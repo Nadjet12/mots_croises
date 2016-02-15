@@ -1,0 +1,88 @@
+\documentclass[a4paper,12pt]{report}
+
+\usepackage[francais]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[latin1,utf8]{inputenc}
+\usepackage{soul}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphics}
+\usepackage{pgf,tikz}
+\usepackage{multirow}
+\usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+\newcommand{\hsp}{\hspace{20pt}}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\begin{document}
+
+\begin{titlepage}
+  \begin{sffamily}
+  \begin{center}
+
+    \textsc{ Université Pierre et Marie Curie \\[1cm] \huge Résolution de problèmes}\\[6cm]
+
+    \textsc{\huge \bfseries Résolution de Mots Croisés par un CSP.}\\
+
+    % Title
+    \HRule \\[0.4cm]
+
+~~\\
+~~\\
+    % Author and supervisor
+    \begin{minipage}{0.4\textwidth}
+      \begin{center} \large
+        Renaud \textsc{ADEQUIN}\\
+        Nadjet \textsc{BOURDACHE}\\
+      \end{center}
+    \end{minipage}
+
+    \vfill
+
+    % Bottom of the page
+    {\large 04/04/2016}
+
+  \end{center}
+  \end{sffamily}
+\end{titlepage}
+
+\section*{1. Modélisation par un CSP}
+Pour résoudre ce problème, on propose une modélisation qui consiste à associer une variable à chaque mot de la grille. Les mots de la grille étants numérotés dans l'odre de leurs apparition dans la grille (d'abord les mots horizontaux puis les verticaux). On définit ensuite un ensemble de contraintes pour vérifier la cohérence de la grille générée.
+
+~~\\
+\textbf{Variables:}
+
+
+Pour \textit{m} mots, on a \textit{m} variables : \textit{$Mot_i$} , $\forall$ $i$  $\in$ $\{1, ... , m \}$.
+
+~~\\
+\textbf{Domaine:}
+
+
+Chaque mot de la grille doit appartenir au dictionnaire considéré, notons le $Dict$.
+\begin{center}
+D(\textit{$Mot_i$}) $=$ $\{ X \in$ $Dict$  : $|X|$ = $|Mot_i|$ $\}$, $\forall$  $i$ $\in$ $\{1, ... , m \}$ .
+\end{center}
+
+~~\\
+\textbf{Contraintes:}\\
+\begin{itemize}
+\item Pour toute paire de mots \textit{Mot$_i$} et \textit{Mot$_j$} qui se croisent aux positions \textit{p} pour \textit{Mot$_i$} et \textit{q} pour \textit{Mot$_j$}, on définit la contrainte:
+$$\textit{Mot}_i [p]\ =\  \textit{Mot}_j [q] .$$ 
+
+\item Pour modéliser le fait qu'un même mot ne peut apparaître plus d'une fois dans la grille, il suffit d'jouter la contrainte:
+$$ \textit{AllDiff}\ (\textit{Mot}_1, \textit{Mot}_2, \cdots , \textit{Mot}_m)  $$
+\end{itemize}
+
+
+\end{document}
