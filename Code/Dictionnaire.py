@@ -38,6 +38,8 @@ class Noeud:
                 if pattern[profondeur] in self.liste_Noeud:
                     liste.update(self.liste_Noeud[pattern[profondeur]].get_list_Mots(pattern, mot+pattern[profondeur], profondeur+1))
         return liste
+
+
 class Dico:
     def __init__(self, file):
         self.lettres = dict()
