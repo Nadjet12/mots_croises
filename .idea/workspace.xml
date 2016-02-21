@@ -2,16 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f14c2b7e-65e7-4f0d-942b-2ad86552d768" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Code/__init__.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Code/ui/GrilleFrame.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Code/ui/__init__.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/Code/MainFrame.py" afterPath="$PROJECT_DIR$/Code/ui/MainFrame.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/mots_croises.iml" afterPath="$PROJECT_DIR$/.idea/mots_croises.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Code/ui/Case.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/Grille.py" afterPath="$PROJECT_DIR$/Code/Grille.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/app.py" afterPath="$PROJECT_DIR$/Code/app.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/ui/ToggledFrame.py" afterPath="$PROJECT_DIR$/Code/ui/ToggledFrame.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/ui/GrilleFrame.py" afterPath="$PROJECT_DIR$/Code/ui/GrilleFrame.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/ui/MainFrame.py" afterPath="$PROJECT_DIR$/Code/ui/MainFrame.py" />
     </list>
     <ignored path="mots_croises.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -32,21 +26,33 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="GrilleFrame.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="GrilleFrame.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Code/ui/GrilleFrame.py">
           <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.71034485">
+              <caret line="55" column="30" selection-start-line="55" selection-start-column="30" selection-end-line="55" selection-end-column="30" />
+              <folding>
+                <element signature="e#46#59#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Case.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Code/ui/Case.py">
+          <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="26" column="79" selection-start-line="26" selection-start-column="79" selection-end-line="26" selection-end-column="79" />
+              <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainFrame.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MainFrame.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Code/ui/MainFrame.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="3.062069">
-              <caret line="74" column="35" selection-start-line="74" selection-start-column="35" selection-end-line="74" selection-end-column="35" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="104" column="0" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -85,8 +91,9 @@
         <option value="$PROJECT_DIR$/Code/Grille.py" />
         <option value="$PROJECT_DIR$/Code/app.py" />
         <option value="$PROJECT_DIR$/Code/ui/ToggledFrame.py" />
-        <option value="$PROJECT_DIR$/Code/ui/GrilleFrame.py" />
         <option value="$PROJECT_DIR$/Code/ui/MainFrame.py" />
+        <option value="$PROJECT_DIR$/Code/ui/Case.py" />
+        <option value="$PROJECT_DIR$/Code/ui/GrilleFrame.py" />
       </list>
     </option>
   </component>
@@ -684,10 +691,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file:///usr/lib/python2.7/lib-tk/tkFileDialog.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334">
+          <caret line="129" column="0" selection-start-line="129" selection-start-column="0" selection-end-line="129" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file:///usr/lib/python2.7/lib-tk/Tkinter.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33333334">
-          <caret line="1535" column="0" selection-start-line="1535" selection-start-column="0" selection-end-line="1535" selection-end-column="0" />
+          <caret line="1939" column="0" selection-start-line="1939" selection-start-column="0" selection-end-line="1939" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -700,27 +715,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Code/ui/GrilleFrame.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="26" column="79" selection-start-line="26" selection-start-column="79" selection-end-line="26" selection-end-column="79" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///usr/lib/python2.7/lib-tk/tkFileDialog.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334">
-          <caret line="129" column="0" selection-start-line="129" selection-start-column="0" selection-end-line="129" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Code/ui/MainFrame.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="3.062069">
-          <caret line="74" column="35" selection-start-line="74" selection-start-column="35" selection-end-line="74" selection-end-column="35" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="104" column="0" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/ui/Case.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Code/ui/GrilleFrame.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.71034485">
+          <caret line="55" column="30" selection-start-line="55" selection-start-column="30" selection-end-line="55" selection-end-column="30" />
+          <folding>
+            <element signature="e#46#59#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

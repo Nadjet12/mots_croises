@@ -10,6 +10,15 @@ except ImportError:
 
 import os
 
+grille = [['.', '.', '.', '.', None, '.', '.', '.', '.'],
+          ['.', None, '.', None, None, None, '.', None, '.'],
+          ['.', '.', '.', '.', None, '.', '.', '.', '.'],
+          [None, '.', None, '.', '.', '.', None, '.', None],
+          ['.', '.', '.', '.', None, '.', '.', '.', '.'],
+          [None, '.', None, '.', '.', '.', None, '.', None],
+          ['.', '.', '.', '.', None, '.', '.', '.', '.'],
+          ['.', None, '.', None, None, None, '.', None, '.'],
+          ['.', '.', '.', '.', None, '.', '.', '.', '.']]
 
 class MainFrame(Frame):
 
@@ -22,9 +31,9 @@ class MainFrame(Frame):
         self.options['initialfile'] = 'ma_grille.mc'
         self.options['parent'] = root
 
+        self.grille = grille
         self.frameMot = Frame(self, width=100, height=100, bg="yellow")
-        self.frameGrille = GrilleFrame(self.frameMot, master=self)
-        self.grille = None
+        self.frameGrille = GrilleFrame(self.frameMot, grille=self.grille, master=self)
 
         self.frameGrille.grid(row=0, column=0, sticky=N+E+S+W)
 
