@@ -1,5 +1,6 @@
 import time
 import re
+from codecs import *
 
 class Noeud:
 
@@ -77,49 +78,49 @@ class Dico:
 
 
 
-file = "./mots/135000-mots-fr.txt"
-
-start_time = time.time()
-
-d = Dico(file)
-elapsed_time = time.time() - start_time
-print("creation dictionnaire " + file + " : " + str(elapsed_time))
-print()
-
-
-taille = 15
-start_time = time.time()
-res = d.get_Domaine(taille)
-
-elapsed_time = time.time() - start_time
-print("recherche taille "+ str(taille) + " dictionnaire " + str(len(res)) + " : " + str(elapsed_time))
-print()
-
-pattern = "....k"
-start_time = time.time()
-res = d.get_New_Domaine(pattern)
-elapsed_time = time.time() - start_time
-print("recherche mot \"" + pattern + "\" dictionnaire " + str(len(res)) + " : " + str(elapsed_time))
-print(res)
-print()
-
-
-pattern = " "+pattern+" "
-pattern = pattern.replace('.', '\w')
-string = ' '.join([line.rstrip() for line in open(file, encoding="ISO-8859-1")])+' '
-start_time = time.time()
-p = re.compile(pattern)
-res = p.findall(string)
-elapsed_time = time.time() - start_time
-print("recherche mot \"" + pattern + "\" regex " + str(len(res)) + " : " + str(elapsed_time))
-print(res)
-print()
-
-pattern = " stock "
-start_time = time.time()
-string = ' '.join([line.rstrip() for line in open(file, encoding="ISO-8859-1")])+' '
-elapsed_time = time.time() - start_time
-res = re.findall(pattern, string)
-print("recherche mot \"" + pattern + "\" regex " + str(len(res)) + " : " + str(elapsed_time))
-print(res)
-print()
+#file = "./mots/135000-mots-fr.txt"
+#
+#start_time = time.time()
+#
+#d = Dico(file)
+#elapsed_time = time.time() - start_time
+#print("creation dictionnaire " + file + " : " + str(elapsed_time))
+#print ""
+#
+#
+#taille = 15
+#start_time = time.time()
+#res = d.get_Domaine(taille)
+#
+#elapsed_time = time.time() - start_time
+#print("recherche taille "+ str(taille) + " dictionnaire " + str(len(res)) + " : " + str(elapsed_time))
+#print()
+#
+#pattern = "....k"
+#start_time = time.time()
+#res = d.get_New_Domaine(pattern)
+#elapsed_time = time.time() - start_time
+#print("recherche mot \"" + pattern + "\" dictionnaire " + str(len(res)) + " : " + str(elapsed_time))
+#print(res)
+#print()
+#
+#
+#pattern = " "+pattern+" "
+#pattern = pattern.replace('.', '[a-zA-Z]')
+#string = ' '.join([line.rstrip() for line in open(file, encoding="ISO-8859-1")])+' '
+#start_time = time.time()
+#p = re.compile(pattern)
+#res = p.findall(string)
+#elapsed_time = time.time() - start_time
+#print("recherche mot \"" + pattern + "\" regex " + str(len(res)) + " : " + str(elapsed_time))
+#print(res)
+#print()
+#
+#pattern = " stock "
+#start_time = time.time()
+#string = ' '.join([line.rstrip() for line in open(file, encoding="ISO-8859-1")])+' '
+#elapsed_time = time.time() - start_time
+#res = re.findall(pattern, string)
+#print("recherche mot \"" + pattern + "\" regex " + str(len(res)) + " : " + str(elapsed_time))
+#print(res)
+#print()
