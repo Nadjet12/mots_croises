@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f14c2b7e-65e7-4f0d-942b-2ad86552d768" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Code/app.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/Code/ui/ToggledFrame.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Code/Dictionnaire.py" afterPath="$PROJECT_DIR$/Code/Dictionnaire.py" />
-    </list>
+    <list default="true" id="f14c2b7e-65e7-4f0d-942b-2ad86552d768" name="Default" comment="" />
     <ignored path="mots_croises.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -216,6 +210,15 @@
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="PyConsoleConfigurable.Python Console" />
+  </component>
+  <component name="PyConsoleOptionsProvider">
+    <option name="myPythonConsoleState">
+      <console-settings module-name="mots_croises" sdk-home="/usr/bin/python2.7">
+        <option name="mySdkHome" value="/usr/bin/python2.7" />
+        <option name="myModuleName" value="mots_croises" />
+      </console-settings>
+    </option>
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
