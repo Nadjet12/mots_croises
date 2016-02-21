@@ -60,6 +60,6 @@ class Grille:
         
         
 # 
-#g = Grille("./doc.txt")
-#print(g.taille)
-#print(type(g.taille[0]))
+g = Grille("./doc.txt")
+print(g.taille)
+print(type(g.taille[0]))
