@@ -13,7 +13,7 @@ import random
 
 class Grille:
     
-    def __init__(self, filePath=None, taille=(20,10), dictionnaire="./mots/135000-mots-fr.txt", alea = False):
+    def __init__(self, filePath=None, taille=(20,10), dictionnaire="./mots/135000-mots-fr.txt", alea=False):
        
         self.mots_verticaux = []
         self.mots_horizontaux = []
@@ -21,7 +21,7 @@ class Grille:
         self.taille = taille
         self.dico = Dico(dictionnaire)
         
-        if alea == True:
+        if alea:
             filePath = self.genereGrilleAlea(taille)
             
         self.detecte_mots(filePath)
@@ -72,11 +72,11 @@ class Grille:
                     if taille > 1 :
                         self.mots_horizontaux += [Mot(''.join(['.' for k in range(taille)]), start)]
                     
-        for j in range(len(tab)):
+        for j in range(len(tab[0])):
             start = [0,j]         
             mot = False
             taille = 0
-            for i in range(len(tab[i])):
+            for i in range(len(tab)):
                 if tab[i][j] and not mot:
                     mot = True
                     start[1] = i
@@ -97,11 +97,11 @@ class Grille:
             if (x,y) not in self.cases_noires:
                 self.cases_noires += [(x,y)]
                 nbNoires -= 1
-        self.fichierSortie()
+        return self.fichierSortie()
                 
                 
     def fichierSortie(self):
-        path = "./grillesVides/doc.txt"
+        path = "./grillesVides/sortie.txt"
         fichier = open(path, "w")
         fichier.write(str(self.taille) + "\n")
         for i in range(self.taille[0]):
@@ -117,9 +117,9 @@ class Grille:
         
             
 t = (20,20)
-g = Grille("./grillesVides/doc.txt",True)
+g = Grille(taille=t,alea=True)
 
 # 
-g = Grille("./doc.txt")
+#g = Grille("./doc.txt")
 print(g.taille)
 print(type(g.taille[0]))

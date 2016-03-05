@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import tkFont
 
-from Code.ui.Case import Case
+from Case import Case
 
 try:
     from tkinter import *

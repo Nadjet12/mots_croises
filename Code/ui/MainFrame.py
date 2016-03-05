@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from Code.ui.GrilleFrame import GrilleFrame
+from GrilleFrame import GrilleFrame
 
 try:
     from tkinter import *
