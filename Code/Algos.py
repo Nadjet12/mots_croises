@@ -60,7 +60,11 @@ def revise(x,y):
             
                     
         
-def consistance((x,mot),(y,mot2))
+def consistance((x,mot),(y,mot2)):
+    if mot == mot2:
+        return False
+    if mot2 in y.domaine:
+        return True
     
     
     
