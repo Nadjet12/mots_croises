@@ -6,6 +6,7 @@ Created on Sat Mar 05 12:16:39 2016
 """
 
 from Grille import Grille
+import Mot
 
 
 def ac3(grille):
@@ -43,7 +44,7 @@ def ac3(grille):
     fait
     retourner modification
     """    
-        
+# a un moment il faut vérifier que le domaine n'est pas vide
 
 def revise(x,y):
     modif = False
@@ -63,6 +64,11 @@ def revise(x,y):
 def consistance((x,mot),(y,mot2)):
     if mot == mot2:
         return False
+    contr = [x.egalContrainteListe[i][0] for i in [0,1]]
+    if mot2 not in contr:
+        return True
+    
+    
     
     
     
