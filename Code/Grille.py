@@ -50,11 +50,15 @@ class Grille:
         fichier = open(filePath, "r")
         taille = eval(fichier.readline())
         self.taille = taille
+        tab = [[None]*taille[1]]*taille[0]
         
         for i in range(taille[0]):
             ligne = fichier.readline()
-            tab[i] = [j for j in ligne]             
-                
+            """ Ici le saut de ligne se rettrouvait dans le tableau 
+            tab[i] = [j for j in ligne]
+            print tab[10][20] donne un saut de ligne
+            """
+            tab[i] = [j for j in ligne[0:taille[1]]]  
         for i in range(len(tab)):
             start = [i,0]
             mot = ""
