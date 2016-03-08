@@ -83,10 +83,12 @@ class Grille:
         self.taille = taille
         nbNoires = (float(random.randrange(20,30))/100) * float(taille[0]) * float(taille[1])
         nbNoires = int(nbNoires)
+        blackList = []
         while nbNoires > 0:
             x = random.randrange(taille[0])
             y = random.randrange(taille[1])
-            if (x,y) not in self.cases_noires:
+            if (x,y) not in self.cases_noires and (x,y) not in blackList:
+                blackList += [(x,y-1),(x,y+1),(x-1,y),(x+1,y)]
                 self.cases_noires += [(x,y)]
                 nbNoires -= 1
         return self.fichierSortie()
