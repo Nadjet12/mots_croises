@@ -50,39 +50,33 @@ class Grille:
         fichier = open(filePath, "r")
         taille = eval(fichier.readline())
         self.taille = taille
-#        tab = [[True for i in range(taille[1])] for j in range(taille[0])]
         
         for i in range(taille[0]):
             ligne = fichier.readline()
             tab[i] = [j for j in ligne]             
                 
         for i in range(len(tab)):
-            start = [i,0]            
-            mot = False
-            taille = 0
-            for j in range(len(tab[i])):
-                if tab[i][j] and not mot:
-                    mot = True
-                    start[1] = j
-                elif not tab[i][j] and mot:
-                    mot = False
-                    taille = j-start[1]
-                    if taille > 1 :
-                        self.mots_horizontaux += [Mot(''.join(['.' for k in range(taille)]), start)]
+            start = [i,0]
+            mot = ""
+            for j in range(len(tab[0])):
+                if tab[i][j] != "$":
+                    if len(mot) == 0:
+                        start[1] = j
+                    mot += tab[i][j]
+                elif tab[i][j] == "$" and len(mot) > 1:
+                    self.mots_horizontaux += [Mot(''.join([k for k in mot]), start)]
                     
         for j in range(len(tab[0])):
-            start = [0,j]         
-            mot = False
-            taille = 0
+            start = [0,j]
+            mot = ""
             for i in range(len(tab)):
-                if tab[i][j] and not mot:
-                    mot = True
-                    start[1] = i
-                elif not tab[i][j] and mot:
-                    mot = False
-                    taille = i-start[1]
-                    if taille > 1 :
-                        self.mots_verticaux += [Mot(''.join(['.' for k in range(taille)]), start)]
+                if tab[i][j] != "$":
+                    if len(mot) == 0:
+                        start[1] = i
+                    mot += tab[i][j]
+                elif tab[i][j] == "$" and len(mot) > 1:
+                    self.mots_verticaux += [Mot(''.join([k for k in mot]), start)]
+        
                     
         
     def genereGrilleAlea(self, taille):
