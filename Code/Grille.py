@@ -50,13 +50,11 @@ class Grille:
         fichier = open(filePath, "r")
         taille = eval(fichier.readline())
         self.taille = taille
-        tab = [[True for i in range(taille[1])] for j in range(taille[0])]
+#        tab = [[True for i in range(taille[1])] for j in range(taille[0])]
         
         for i in range(taille[0]):
             ligne = fichier.readline()
-            for j in range(taille[1]):
-                if ligne[j] == "$":                
-                    tab[i][j] = False
+            tab[i] = [j for j in ligne]             
                 
         for i in range(len(tab)):
             start = [i,0]            
@@ -114,7 +112,16 @@ class Grille:
         fichier.close
         return path
         
+    def getContraintes(self):
+        liste = []
+        for m in self.mots_verticaux:
+            for mot2 in m.egalContrainteListe:
+                liste += [(m,mot2[0])]
         
+        for m in self.mots_horizontaux:
+            for mot2 in m.egalContrainteListe:
+                liste += [(m,mot2[0])]
+        return liste
             
 t = (20,20)
 g = Grille(taille=t,alea=True)

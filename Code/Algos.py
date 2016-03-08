@@ -18,23 +18,25 @@ def ac3(grille):
             L ← L ∪ {(xk , xi) / ∃ contrainte liant xk et xi}
         fsi
     ftq
-    
-    
     """
     
-    contrainte_Liste = []
+    contrainte_Liste = grille.getContraintes()
     file_L = contrainte_Liste[::]
-    # remplir la liste des contraintes     
     while file_L is not []:
         (x,y) = file_L[0] 
         file_L = file_L[1:]
         if revise(x,y):
+            if x.domaine is set():
+                return False
             for (i,j) in contrainte_Liste:
                 if j == x:
                     file_L += [(i,j)]
+    return True
         
-    """
+   
 
+def revise(x,y):
+    """
     modification ← false
     faire pour chaque v ∈ Di
         si il n'existe pas de v∈ Dj | {xi → v, xj → v} est consistante alors
@@ -44,9 +46,6 @@ def ac3(grille):
     fait
     retourner modification
     """    
-# a un moment il faut vérifier que le domaine n'est pas vide
-
-def revise(x,y):
     modif = False
     for mot in x.domaine:
         consistant = False
@@ -64,26 +63,16 @@ def revise(x,y):
 def consistance((x, mot), (y, mot2)):
     if mot is mot2:
         return False
-    #crossPosX = []
-    #crossPosX = [x.egalContrainteListe[i][1] for i in range(x.egalContrainteListe) if x.egalContrainteListe[i][0] == mot2]
-    # il faut tester les objets et pas les srings (je crois) :-)
     crossPosX = [cont[1] for cont in x.egalContrainteListe if cont[0] is y]
     if crossPosX is []:
         return True
     elif len(crossPosX) > 1:
-        # 2 mots ne peuvent pas se croiser plusieurs fois :-) => erreur implémentation
         return False
     crossPosX = crossPosX[0]
-    #crossPosY = [y.egalContrainteListe[i][1] for i in range(y.egalContrainteListe) if y.egalContrainteListe[i][0] == mot]
     crossPosY = [cont[1] for cont in y.egalContrainteListe if cont[0] is x]
     if len(crossPosY) > 1:
         return False
     crossPosY = crossPosY[0]
-    '''
-    if mot[crossPosX] != mot2[crossPosY]:
-        return False
-    return True
-    '''
     return mot[crossPosX] is mot2[crossPosY]
     
     
