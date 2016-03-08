@@ -18,6 +18,9 @@ class Mot:
         
     def ajoute_contrainte(self, obj, i):
         self.egalContrainteListe += [(obj, i)]
+
+    def remove(self, mot):
+        self.egalContrainteListe.remove(mot)
         
     def __repr__(self):
         return self.lettres + str(type(self.lettres))

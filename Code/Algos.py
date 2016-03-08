@@ -61,19 +61,30 @@ def revise(x,y):
             
                     
         
-def consistance((x,mot),(y,mot2)):
-    if mot == mot2:
+def consistance((x, mot), (y, mot2)):
+    if mot is mot2:
         return False
-    crossPosX = []
-    crossPosX = [x.egalContrainteListe[i][1] for i in range(x.egalContrainteListe) if x.egalContrainteListe[i][0] == mot2]
-    if crossPosX == []:
+    #crossPosX = []
+    #crossPosX = [x.egalContrainteListe[i][1] for i in range(x.egalContrainteListe) if x.egalContrainteListe[i][0] == mot2]
+    # il faut tester les objets et pas les srings (je crois) :-)
+    crossPosX = [cont[1] for cont in x.egalContrainteListe if cont[0] is y]
+    if crossPosX is []:
         return True
+    elif len(crossPosX) > 1:
+        # 2 mots ne peuvent pas se croiser plusieurs fois :-) => erreur implémentation
+        return False
     crossPosX = crossPosX[0]
-    crossPosY = [y.egalContrainteListe[i][1] for i in range(y.egalContrainteListe) if y.egalContrainteListe[i][0] == mot]
+    #crossPosY = [y.egalContrainteListe[i][1] for i in range(y.egalContrainteListe) if y.egalContrainteListe[i][0] == mot]
+    crossPosY = [cont[1] for cont in y.egalContrainteListe if cont[0] is x]
+    if len(crossPosY) > 1:
+        return False
     crossPosY = crossPosY[0]
+    '''
     if mot[crossPosX] != mot2[crossPosY]:
         return False
     return True
+    '''
+    return mot[crossPosX] is mot2[crossPosY]
     
     
     
