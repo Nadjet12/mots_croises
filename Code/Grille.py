@@ -9,7 +9,7 @@ from codecs import *
 from Dictionnaire import Dico
 from Mot import Mot
 import random
-
+import numpy
 
 class Grille:
     
@@ -50,15 +50,12 @@ class Grille:
         fichier = open(filePath, "r")
         taille = eval(fichier.readline())
         self.taille = taille
-        tab = [[None]*taille[1]]*taille[0]
+        tab = numpy.ones((taille[0],taille[1]),str)
         
         for i in range(taille[0]):
             ligne = fichier.readline()
-            """ Ici le saut de ligne se rettrouvait dans le tableau 
-            tab[i] = [j for j in ligne]
-            print tab[10][20] donne un saut de ligne
-            """
-            tab[i] = [j for j in ligne[0:taille[1]]]  
+            tab[i] = [j for j in ligne[:-1]]  
+            
         for i in range(len(tab)):
             start = [i,0]
             mot = ""
@@ -67,8 +64,10 @@ class Grille:
                     if len(mot) == 0:
                         start[1] = j
                     mot += tab[i][j]
-                elif tab[i][j] == "$" and len(mot) > 1:
-                    self.mots_horizontaux += [Mot(''.join([k for k in mot]), start)]
+                elif tab[i][j] == "$":
+                    self.cases_noires += [(i,j)]
+                    if len(mot) > 1:
+                        self.mots_horizontaux += [Mot(''.join([k for k in mot]), start)]
                     
         for j in range(len(tab[0])):
             start = [0,j]
@@ -78,8 +77,10 @@ class Grille:
                     if len(mot) == 0:
                         start[1] = i
                     mot += tab[i][j]
-                elif tab[i][j] == "$" and len(mot) > 1:
-                    self.mots_verticaux += [Mot(''.join([k for k in mot]), start)]
+                elif tab[i][j] == "$":
+                    self.cases_noires += [(i,j)]
+                    if len(mot) > 1:
+                        self.mots_verticaux += [Mot(''.join([k for k in mot]), start)]
         
                     
         
@@ -87,27 +88,43 @@ class Grille:
         self.taille = taille
         nbNoires = (float(random.randrange(20,30))/100) * float(taille[0]) * float(taille[1])
         nbNoires = int(nbNoires)
-        blackList = []
+        print nbNoires
+        
+        
+        tab = numpy.ones((taille[0],taille[1]),str)
+              
+        
         while nbNoires > 0:
             x = random.randrange(taille[0])
             y = random.randrange(taille[1])
-            if (x,y) not in self.cases_noires and (x,y) not in blackList:
-                blackList += [(x,y-1),(x,y+1),(x-1,y),(x+1,y)]
-                self.cases_noires += [(x,y)]
+            if tab[x][y] != "$":
+                tab[x][y] = "$"
                 nbNoires -= 1
-        return self.fichierSortie()
+                
+        
+        
+        for i in range(taille[0]):
+            for j in range(taille[1]):
+                if tab[i][j] != "$":
+                    if ( (i>0 and tab[i-1][j] == "$") and (i<taille[0]-1 and tab[i+1][j] == "$") and 
+                    (j>0 and tab[i][j-1] == "$") and (j<taille[1]-1 and tab[i][j+1] == "$") ):
+                        tab[i][j] = "$"
+                    else:
+                        tab[i][j] = "."
+                    
+#        for i in range(taille[0]):
+#                print tab[i]
+        
+        return self.fichierSortie(tab)
                 
                 
-    def fichierSortie(self):
+    def fichierSortie(self, tab):
         path = "./grillesVides/sortie.txt"
         fichier = open(path, "w")
         fichier.write(str(self.taille) + "\n")
         for i in range(self.taille[0]):
             for j in range(self.taille[1]):
-                if (i,j) in self.cases_noires:
-                    fichier.write("$")
-                else:
-                    fichier.write(".")
+                fichier.write(tab[i][j])
             fichier.write("\n")
         fichier.close
         return path
