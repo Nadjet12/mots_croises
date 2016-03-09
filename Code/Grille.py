@@ -25,6 +25,7 @@ class Grille:
             filePath = self.genereGrilleAlea(taille)
             
         self.detecte_mots(filePath)
+        self.defContraintes()
         
 #        print self.mots_horizontaux
 #        print self.mots_verticaux
@@ -64,10 +65,14 @@ class Grille:
                     if len(mot) == 0:
                         start[1] = j
                     mot += tab[i][j]
+                    if j == (len(tab[0])-1) and len(mot) > 1:
+                        self.mots_horizontaux += [Mot(''.join([k for k in mot]), start)]
                 elif tab[i][j] == "$":
                     self.cases_noires += [(i,j)]
                     if len(mot) > 1:
                         self.mots_horizontaux += [Mot(''.join([k for k in mot]), start)]
+                    if len(mot) > 0:
+                        mot = ""
                     
         for j in range(len(tab[0])):
             start = [0,j]
@@ -75,21 +80,22 @@ class Grille:
             for i in range(len(tab)):
                 if tab[i][j] != "$":
                     if len(mot) == 0:
-                        start[1] = i
+                        start[0] = i
                     mot += tab[i][j]
-                elif tab[i][j] == "$":
+                    if i == (len(tab)-1) and len(mot) > 1:
+                        self.mots_verticaux += [Mot(''.join([k for k in mot]), start)]
+                elif tab[i][j] == "$" or i == (len(tab)-1):
                     self.cases_noires += [(i,j)]
                     if len(mot) > 1:
                         self.mots_verticaux += [Mot(''.join([k for k in mot]), start)]
-        
+                    if len(mot) > 0:
+                        mot = ""
                     
         
     def genereGrilleAlea(self, taille):
         self.taille = taille
         nbNoires = (float(random.randrange(20,30))/100) * float(taille[0]) * float(taille[1])
         nbNoires = int(nbNoires)
-        print nbNoires
-        
         
         tab = numpy.ones((taille[0],taille[1]),str)
               
@@ -129,6 +135,30 @@ class Grille:
         fichier.close
         return path
         
+    def defContraintes(self):
+        for mot in self.mots_horizontaux:
+            " mots horizontaux de même taille "
+            for mot2 in self.mots_horizontaux:
+                if mot != mot2 and mot.taille == mot2.taille:
+                    mot.difContraintesListe += [mot2]
+                    mot2.difContraintesListe += [mot]
+            " mots verticaux "
+            for mot2 in self.mots_verticaux:
+                if mot.taille == mot2.taille:
+                    mot.difContraintesListe += [mot2]
+                    mot2.difContraintesListe += [mot]
+                if mot.xStart in range(mot2.xStart,mot2.taille) and mot2.yStart in range(mot.yStart,mot.taille):
+                    mot.ajoute_contrainte(mot2, mot2.yStart-mot.yStart)
+                    mot2.ajoute_contrainte(mot, mot.xStart-mot2.xStart)
+            
+            print mot.xStart, mot.yStart
+            print mot.egalContrainteListe
+            print mot.difContraintesListe
+            print
+                
+                    
+                
+        
     def getContraintes(self):
         liste = []
         for m in self.mots_verticaux:
@@ -141,9 +171,9 @@ class Grille:
         return liste
             
 t = (20,20)
-g = Grille(taille=t,alea=True)
+#g = Grille(taille=t,alea=True)
 
 # 
-#g = Grille("./doc.txt")
-print(g.taille)
-print(type(g.taille[0]))
+g = Grille(filePath="./grillesVides/sortie.txt")
+#print(g.taille)
+#print(type(g.taille[0]))

@@ -14,6 +14,7 @@ class Mot:
         self.yStart = coord[1]
         self.domaine = set()
         self.egalContrainteListe = []
+        self.difContraintesListe = []
         
         
     def ajoute_contrainte(self, obj, i):
