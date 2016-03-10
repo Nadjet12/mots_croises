@@ -143,16 +143,17 @@ class Grille:
             " mots horizontaux de même taille "
             for mot2 in self.mots_horizontaux:
                 if mot != mot2 and mot.taille == mot2.taille:
-                    mot.difContraintesListe += [mot2]
-                    mot2.difContraintesListe += [mot]
+                    mot.contraintesListe += [(mot2,-1)]
+                    mot2.contraintesListe += [(mot,-1)]
             " mots verticaux "
             for mot2 in self.mots_verticaux:
                 if mot.taille == mot2.taille:
-                    mot.difContraintesListe += [mot2]
-                    mot2.difContraintesListe += [mot]
-                if mot.xStart in range(mot2.xStart,mot2.taille) and mot2.yStart in range(mot.yStart,mot.taille):
-                    mot.ajoute_contrainte(mot2, mot2.yStart-mot.yStart)
-                    mot2.ajoute_contrainte(mot, mot.xStart-mot2.xStart)
+                    mot.contraintesListe += [(mot2,-1)]
+                    mot2.contraintesListe += [(mot,-1)]
+                if (mot.xStart in range(mot2.xStart,mot2.taille + mot2.xStart) and 
+                mot2.yStart in range(mot.yStart,mot.taille + mot.yStart)):
+                    mot.ajoute_contrainte(mot2, mot2.yStart - mot.yStart)
+                    mot2.ajoute_contrainte(mot, mot.xStart - mot2.xStart)
             
             print mot.xStart, mot.yStart
             print mot.egalContrainteListe

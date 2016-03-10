@@ -13,15 +13,14 @@ class Mot:
         self.xStart = coord[0]
         self.yStart = coord[1]
         self.domaine = set()
-        self.egalContrainteListe = []
-        self.difContraintesListe = []
+        self.contrainteListe = []
         
         
     def ajoute_contrainte(self, obj, i):
-        self.egalContrainteListe += [(obj, i)]
+        self.contrainteListe += [(obj, i)]
 
     def remove(self, mot):
-        self.egalContrainteListe.remove(mot)
+        self.domaine.remove(mot)
         
     def __repr__(self):
         return self.lettres + str(type(self.lettres))

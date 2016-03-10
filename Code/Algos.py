@@ -61,18 +61,30 @@ def revise(x,y):
                     
         
 def consistance((x, mot), (y, mot2)):
+
     if mot is mot2:
         return False
-    crossPosX = [cont[1] for cont in x.egalContrainteListe if cont[0] is y]
+
+    crossPosX = [cont[1] for cont in x.contrainteListe if cont[0] is y]
+    for pos in crossPosX:
+        if pos == -1:
+            crossPosX.remove(pos)
     if crossPosX is []:
         return True
+
     elif len(crossPosX) > 1:
         return False
-    crossPosX = crossPosX[0]
-    crossPosY = [cont[1] for cont in y.egalContrainteListe if cont[0] is x]
+
+    crossPosY = [cont[1] for cont in y.contrainteListe if cont[0] is x]
+    for pos in crossPosY:
+        if pos == -1:
+            crossPosY.remove(pos)
+    if crossPosY is []:
+        return True
+
     if len(crossPosY) > 1:
         return False
-    crossPosY = crossPosY[0]
+        
     return mot[crossPosX] is mot2[crossPosY]
     
     
