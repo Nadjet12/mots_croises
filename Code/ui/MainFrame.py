@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from Code.Grille import Grille
 from GrilleFrame import GrilleFrame
 
 try:
@@ -47,14 +48,14 @@ class MainFrame(Frame):
         newGrilleMenu = Menu(menubar, tearoff=0)
         newGrilleMenu.add_command(label="Ouvrir Grille", command=self.file_chooser)
         newGrilleMenu.add_command(label="Saver Grille", command=self.file_saver)
-        newGrilleMenu.add_command(label="Générer Grille", command=None)
+        newGrilleMenu.add_command(label="Générer Grille", command=self.genere_Grille)
 
         filemenu.add_cascade(label="Nouvelle grille", menu=newGrilleMenu)
         filemenu.add_separator()
         filemenu.add_command(label="Quitter", command=master.quit)
 
         self.radio_algo = StringVar()
-        algomenu.add_radiobutton(label="Algo1", variable=self.radio_algo, value=1,
+        algomenu.add_radiobutton(label="AC3", variable=self.radio_algo, value=1,
                                  command=lambda arg0="Algo1": self.test(arg0))
         algomenu.add_radiobutton(label="Algo2", variable=self.radio_algo, value=2,
                                  command=lambda arg0="Algo2": self.test(arg0))
@@ -89,7 +90,13 @@ class MainFrame(Frame):
 
     def file_chooser(self):
         filename = askopenfilename(**self.options)
+        self.grille = Grille(filename)
+        self.frameGrille.set_Grille(self.grille)
         print(filename)
+
+    def genere_Grille(self):
+        self.grille =  Grille(taille=(10,10),alea=True)
+        self.frameGrille.set_Grille(self.grille)
 
     def file_saver(self):
         filename = asksaveasfilename(**self.options)

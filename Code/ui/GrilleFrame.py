@@ -3,6 +3,7 @@
 import tkFont
 
 from Case import Case
+from Code.ui.UiMot import UiMot
 
 try:
     from tkinter import *
@@ -35,31 +36,7 @@ class GrilleFrame(Frame):
         self.buttonsFrame.grid(row=0, column=0, sticky=N+E+S+W)
         self.gframe.grid(row=1, column=0, sticky=N+E+S+W)
         self.var = 'f'
-        l = 0
-        self.grille2 = []
-        for line in grille:
-            col = 0
-            g = []
-            for c in line:
-                if c is None:
-                    g += [Case(self.gframe, validate="key", state=DISABLED,
-                                disabledbackground='black', width=5, font=self.customFont)]
-                    g[-1].grid(row=l, column=col, ipady=10)
-                else:
 
-                    g += [Case(self.gframe, validate="key",
-                                textvariable=None,
-                                state=NORMAL,
-                                # state="readonly",
-                                bg='white',
-                                font=self.customFont,
-                                width=5,
-                                justify=CENTER)]
-                    g[-1].grid(row=l, column=col, ipady=10)
-
-                col += 1
-            l += 1
-            self.grille2 += [g]
 
 
 
@@ -70,3 +47,42 @@ class GrilleFrame(Frame):
             self.motFrame.grid_forget()
 
 
+    def set_Grille(self, grille):
+        self.grille = grille
+
+        l = 0
+        self.grille2 = [
+            [Case(self.gframe, validate="key", state=DISABLED,
+                                disabledbackground='black', width=5, font=self.customFont)
+                         for i in range(grille.taille[1])]
+                for j in range(grille.taille[0])]
+
+
+        self.motVert = [UiMot(mot, self.gframe, self.customFont) for mot in self.grille.mots_verticaux]
+        self.motHori = [UiMot(mot, self.gframe, self.customFont) for mot in self.grille.mots_horizontaux]
+        #
+        # TODO: Attention les lettres qui sont dans deux mot !!!
+        # la ne sont que dans hori !!!
+
+        for mot in self.motVert:
+            for i in range(mot.taille):
+                self.grille2[mot.xStart+i][mot.yStart] = mot.caseG[i]
+
+        for mot in self.motHori:
+            for i in range(mot.taille):
+                self.grille2[mot.xStart][mot.yStart+i] = mot.caseG[i]
+
+
+        for line in range(len(self.grille2)):
+            for case in range(len(self.grille2[line])):
+                self.grille2[line][case].grid(row=line, column=case, ipady=10)
+
+        for mot in self.motVert:
+            for i in range(mot.taille):
+                mot.update()
+
+        for mot in self.motHori:
+            for i in range(mot.taille):
+                mot.update()
+
+        # TODO : afficher les mots sur la droite

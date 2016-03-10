@@ -13,7 +13,7 @@ import numpy
 
 class Grille:
     
-    def __init__(self, filePath=None, taille=(20,10), dictionnaire="./mots/135000-mots-fr.txt", alea=False):
+    def __init__(self, filePath=None, taille=(20,10), dictionnaire="../mots/135000-mots-fr.txt", alea=False):
        
         self.mots_verticaux = []
         self.mots_horizontaux = []
@@ -110,13 +110,16 @@ class Grille:
         
         
         for i in range(taille[0]):
+            sstr = ""
             for j in range(taille[1]):
+                sstr += tab[i][j]
                 if tab[i][j] != "$":
                     if ( (i>0 and tab[i-1][j] == "$") and (i<taille[0]-1 and tab[i+1][j] == "$") and 
                     (j>0 and tab[i][j-1] == "$") and (j<taille[1]-1 and tab[i][j+1] == "$") ):
                         tab[i][j] = "$"
                     else:
-                        tab[i][j] = "."
+                        tab[i][j] = " "
+            print(sstr)
                     
 #        for i in range(taille[0]):
 #                print tab[i]
@@ -125,7 +128,7 @@ class Grille:
                 
                 
     def fichierSortie(self, tab):
-        path = "./grillesVides/sortie.txt"
+        path = "../grillesVides/sortie.mc"
         fichier = open(path, "w")
         fichier.write(str(self.taille) + "\n")
         for i in range(self.taille[0]):
@@ -174,6 +177,6 @@ t = (20,20)
 #g = Grille(taille=t,alea=True)
 
 # 
-g = Grille(filePath="./grillesVides/sortie.txt")
+g = Grille(filePath="../grillesVides/sortie.mc")
 #print(g.taille)
 #print(type(g.taille[0]))

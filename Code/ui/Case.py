@@ -13,3 +13,6 @@ class Case(Entry):
     def char_callback(self,sv):
         print "get " + sv.get()
         sv.set(sv.get().upper()[-1])
+
+    def setLettre(self, lettre):
+        self.insert(0,lettre)
