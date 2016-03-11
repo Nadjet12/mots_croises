@@ -3,7 +3,11 @@
 import tkFont
 
 from Case import Case
-from Code.ui.UiMot import UiMot
+try:
+    from Code.ui.UiMot import UiMot
+except ImportError:
+    import sys
+    sys.path.append('./Code/ui/UiMot')
 
 try:
     from tkinter import *

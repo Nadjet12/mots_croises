@@ -13,7 +13,7 @@ import numpy
 
 class Grille:
     
-    def __init__(self, filePath=None, taille=(20,10), dictionnaire="../mots/135000-mots-fr.txt", alea=False):
+    def __init__(self, filePath=None, taille=(20,10), dictionnaire="./mots/135000-mots-fr.txt", alea=False):
        
         self.mots_verticaux = []
         self.mots_horizontaux = []
@@ -26,25 +26,7 @@ class Grille:
             
         self.detecte_mots(filePath)
         self.defContraintes()
-        
-#        print self.mots_horizontaux
-#        print self.mots_verticaux
-        
-#    def readFromFile(self, filePath=None):  
-#        fichier = open(filePath, encoding="ISO-8859-1")
-#        self.taille = eval(fichier.readline())
-#        mot = fichier.readline()   
-#        while mot not in '\r\n':
-#            mot = mot.split(" ")    
-##            print(mot)
-#            self.mots_horizontaux += [Mot(str(mot[0]), eval(mot[1]))]
-#            mot = fichier.readline()
-#        
-#        while mot not in '\r\n':
-#            mot = mot.split(" ")
-#            self.mots_verticaux += [Mot(str(mot[0]), eval(mot[1]))]
-#            mot = fichier.readline()
-#        fichier.close
+    
         
     def detecte_mots(self, filePath):
         
@@ -121,8 +103,6 @@ class Grille:
                         tab[i][j] = " "
             print(sstr)
                     
-#        for i in range(taille[0]):
-#                print tab[i]
         
         return self.fichierSortie(tab)
                 
@@ -143,21 +123,20 @@ class Grille:
             " mots horizontaux de même taille "
             for mot2 in self.mots_horizontaux:
                 if mot != mot2 and mot.taille == mot2.taille:
-                    mot.contraintesListe += [(mot2,-1)]
-                    mot2.contraintesListe += [(mot,-1)]
+                    mot.contrainteListe += [(mot2,-1)]
+                    mot2.contrainteListe += [(mot,-1)]
             " mots verticaux "
             for mot2 in self.mots_verticaux:
                 if mot.taille == mot2.taille:
-                    mot.contraintesListe += [(mot2,-1)]
-                    mot2.contraintesListe += [(mot,-1)]
+                    mot.contrainteListe += [(mot2,-1)]
+                    mot2.contrainteListe += [(mot,-1)]
                 if (mot.xStart in range(mot2.xStart,mot2.taille + mot2.xStart) and 
                 mot2.yStart in range(mot.yStart,mot.taille + mot.yStart)):
                     mot.ajoute_contrainte(mot2, mot2.yStart - mot.yStart)
                     mot2.ajoute_contrainte(mot, mot.xStart - mot2.xStart)
             
             print mot.xStart, mot.yStart
-            print mot.egalContrainteListe
-            print mot.difContraintesListe
+            print mot.contrainteListe
             print
                 
                     
@@ -178,6 +157,6 @@ t = (20,20)
 #g = Grille(taille=t,alea=True)
 
 # 
-g = Grille(filePath="../grillesVides/sortie.mc")
+g = Grille(filePath="./grillesVides/sortie.mc")
 #print(g.taille)
 #print(type(g.taille[0]))

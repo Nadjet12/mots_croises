@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from Code.Grille import Grille
+
+try:
+    from Code.Grille import Grille
+except ImportError:
+    import sys
+    sys.path.append('./Code/Grille')
+
 from GrilleFrame import GrilleFrame
 
 try:
@@ -47,7 +53,7 @@ class MainFrame(Frame):
 
         newGrilleMenu = Menu(menubar, tearoff=0)
         newGrilleMenu.add_command(label="Ouvrir Grille", command=self.file_chooser)
-        newGrilleMenu.add_command(label="Saver Grille", command=self.file_saver)
+        newGrilleMenu.add_command(label="Sauver Grille", command=self.file_saver)
         newGrilleMenu.add_command(label="Générer Grille", command=self.genere_Grille)
 
         filemenu.add_cascade(label="Nouvelle grille", menu=newGrilleMenu)
