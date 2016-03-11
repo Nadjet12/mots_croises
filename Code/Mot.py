@@ -19,8 +19,40 @@ class Mot:
     def ajoute_contrainte(self, obj, i):
         self.contrainteListe += [(obj, i)]
 
+    def set_lettre(self, i, c):
+        s = list(self.lettres)
+        s[i] = c
+        self.lettres = "".join(s)
+        for c1,c2 in self.contrainteListe:
+            if c2 is i:
+                c1.update(self, c)
+
+    def update(self, mot, c):
+        for c1,c2 in self.contrainteListe:
+            if c1 is mot:
+                s = list(self.lettres)
+                s[c2] = c
+                self.lettres = "".join(s)
+
+
     def remove(self, mot):
         self.domaine.remove(mot)
         
     def __repr__(self):
-        return self.lettres + str(type(self.lettres))
+        return str(self.xStart) + "," + str(self.yStart) + ":" + self.lettres
+
+    def get_Contrainte(self, mot):
+        c1 = None
+        c2 = None
+
+        for c in self.contrainteListe:
+            if c[0] is mot and not c[1] is -1:
+                c1 = c
+        if not c1:
+            return c1, c2
+
+        for c in mot.contrainteListe:
+            if c[0] is mot and not c[1] is -1:
+                c2 = c
+
+        return c1, c2
