@@ -26,7 +26,27 @@ class Grille:
             
         self.detecte_mots(filePath)
         self.defContraintes()
-    
+        
+            
+#        print self.mots_horizontaux
+#        print self.mots_verticaux
+        
+#    def readFromFile(self, filePath=None):  
+#        fichier = open(filePath, encoding="ISO-8859-1")
+#        self.taille = eval(fichier.readline())
+#        mot = fichier.readline()   
+#        while mot not in '\r\n':
+#            mot = mot.split(" ")    
+##            print(mot)
+#            self.mots_horizontaux += [Mot(str(mot[0]), eval(mot[1]))]
+#            mot = fichier.readline()
+#        
+#        while mot not in '\r\n':
+#            mot = mot.split(" ")
+#            self.mots_verticaux += [Mot(str(mot[0]), eval(mot[1]))]
+#            mot = fichier.readline()
+#        fichier.close
+            
         
     def detecte_mots(self, filePath):
         
@@ -137,6 +157,8 @@ class Grille:
             
             print mot.xStart, mot.yStart
             print mot.contrainteListe
+           # print mot.egalContrainteListe
+            #print mot.difContraintesListe
             print
                 
                     
