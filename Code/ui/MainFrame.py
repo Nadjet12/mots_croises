@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from Code.Grille import Grille
+from Code.ui.MotsFrame import MotsFrame
 from GrilleFrame import GrilleFrame
 
 try:
@@ -33,7 +34,7 @@ class MainFrame(Frame):
         self.options['parent'] = root
 
         self.grille = grille
-        self.frameMot = Frame(self, width=100, height=100, bg="yellow")
+        self.frameMot = MotsFrame(self)
         self.frameGrille = GrilleFrame(self.frameMot, grille=self.grille, master=self)
 
         self.frameGrille.grid(row=0, column=0, sticky=N+E+S+W)
@@ -91,7 +92,8 @@ class MainFrame(Frame):
     def file_chooser(self):
         filename = askopenfilename(**self.options)
         self.grille = Grille(filename)
-        self.frameGrille.set_Grille(self.grille)
+        listes = self.frameGrille.set_Grille(self.grille)
+        self.frameMot.set_Mots(listes)
         print(filename)
 
     def genere_Grille(self):

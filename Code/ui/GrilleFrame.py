@@ -23,7 +23,7 @@ class GrilleFrame(Frame):
         self.motFrame = motFrame
         self.buttonsFrame =Frame(self, width=100, height=100)
 
-        self.playButton = Button(self.buttonsFrame, text="Play", command=None)
+        self.playButton = Button(self.buttonsFrame, text="Play", command=self.printt)
         self.playButton.grid(row=0, column=0, sticky=W)
 
         self.stepButton = Button(self.buttonsFrame, text="Step by Step", command=None)
@@ -37,6 +37,13 @@ class GrilleFrame(Frame):
         self.gframe.grid(row=1, column=0, sticky=N+E+S+W)
         self.var = 'f'
 
+    def printt(self):
+        print "MOT VERT"
+        for mot in self.motVert:
+            print mot.mot
+        print "MOT HORI"
+        for mot in self.motHori:
+            print mot.mot
 
 
 
@@ -58,8 +65,8 @@ class GrilleFrame(Frame):
                 for j in range(grille.taille[0])]
 
 
-        self.motVert = [UiMot(mot, self.gframe, self.customFont) for mot in self.grille.mots_verticaux]
-        self.motHori = [UiMot(mot, self.gframe, self.customFont) for mot in self.grille.mots_horizontaux]
+        self.motVert = [UiMot(self.grille.mots_verticaux[mot], self.gframe, self.customFont) for mot in range(len(self.grille.mots_verticaux))]
+        self.motHori = [UiMot(self.grille.mots_horizontaux[mot], self.gframe, self.customFont) for mot in range(len(self.grille.mots_horizontaux))]
         #
         # TODO: Attention les lettres qui sont dans deux mot !!!
         # la ne sont que dans hori !!!
@@ -71,6 +78,12 @@ class GrilleFrame(Frame):
         for mot in self.motHori:
             for i in range(mot.taille):
                 self.grille2[mot.xStart][mot.yStart+i] = mot.caseG[i]
+
+        for mot in self.motVert:
+            for mot2 in self.motHori:
+                c1, c2 = mot.mot.get_Contrainte(mot2.mot)
+                if c1 and c2:
+                    mot.caseG[c1[1]] = mot2.caseG[c2[1]]
 
 
         for line in range(len(self.grille2)):
@@ -86,3 +99,5 @@ class GrilleFrame(Frame):
                 mot.update()
 
         # TODO : afficher les mots sur la droite
+
+        return self.motVert, self.motHori
