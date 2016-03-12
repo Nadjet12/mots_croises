@@ -39,10 +39,8 @@ canvas.pack(side="left")
         line = 0
         col = 0
         max = 0
-        print listes
         for l in listes:
             for l2 in l:
-                print(l2)
                 for case in l2.caseD:
                     case.grid(row=line, column=col, ipady=10)
                     col += 1

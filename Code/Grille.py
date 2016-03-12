@@ -26,7 +26,8 @@ class Grille:
             
         self.detecte_mots(filePath)
         self.defContraintes()
-        
+        self.initDomaine()
+
             
 #        print self.mots_horizontaux
 #        print self.mots_verticaux
@@ -155,11 +156,17 @@ class Grille:
                     mot.ajoute_contrainte(mot2, mot2.yStart - mot.yStart)
                     mot2.ajoute_contrainte(mot, mot.xStart - mot2.xStart)
             
-            print mot.xStart, mot.yStart
+            print mot
             print mot.contrainteListe
            # print mot.egalContrainteListe
             #print mot.difContraintesListe
             print
+
+        for mot in self.mots_verticaux:
+            for mot2 in self.mots_verticaux:
+                if mot != mot2 and mot.taille == mot2.taille:
+                    mot.contrainteListe += [(mot2,-1)]
+                    mot2.contrainteListe += [(mot,-1)]
                 
                     
                 
@@ -174,7 +181,18 @@ class Grille:
             for mot2 in m.contrainteListe:
                 liste += [(m,mot2[0])]
         return liste
-            
+
+    def updateDico(self, dico):
+        self.dico = Dico(dico)
+        self.initDomaine()
+
+    def initDomaine(self):
+        for m in self.mots_horizontaux:
+            m.initDomaine(self.dico)
+        for m in self.mots_verticaux:
+            m.initDomaine(self.dico)
+
+
 t = (20,20)
 #g = Grille(taille=t,alea=True)
 

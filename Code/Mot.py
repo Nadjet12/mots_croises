@@ -22,10 +22,7 @@ class Mot:
     def set_lettre(self, i, c):
         s = list(self.lettres)
         print str(i) + " " + c
-        try:
-            s[i] = c
-        except IndexError:
-            print "Mot : index error: " + str(i) + " " + str(self)
+        s[i] = c
         self.lettres = "".join(s)
         for c1,c2 in self.contrainteListe:
             if c2 is i:
@@ -34,7 +31,6 @@ class Mot:
     def update(self, mot, c):
         for c1,c2 in self.contrainteListe:
             if c1 is mot:
-                print 'hh :' + str(self)
                 s = list(self.lettres)
                 s[c2] = c
                 self.lettres = "".join(s)
@@ -70,4 +66,4 @@ class Mot:
         m = self.lettres.replace(' ', '.')
         d = dico.get_New_Domaine(m)
         for i in d:
-            self.domaine.add(str(i))
+            self.domaine.add(str(i.encode('utf-8')))

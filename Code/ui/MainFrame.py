@@ -1,10 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+<<<<<<< HEAD
 try:
     from Code import Algos
 except ImportError:
     import sys
     sys.path.append('./Code/Algos') 
+=======
+from Code import Algos
+from Code.ui.TraceFrame import TraceFrame
+>>>>>>> origin/master
 
 try:
     from Code.Grille import Grille
@@ -27,15 +32,6 @@ except ImportError:
 
 import os
 
-grille = [['.', '.', '.', '.', None, '.', '.', '.', '.'],
-          ['.', None, '.', None, None, None, '.', None, '.'],
-          ['.', '.', '.', '.', None, '.', '.', '.', '.'],
-          [None, '.', None, '.', '.', '.', None, '.', None],
-          ['.', '.', '.', '.', None, '.', '.', '.', '.'],
-          [None, '.', None, '.', '.', '.', None, '.', None],
-          ['.', '.', '.', '.', None, '.', '.', '.', '.'],
-          ['.', None, '.', None, None, None, '.', None, '.'],
-          ['.', '.', '.', '.', None, '.', '.', '.', '.']]
 
 class MainFrame(Frame):
 
@@ -48,10 +44,14 @@ class MainFrame(Frame):
         self.options['initialfile'] = 'ma_grille.mc'
         self.options['parent'] = root
 
-        self.grille = grille
-        self.frameMot = MotsFrame(self, grille=None)
-        self.frametrace =MotsFrame(self, grille=None)
-        self.frameGrille = GrilleFrame(self.frameMot, self.frametrace, grille=self.grille, master=self)
+        self.grille = None
+
+
+
+
+
+        self.frametrace =TraceFrame(self, grille=None)
+        self.frameGrille = GrilleFrame(self.frametrace, grille=self.grille, master=self)
 
         self.frameGrille.grid(row=0, column=0, sticky=N+E+S+W)
 
@@ -80,13 +80,16 @@ class MainFrame(Frame):
                                  command=lambda arg0="Algo3": self.test(arg0))
         self.radio_algo.set(1)
 
-        self.radio_dico = StringVar()
+        self.radio_dico = IntVar()
         self.listDico = []
+        self.dliste = []
         for dirname, dirnames, filenames in os.walk('../mots'):
             # print path to all filenames.
             for filename in filenames:
+                self.dliste += ["".join(['../mots/', filename])]
                 filename = filename[:-4]
                 print(filename)
+
                 self.listDico += [filename]
 
         i = 1
@@ -103,19 +106,21 @@ class MainFrame(Frame):
 
 
     def test(self, arg0):
+        print "update dico :" + str(self.dliste[self.radio_dico.get()-1])
+        if self.grille:
+            self.grille.updateDico(self.dliste[self.radio_dico.get()-1])
 
         print arg0
 
     def file_chooser(self):
         filename = askopenfilename(**self.options)
-        self.grille = Grille(filename)
+        self.grille = Grille(filename, dictionnaire=self.dliste[self.radio_dico.get()-1])
         listes = self.frameGrille.set_Grille(self.grille)
-        self.frameMot.set_Mots(listes)
+
 
     def genere_Grille(self):
-        self.grille =  Grille(taille=(10,10),alea=True)
+        self.grille =  Grille(taille=(10,10),alea=True, dictionnaire=self.dliste[self.radio_dico.get()-1])
         listes = self.frameGrille.set_Grille(self.grille)
-        self.frameMot.set_Mots(listes)
 
     def file_saver(self):
         filename = asksaveasfilename(**self.options)

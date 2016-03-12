@@ -3,11 +3,16 @@
 import tkFont
 
 from Case import Case
+<<<<<<< HEAD
 try:
     from Code import Algos
 except ImportError:
     import sys
     sys.path.append('./Code/Algos') 
+=======
+from Code import Algos
+from Code.ui.MotsFrame import MotsFrame
+>>>>>>> origin/master
 
 try:
     from Code.ui.UiMot import UiMot
@@ -23,7 +28,7 @@ except ImportError:
 
 class GrilleFrame(Frame):
 
-    def __init__(self, motFrame, traceFrame, grille=None, master=None):
+    def __init__(self, traceFrame, grille=None, master=None):
 
         Frame.__init__(self, master)
         self.customFont = tkFont.Font(family="Helvetica", size=7)
@@ -32,9 +37,19 @@ class GrilleFrame(Frame):
         self.showtr= IntVar()
         self.showtr.set(0)
         #self.gframe = Frame(self, width=100, height=100, bg="red")
+        self.vsb = Scrollbar(self, orient=VERTICAL)
+        self.vsb.grid(row=0, column=2,rowspan=10,  sticky=N+S)
+        self.c = Canvas(self,yscrollcommand=self.vsb.set)
+        self.vsb.config(command=self.c.yview)
         self.gframe = Frame(self)
-        self.motFrame = motFrame
+        self.motFrame = MotsFrame(self.c, grille=None)
+        self.motFrame.pack()
         self.traceFrame = traceFrame
+
+
+
+
+
         self.buttonsFrame =Frame(self, width=100, height=100)
 
         self.playButton = Button(self.buttonsFrame, text="Play", command=self.printt)
@@ -57,13 +72,8 @@ class GrilleFrame(Frame):
 
     def printt(self):
         print "AVANT"
-        for m in self.motHori:
-            m.mot.initDomaine(self.grille.dico)
-            m.printD()
-        for m in self.motVert:
-            m.mot.initDomaine(self.grille.dico)
-            m.printD()
-        Algos.ac3(self.grille)
+
+        Algos.ac3(self.grille, self.traceFrame)
         print "apres"
         for m in self.motHori:
             m.update()
@@ -86,9 +96,9 @@ class GrilleFrame(Frame):
 
     def toggle_Advance(self):
         if self.showadv.get():
-            self.motFrame.grid(row=0, column=1, rowspan=3, sticky=N+E+S+W)
+            self.c.grid(row=0, column=1,rowspan=100, sticky=N+E+S+W)
         else:
-            self.motFrame.grid_forget()
+            self.c.grid_forget()
 
     def toggle_Trace(self):
         if self.showtr.get():
@@ -98,6 +108,7 @@ class GrilleFrame(Frame):
 
 
     def set_Grille(self, grille):
+
         self.grille = grille
 
         self.grille2 = [
@@ -120,7 +131,6 @@ class GrilleFrame(Frame):
             for mot2 in self.motHori:
                 c1, c2 = mot.mot.get_Contrainte(mot2.mot)
                 if c1 and c2:
-                    print "hello"
                     mot.caseG[c1[1]].add_ui(mot2.caseG[c2[1]].uis)
                     mot2.caseG[c2[1]].add_ui(mot.caseG[c1[1]].uis)
                     mot.caseG[c1[1]] = mot2.caseG[c2[1]]
@@ -142,5 +152,5 @@ class GrilleFrame(Frame):
             mot.update()
 
         # TODO : afficher les mots sur la droite
-
+        self.motFrame.set_Mots([self.motVert, self.motHori ])
         return [self.motVert, self.motHori ]
