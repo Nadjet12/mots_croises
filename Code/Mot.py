@@ -21,7 +21,11 @@ class Mot:
 
     def set_lettre(self, i, c):
         s = list(self.lettres)
-        s[i] = c
+        print str(i) + " " + c
+        try:
+            s[i] = c
+        except IndexError:
+            print "Mot : index error: " + str(i) + " " + str(self)
         self.lettres = "".join(s)
         for c1,c2 in self.contrainteListe:
             if c2 is i:
@@ -30,16 +34,21 @@ class Mot:
     def update(self, mot, c):
         for c1,c2 in self.contrainteListe:
             if c1 is mot:
+                print 'hh :' + str(self)
                 s = list(self.lettres)
                 s[c2] = c
                 self.lettres = "".join(s)
 
 
     def remove(self, mot):
-        self.domaine.remove(mot)
+        for m in mot:
+            self.domaine.remove(m)
+        if len(self.domaine) == 1:
+            for d in self.domaine:
+                self.lettres = d
         
     def __repr__(self):
-        return str(self.xStart) + "," + str(self.yStart) + ":" + self.lettres
+        return str(self.xStart) + "," + str(self.yStart) + ":" + self.lettres + ":" + str(self.taille)
 
     def get_Contrainte(self, mot):
         c1 = None
@@ -52,7 +61,13 @@ class Mot:
             return c1, c2
 
         for c in mot.contrainteListe:
-            if c[0] is mot and not c[1] is -1:
+            if c[0] is self and not c[1] is -1:
                 c2 = c
 
         return c1, c2
+
+    def initDomaine(self, dico):
+        m = self.lettres.replace(' ', '.')
+        d = dico.get_New_Domaine(m)
+        for i in d:
+            self.domaine.add(str(i))

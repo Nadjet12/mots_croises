@@ -13,7 +13,7 @@ import numpy
 
 class Grille:
     
-    def __init__(self, filePath=None, taille=(20,10), dictionnaire="./mots/135000-mots-fr.txt", alea=False):
+    def __init__(self, filePath=None, taille=(20,10), dictionnaire="../mots/td3.txt", alea=False):
        
         self.mots_verticaux = []
         self.mots_horizontaux = []
@@ -167,11 +167,11 @@ class Grille:
     def getContraintes(self):
         liste = []
         for m in self.mots_verticaux:
-            for mot2 in m.egalContrainteListe:
+            for mot2 in m.contrainteListe:
                 liste += [(m,mot2[0])]
         
         for m in self.mots_horizontaux:
-            for mot2 in m.egalContrainteListe:
+            for mot2 in m.contrainteListe:
                 liste += [(m,mot2[0])]
         return liste
             
@@ -179,6 +179,6 @@ t = (20,20)
 #g = Grille(taille=t,alea=True)
 
 # 
-g = Grille(filePath="./grillesVides/sortie.mc")
+g = Grille(filePath="../grillesVides/sortie.mc")
 #print(g.taille)
 #print(type(g.taille[0]))

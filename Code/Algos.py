@@ -22,11 +22,11 @@ def ac3(grille):
     
     contrainte_Liste = grille.getContraintes()
     file_L = contrainte_Liste[::]
-    while file_L is not []:
+    while file_L:
         (x,y) = file_L[0] 
         file_L = file_L[1:]
         if revise(x,y):
-            if x.domaine is set():
+            if not x.domaine :
                 return False
             for (i,j) in contrainte_Liste:
                 if j == x:
@@ -47,6 +47,7 @@ def revise(x,y):
     retourner modification
     """    
     modif = False
+    tmp = set()
     for mot in x.domaine:
         consistant = False
         for mot2 in y.domaine:
@@ -54,38 +55,46 @@ def revise(x,y):
                 consistant = True
                 break
         if not consistant:
-            x.remove(mot)
+            print 'mot :' + str(mot) + " supprimer du domaine de " + str(x)+ " a cause de " + str(y)
+            tmp.add(mot)
             modif = True
+
+    x.remove(tmp)
     return modif
             
                     
         
 def consistance((x, mot), (y, mot2)):
-
-    if mot is mot2:
+    # probleme consistance egalité ex: 1 (OBSADA TANTAL ZAMACH) 2 (OBSADA TANTAL ZAMACH)
+    if mot == mot2:
+        #print str(x)+" "+str(mot) + " egal " + str(mot2)
+        #return True
+        #pass
         return False
 
     crossPosX = [cont[1] for cont in x.contrainteListe if cont[0] is y]
-    for pos in crossPosX:
-        if pos == -1:
-            crossPosX.remove(pos)
-    if crossPosX is []:
+
+    if(len(crossPosX) > 0):
+        crossPosX = [item for item in crossPosX if item != -1]
+    if not crossPosX:
         return True
 
     elif len(crossPosX) > 1:
         return False
 
     crossPosY = [cont[1] for cont in y.contrainteListe if cont[0] is x]
-    for pos in crossPosY:
-        if pos == -1:
-            crossPosY.remove(pos)
-    if crossPosY is []:
+
+    if(len(crossPosY) > 0):
+        crossPosY = [item for item in crossPosY if item != -1]
+    print crossPosY
+    if not crossPosY:
         return True
 
     if len(crossPosY) > 1:
         return False
-        
-    return mot[crossPosX] is mot2[crossPosY]
+
+    #print str(x)+" "+str(mot) + " end " + str(mot2) + " " + str(y) + " " + str(mot[crossPosX[0]] is mot2[crossPosY[0]])
+    return mot[crossPosX[0]] is mot2[crossPosY[0]]
     
     
     

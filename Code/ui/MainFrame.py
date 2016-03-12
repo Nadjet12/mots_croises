@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from Code import Algos
 
 try:
     from Code.Grille import Grille
@@ -44,8 +45,9 @@ class MainFrame(Frame):
         self.options['parent'] = root
 
         self.grille = grille
-        self.frameMot = MotsFrame(self)
-        self.frameGrille = GrilleFrame(self.frameMot, grille=self.grille, master=self)
+        self.frameMot = MotsFrame(self, grille=None)
+        self.frametrace =MotsFrame(self, grille=None)
+        self.frameGrille = GrilleFrame(self.frameMot, self.frametrace, grille=self.grille, master=self)
 
         self.frameGrille.grid(row=0, column=0, sticky=N+E+S+W)
 
@@ -67,7 +69,7 @@ class MainFrame(Frame):
 
         self.radio_algo = StringVar()
         algomenu.add_radiobutton(label="AC3", variable=self.radio_algo, value=1,
-                                 command=lambda arg0="Algo1": self.test(arg0))
+                                 command=lambda arg0="AC3": self.test(arg0))
         algomenu.add_radiobutton(label="Algo2", variable=self.radio_algo, value=2,
                                  command=lambda arg0="Algo2": self.test(arg0))
         algomenu.add_radiobutton(label="Algo3", variable=self.radio_algo, value=3,
@@ -95,8 +97,9 @@ class MainFrame(Frame):
 
         master.config(menu=menubar)
 
-    @staticmethod
-    def test(arg0):
+
+    def test(self, arg0):
+
         print arg0
 
     def file_chooser(self):
@@ -104,15 +107,14 @@ class MainFrame(Frame):
         self.grille = Grille(filename)
         listes = self.frameGrille.set_Grille(self.grille)
         self.frameMot.set_Mots(listes)
-        print(filename)
 
     def genere_Grille(self):
         self.grille =  Grille(taille=(10,10),alea=True)
-        self.frameGrille.set_Grille(self.grille)
+        listes = self.frameGrille.set_Grille(self.grille)
+        self.frameMot.set_Mots(listes)
 
     def file_saver(self):
         filename = asksaveasfilename(**self.options)
-        print(filename)
 
 
 if __name__ == "__main__":
