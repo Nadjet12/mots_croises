@@ -4,12 +4,13 @@ Created on Sat Mar 05 12:16:39 2016
 
 @author: Nadjet BOURDACHE
 """
+import time
 
 from Grille import Grille
 import Mot
 
 
-def ac3(grille):
+def ac3(grille, traceframe):
     """
     L ← {(xi, xj), i 6= j liées par une contrainte}
     tant que L 6= ∅
@@ -19,23 +20,29 @@ def ac3(grille):
         fsi
     ftq
     """
-    
+    start_time = time.time()
+    traceframe.add_To_Trace("Debut de l'AC3\n", 'in')
     contrainte_Liste = grille.getContraintes()
     file_L = contrainte_Liste[::]
     while file_L:
         (x,y) = file_L[0] 
         file_L = file_L[1:]
-        if revise(x,y):
+        if revise(x,y, traceframe):
             if not x.domaine :
                 return False
             for (i,j) in contrainte_Liste:
                 if j == x:
                     file_L += [(i,j)]
+
+    elapsed_time = time.time() - start_time
+    traceframe.add_To_Trace("Fin de l'AC3", "out")
+    traceframe.add_To_Trace(" Temps :" + str(elapsed_time) + "\n", "time")
+
     return True
         
    
 
-def revise(x,y):
+def revise(x,y, traceframe):
     """
     modification ← false
     faire pour chaque v ∈ Di
@@ -45,7 +52,10 @@ def revise(x,y):
             fait
     fait
     retourner modification
-    """    
+    """
+    traceframe.add_To_Trace("Debut revise de :" + str(x.lettres) + " et " + str(y.lettres) + "\n", "in")
+    start_time = time.time()
+
     modif = False
     tmp = set()
     for mot in x.domaine:
@@ -55,11 +65,18 @@ def revise(x,y):
                 consistant = True
                 break
         if not consistant:
-            print 'mot :' + str(mot) + " supprimer du domaine de " + str(x)+ " a cause de " + str(y)
+            #print 'mot :' + str(mot) + " supprimer du domaine de " + str(x)+ " a cause de " + str(y)
             tmp.add(mot)
             modif = True
 
     x.remove(tmp)
+    s = [i+" " for i in tmp]
+    s = "".join(s)
+    elapsed_time = time.time() - start_time
+    traceframe.add_To_Trace("Les mots " + str(s) + " sont supprimés de " + str(x.lettres) + "\n", "curr")
+    traceframe.add_To_Trace("Fin revise de :" + str(x.lettres) + " et " + str(y.lettres), "out")
+
+    traceframe.add_To_Trace(" Temps :" + str(elapsed_time) + "\n", "time")
     return modif
             
                     
@@ -86,7 +103,6 @@ def consistance((x, mot), (y, mot2)):
 
     if(len(crossPosY) > 0):
         crossPosY = [item for item in crossPosY if item != -1]
-    print crossPosY
     if not crossPosY:
         return True
 

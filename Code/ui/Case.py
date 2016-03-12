@@ -11,20 +11,14 @@ class Case(Entry):
             self.uis += [(ui, kwargs.pop('pos', None), kwargs.pop('m', None))]
         Entry.__init__(self, *args, **kwargs)
         sv = StringVar()
-        if len(self.uis) > 0:
-            print self.uis
         sv.trace("w", lambda name, index, mode, sv=sv: self.char_callback(sv))
         self['textvariable'] = sv
 
     def add_ui(self, ui):
-        print self.uis
-        print ui
         self.uis += ui
-        print len(self.uis)
 
     def char_callback(self,sv):
         c = sv.get()
-        print 'call .' + str(sv.get())+"."
         if c is'':
             for u in self.uis:
                 u[0].update()
