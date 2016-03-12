@@ -13,7 +13,7 @@ import numpy
 
 class Grille:
     
-    def __init__(self, filePath=None, taille=(20,10), dictionnaire="../mots/td3.txt", alea=False):
+    def __init__(self, filePath=None, taille=(20,10), dictionnaire="./mots/td3.txt", alea=False):
        
         self.mots_verticaux = []
         self.mots_horizontaux = []
@@ -128,7 +128,7 @@ class Grille:
                 
                 
     def fichierSortie(self, tab):
-        path = "../grillesVides/sortie.mc"
+        path = "./grillesVides/sortie.mc"
         fichier = open(path, "w")
         fichier.write(str(self.taille) + "\n")
         for i in range(self.taille[0]):
@@ -179,6 +179,6 @@ t = (20,20)
 #g = Grille(taille=t,alea=True)
 
 # 
-g = Grille(filePath="../grillesVides/sortie.mc")
+g = Grille(filePath="./grillesVides/sortie.mc")
 #print(g.taille)
 #print(type(g.taille[0]))

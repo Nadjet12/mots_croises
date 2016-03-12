@@ -3,14 +3,17 @@
 import tkFont
 
 from Case import Case
-from Code import Algos
+try:
+    from Code import Algos
+except ImportError:
+    import sys
+    sys.path.append('./Code/Algos') 
 
 try:
     from Code.ui.UiMot import UiMot
 except ImportError:
     import sys
     sys.path.append('./Code/ui/UiMot')
-    from Code.ui.UiMot import UiMot
 
 try:
     from tkinter import *

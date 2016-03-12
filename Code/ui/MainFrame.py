@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from Code import Algos
+try:
+    from Code import Algos
+except ImportError:
+    import sys
+    sys.path.append('./Code/Algos') 
 
 try:
     from Code.Grille import Grille

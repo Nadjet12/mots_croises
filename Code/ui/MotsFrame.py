@@ -3,6 +3,7 @@
 import tkFont
 
 from Case import Case
+
 try:
     from Code.ui.UiMot import UiMot
 except ImportError:
