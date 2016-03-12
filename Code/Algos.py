@@ -31,7 +31,7 @@ def ac3(grille, traceframe):
             if not x.domaine :
                 return False
             for (i,j) in contrainte_Liste:
-                if j == x:
+                if j == x or i==x:
                     file_L += [(i,j)]
 
     elapsed_time = time.time() - start_time
@@ -61,11 +61,11 @@ def revise(x,y, traceframe):
     for mot in x.domaine:
         consistant = False
         for mot2 in y.domaine:
-            if consistance((x,mot),(y,mot2)):
+            if consistance((x,mot),(y,mot2), traceframe):
                 consistant = True
                 break
         if not consistant:
-            #print 'mot :' + str(mot) + " supprimer du domaine de " + str(x)+ " a cause de " + str(y)
+            traceframe.add_To_Trace('mot :' + str(mot) + " supprimer du domaine de " + str(x)+ " a cause de " + str(y)+ "\n", "curr")
             tmp.add(mot)
             modif = True
 
@@ -81,22 +81,26 @@ def revise(x,y, traceframe):
             
                     
         
-def consistance((x, mot), (y, mot2)):
-    # probleme consistance egalité ex: 1 (OBSADA TANTAL ZAMACH) 2 (OBSADA TANTAL ZAMACH)
+def consistance((x, mot), (y, mot2), traceframe):
+
     if mot == mot2:
-        #print str(x)+" "+str(mot) + " egal " + str(mot2)
-        #return True
-        #pass
-        return False
+        #print str(x)+" "+str(mot) + " egal " + str(mot2)+ " " + str(y)
+
+        if len(y.domaine) == 1:
+            traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant ==\n", "err")
+            return False
+
 
     crossPosX = [cont[1] for cont in x.contrainteListe if cont[0] is y]
 
     if(len(crossPosX) > 0):
         crossPosX = [item for item in crossPosX if item != -1]
     if not crossPosX:
+        traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Consistant \n", "curr")
         return True
 
     elif len(crossPosX) > 1:
+        traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant ???\n", "err")
         return False
 
     crossPosY = [cont[1] for cont in y.contrainteListe if cont[0] is x]
@@ -104,12 +108,19 @@ def consistance((x, mot), (y, mot2)):
     if(len(crossPosY) > 0):
         crossPosY = [item for item in crossPosY if item != -1]
     if not crossPosY:
+        traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Consistant \n", "curr")
         return True
 
     if len(crossPosY) > 1:
+        traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant ???\n", "err")
         return False
 
     #print str(x)+" "+str(mot) + " end " + str(mot2) + " " + str(y) + " " + str(mot[crossPosX[0]] is mot2[crossPosY[0]])
+    b = mot[crossPosX[0]] is mot2[crossPosY[0]]
+    if b:
+        traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Consistant \n", "curr")
+    else:
+        traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant Lettre\n", "err")
     return mot[crossPosX[0]] is mot2[crossPosY[0]]
     
     

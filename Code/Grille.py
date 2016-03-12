@@ -156,11 +156,17 @@ class Grille:
                     mot.ajoute_contrainte(mot2, mot2.yStart - mot.yStart)
                     mot2.ajoute_contrainte(mot, mot.xStart - mot2.xStart)
             
-            print mot.xStart, mot.yStart
+            print mot
             print mot.contrainteListe
            # print mot.egalContrainteListe
             #print mot.difContraintesListe
             print
+
+        for mot in self.mots_verticaux:
+            for mot2 in self.mots_verticaux:
+                if mot != mot2 and mot.taille == mot2.taille:
+                    mot.contrainteListe += [(mot2,-1)]
+                    mot2.contrainteListe += [(mot,-1)]
                 
                     
                 

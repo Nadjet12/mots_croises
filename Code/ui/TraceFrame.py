@@ -18,11 +18,13 @@ class TraceFrame(Frame):
         Frame.__init__(self, *args, **kwargs)
         self.t = ScrolledText(self, wrap="word")
         self.t.configure(state="disabled")
+        self.t.configure(background="light cyan")
         self.t.configure(height = 5)
-        self.t.tag_config("in", background="yellow", foreground="red")
-        self.t.tag_config("time", foreground="green")
+        self.t.tag_config("in", foreground="forest green")
+        self.t.tag_config("err", foreground="orange red")
+        self.t.tag_config("time", foreground="sea green")
         self.t.tag_config("curr", foreground="black")
-        self.t.tag_config("out", foreground="blue")
+        self.t.tag_config("out", foreground="firebrick")
         self.t.pack(side="top", fill="both", expand=True)
 
 
