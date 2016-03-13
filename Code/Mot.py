@@ -13,11 +13,57 @@ class Mot:
         self.xStart = coord[0]
         self.yStart = coord[1]
         self.domaine = set()
-        self.egalContrainteListe = []
+        self.contrainteListe = []
         
         
     def ajoute_contrainte(self, obj, i):
-        self.egalContrainteListe += [(obj, i)]
+        self.contrainteListe += [(obj, i)]
+
+    def set_lettre(self, i, c):
+        s = list(self.lettres)
+        print str(i) + " " + c
+        s[i] = c
+        self.lettres = "".join(s)
+        for c1,c2 in self.contrainteListe:
+            if c2 is i:
+                c1.update(self, c)
+
+    def update(self, mot, c):
+        for c1,c2 in self.contrainteListe:
+            if c1 is mot:
+                s = list(self.lettres)
+                s[c2] = c
+                self.lettres = "".join(s)
+
+
+    def remove(self, mot):
+        for m in mot:
+            self.domaine.remove(m)
+        if len(self.domaine) == 1:
+            for d in self.domaine:
+                self.lettres = d
         
     def __repr__(self):
-        return self.lettres + str(type(self.lettres))
+        return str(self.xStart) + "," + str(self.yStart) + ":" + self.lettres + ":" + str(self.taille)
+
+    def get_Contrainte(self, mot):
+        c1 = None
+        c2 = None
+
+        for c in self.contrainteListe:
+            if c[0] is mot and not c[1] is -1:
+                c1 = c
+        if not c1:
+            return c1, c2
+
+        for c in mot.contrainteListe:
+            if c[0] is self and not c[1] is -1:
+                c2 = c
+
+        return c1, c2
+
+    def initDomaine(self, dico):
+        m = self.lettres.replace(' ', '.')
+        d = dico.get_New_Domaine(m)
+        for i in d:
+            self.domaine.add(str(i.encode('utf-8')))

@@ -1,6 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from Code.ui.GrilleFrame import GrilleFrame
+try:
+    from Code import Algos
+except ImportError:
+    import sys
+    sys.path.append('./Code/Algos')
+from Code import Algos
+from Code.ui.TraceFrame import TraceFrame
+
+try:
+    from Code.Grille import Grille
+except ImportError:
+    import sys
+    sys.path.append('./Code/Grille')
+try:
+    from Code.ui.MotsFrame import MotsFrame
+except ImportError:
+    import sys
+    sys.path.append('./Code/ui/MotsFrame')
+    
+from GrilleFrame import GrilleFrame
 
 try:
     from tkinter import *
@@ -10,15 +29,6 @@ except ImportError:
 
 import os
 
-grille = [['.', '.', '.', '.', None, '.', '.', '.', '.'],
-          ['.', None, '.', None, None, None, '.', None, '.'],
-          ['.', '.', '.', '.', None, '.', '.', '.', '.'],
-          [None, '.', None, '.', '.', '.', None, '.', None],
-          ['.', '.', '.', '.', None, '.', '.', '.', '.'],
-          [None, '.', None, '.', '.', '.', None, '.', None],
-          ['.', '.', '.', '.', None, '.', '.', '.', '.'],
-          ['.', None, '.', None, None, None, '.', None, '.'],
-          ['.', '.', '.', '.', None, '.', '.', '.', '.']]
 
 class MainFrame(Frame):
 
@@ -31,9 +41,14 @@ class MainFrame(Frame):
         self.options['initialfile'] = 'ma_grille.mc'
         self.options['parent'] = root
 
-        self.grille = grille
-        self.frameMot = Frame(self, width=100, height=100, bg="yellow")
-        self.frameGrille = GrilleFrame(self.frameMot, grille=self.grille, master=self)
+        self.grille = None
+
+
+
+
+
+        self.frametrace =TraceFrame(self, grille=None)
+        self.frameGrille = GrilleFrame(self.frametrace, grille=self.grille, master=self)
 
         self.frameGrille.grid(row=0, column=0, sticky=N+E+S+W)
 
@@ -46,29 +61,32 @@ class MainFrame(Frame):
 
         newGrilleMenu = Menu(menubar, tearoff=0)
         newGrilleMenu.add_command(label="Ouvrir Grille", command=self.file_chooser)
-        newGrilleMenu.add_command(label="Saver Grille", command=self.file_saver)
-        newGrilleMenu.add_command(label="Générer Grille", command=None)
+        newGrilleMenu.add_command(label="Sauver Grille", command=self.file_saver)
+        newGrilleMenu.add_command(label="Générer Grille", command=self.genere_Grille)
 
         filemenu.add_cascade(label="Nouvelle grille", menu=newGrilleMenu)
         filemenu.add_separator()
         filemenu.add_command(label="Quitter", command=master.quit)
 
         self.radio_algo = StringVar()
-        algomenu.add_radiobutton(label="Algo1", variable=self.radio_algo, value=1,
-                                 command=lambda arg0="Algo1": self.test(arg0))
+        algomenu.add_radiobutton(label="AC3", variable=self.radio_algo, value=1,
+                                 command=lambda arg0="AC3": self.test(arg0))
         algomenu.add_radiobutton(label="Algo2", variable=self.radio_algo, value=2,
                                  command=lambda arg0="Algo2": self.test(arg0))
         algomenu.add_radiobutton(label="Algo3", variable=self.radio_algo, value=3,
                                  command=lambda arg0="Algo3": self.test(arg0))
         self.radio_algo.set(1)
 
-        self.radio_dico = StringVar()
+        self.radio_dico = IntVar()
         self.listDico = []
+        self.dliste = []
         for dirname, dirnames, filenames in os.walk('../mots'):
             # print path to all filenames.
             for filename in filenames:
+                self.dliste += ["".join(['../mots/', filename])]
                 filename = filename[:-4]
                 print(filename)
+
                 self.listDico += [filename]
 
         i = 1
@@ -83,17 +101,26 @@ class MainFrame(Frame):
 
         master.config(menu=menubar)
 
-    @staticmethod
-    def test(arg0):
+
+    def test(self, arg0):
+        print "update dico :" + str(self.dliste[self.radio_dico.get()-1])
+        if self.grille:
+            self.grille.updateDico(self.dliste[self.radio_dico.get()-1])
+
         print arg0
 
     def file_chooser(self):
         filename = askopenfilename(**self.options)
-        print(filename)
+        self.grille = Grille(filename, dictionnaire=self.dliste[self.radio_dico.get()-1])
+        listes = self.frameGrille.set_Grille(self.grille)
+
+
+    def genere_Grille(self):
+        self.grille =  Grille(taille=(10,10),alea=True, dictionnaire=self.dliste[self.radio_dico.get()-1])
+        listes = self.frameGrille.set_Grille(self.grille)
 
     def file_saver(self):
         filename = asksaveasfilename(**self.options)
-        print(filename)
 
 
 if __name__ == "__main__":
