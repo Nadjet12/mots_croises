@@ -32,3 +32,4 @@ class TraceFrame(Frame):
         self.t.configure(state=NORMAL)
         self.t.insert(INSERT, st, tag)
         self.t.configure(state="disabled")
+        self.update_idletasks()

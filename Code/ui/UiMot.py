@@ -1,3 +1,5 @@
+from idlelib.configDialog import VerticalScrolledFrame
+
 from Code.ui.Case import Case
 import tkFont
 
@@ -41,9 +43,17 @@ class UiMot:
 
     def showDomaine(self):
         s = ""
-        top = Toplevel()
-        top.title("Domaine de " + str(self.mot.lettres))
         for i in self.mot.domaine:
             s+= str(i)+"\n"
-        msg = Message(top, text=s)
-        msg.pack()
+        win    = Toplevel()
+        win.title("Domaine de " + str(self.mot.lettres))
+        frame  = Frame(win)
+        scroll = Scrollbar(frame)
+        text   = Text(frame, yscrollcommand=scroll.set, height=5, width=self.mot.taille+10)
+        # Config
+        text.insert(END, ''.join(s))
+        scroll.config(command=text.yview)
+        # Packing
+        text.pack(side='left', fill='both', expand=1)
+        scroll.pack(side='right', fill='y')
+        frame.pack(fill='both', expand=1)

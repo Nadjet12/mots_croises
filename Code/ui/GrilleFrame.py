@@ -3,16 +3,13 @@
 import tkFont
 
 from Case import Case
-<<<<<<< HEAD
 try:
     from Code import Algos
 except ImportError:
     import sys
-    sys.path.append('./Code/Algos') 
-=======
+    sys.path.append('./Code/Algos')
 from Code import Algos
 from Code.ui.MotsFrame import MotsFrame
->>>>>>> origin/master
 
 try:
     from Code.ui.UiMot import UiMot

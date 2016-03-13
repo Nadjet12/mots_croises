@@ -1,15 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-<<<<<<< HEAD
 try:
     from Code import Algos
 except ImportError:
     import sys
-    sys.path.append('./Code/Algos') 
-=======
+    sys.path.append('./Code/Algos')
 from Code import Algos
 from Code.ui.TraceFrame import TraceFrame
->>>>>>> origin/master
 
 try:
     from Code.Grille import Grille
