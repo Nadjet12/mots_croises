@@ -1,37 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-try:
-    from Code import Algos
-except ImportError:
-    import sys
-    sys.path.append('./Code/Algos')
-
-try:
-    from TraceFrame import TraceFrame
-except ImportError:
-    import sys
-    sys.path.append('./TraceFrame.py')
-    
-try:
-    from Code.Grille import Grille
-except ImportError:
-    import sys
-    sys.path.append('./Code/Grille')
-try:
-    from MotsFrame import MotsFrame
-except ImportError:
-    import sys
-    sys.path.append('./MotsFrame.py')
-    
-from GrilleFrame import GrilleFrame
-
-try:
-    from tkinter import *
-except ImportError:
-    from Tkinter import *
-    from tkFileDialog import askopenfilename, asksaveasfilename
-
 import os
+from Tkinter import *
+from tkFileDialog import askopenfilename, asksaveasfilename
+
+from Grille import Grille
+from ui.GrilleFrame import GrilleFrame
+from ui.TraceFrame import TraceFrame
 
 
 class MainFrame(Frame):
@@ -51,7 +26,7 @@ class MainFrame(Frame):
 
 
 
-        self.frametrace =TraceFrame(self, grille=None)
+        self.frametrace = TraceFrame(self, grille=None)
         self.frameGrille = GrilleFrame(self.frametrace, grille=self.grille, master=self)
 
         self.frameGrille.grid(row=0, column=0, sticky=N+E+S+W)

@@ -1,13 +1,7 @@
-from idlelib.configDialog import VerticalScrolledFrame
+from Tkinter import *
 
-from Code.ui.Case import Case
-import tkFont
+from ui.Case import Case
 
-try:
-    from tkinter import *
-    import tkinter as ttk
-except ImportError:
-    from Tkinter import *
 
 class UiMot:
 

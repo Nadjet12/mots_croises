@@ -124,6 +124,52 @@ def consistance((x, mot), (y, mot2), traceframe):
     return mot[crossPosX[0]] is mot2[crossPosY[0]]
     
     
-    
-    
-    
+
+def check_forward(xk,v,V):
+    """
+    consistant ← true
+    pour chaque xj ∈ V \ {xk } et tant que consistant
+        faire pour chaque v' ∈ Dj
+            si {xk → v, xj → v'} non-consistant
+                alors Dj ← Dj \ {v'}
+            fsi
+        fait
+    si Dj = ∅ alors consistant ← false
+    retourner consistant
+    """
+
+    for xj in V:
+        if not xj == xk:
+            sup = set()
+            for vv in xj.domaine:
+                if not consistance((xk, v), (xj, vv)):
+                    sup.add(vv)
+            xj.remove(sup)
+            if not xj.domaine:
+                return False
+    return True
+
+def forward_checking(V,i):
+    """
+    si V = ∅ alors i est une solution
+    sinon
+        choisir xk ∈ V
+        faire pour tout v ∈ Dk
+            sauvegarde(V \ {xk })
+            si check-forward(xk , v, V) alors
+                forward-checking(V \ {xk }, i ∪ {xk → v})
+            fsi
+            restauration V \ {xk }
+        fait
+    fsi
+    """
+
+    if not V :
+        return i
+
+    xk = V[0]
+    for v in xk.domaine:
+        if check_forward(xk, v, V[1:]):
+            return forward_checking(V, i+[(xk, v)])
+
+    return None

@@ -2,29 +2,12 @@
 # -*- coding: utf-8 -*-
 import threading
 import tkFont
+from Tkinter import *
 
-from Case import Case
-try:
-    from Code import Algos
-except ImportError:
-    import sys
-    sys.path.append('./Code/Algos')
-try:
-    from Code.ui.MotsFrame import MotsFrame
-except ImportError:
-    import sys
-    sys.path.append('./Code/ui/MotsFrame')
-    
-try:
-    from Code.ui.UiMot import UiMot
-except ImportError:
-    import sys
-    sys.path.append('./Code/ui/UiMot')
-
-try:
-    from tkinter import *
-except ImportError:
-    from Tkinter import *
+import Algos
+from ui.Case import Case
+from ui.MotsFrame import MotsFrame
+from ui.UiMot import UiMot
 
 
 class GrilleFrame(Frame):
