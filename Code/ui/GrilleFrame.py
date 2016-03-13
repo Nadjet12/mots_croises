@@ -9,9 +9,12 @@ try:
 except ImportError:
     import sys
     sys.path.append('./Code/Algos')
-from Code import Algos
-from Code.ui.MotsFrame import MotsFrame
-
+try:
+    from Code.ui.MotsFrame import MotsFrame
+except ImportError:
+    import sys
+    sys.path.append('./Code/ui/MotsFrame')
+    
 try:
     from Code.ui.UiMot import UiMot
 except ImportError:

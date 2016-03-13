@@ -5,19 +5,23 @@ try:
 except ImportError:
     import sys
     sys.path.append('./Code/Algos')
-from Code import Algos
-from Code.ui.TraceFrame import TraceFrame
 
+try:
+    from TraceFrame import TraceFrame
+except ImportError:
+    import sys
+    sys.path.append('./TraceFrame.py')
+    
 try:
     from Code.Grille import Grille
 except ImportError:
     import sys
     sys.path.append('./Code/Grille')
 try:
-    from Code.ui.MotsFrame import MotsFrame
+    from MotsFrame import MotsFrame
 except ImportError:
     import sys
-    sys.path.append('./Code/ui/MotsFrame')
+    sys.path.append('./MotsFrame.py')
     
 from GrilleFrame import GrilleFrame
 
