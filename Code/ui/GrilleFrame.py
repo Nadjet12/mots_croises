@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import threading
 import tkFont
 
 from Case import Case
@@ -69,8 +70,8 @@ class GrilleFrame(Frame):
 
     def printt(self):
         print "AVANT"
+        threading.Thread(target=Algos.ac3(self.grille, self.traceFrame)).start()
 
-        Algos.ac3(self.grille, self.traceFrame)
         print "apres"
         for m in self.motHori:
             m.update()
