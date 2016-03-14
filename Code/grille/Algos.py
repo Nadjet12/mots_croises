@@ -21,7 +21,8 @@ def ac3(grille, traceframe):
     ftq
     """
     start_time = time.time()
-    traceframe.add_To_Trace("Debut de l'AC3\n", 'in')
+    if traceframe:
+        traceframe.add_To_Trace("Debut de l'AC3\n", 'in')
     contrainte_Liste = grille.getContraintes()
     file_L = contrainte_Liste[::]
     while file_L:
@@ -35,8 +36,11 @@ def ac3(grille, traceframe):
                     file_L += [(i,j)]
 
     elapsed_time = time.time() - start_time
-    traceframe.add_To_Trace("Fin de l'AC3", "out")
-    traceframe.add_To_Trace(" Temps :" + str(elapsed_time) + "\n", "time")
+    if traceframe:
+        traceframe.add_To_Trace("Fin de l'AC3", "out")
+        traceframe.add_To_Trace(" Temps :" + str(elapsed_time) + "\n", "time")
+    else :
+        print "AC3 Temps :" + str(elapsed_time)
 
     return True
         
@@ -53,7 +57,8 @@ def revise(x,y, traceframe):
     fait
     retourner modification
     """
-    traceframe.add_To_Trace("Debut revise de :" + str(x.lettres) + " et " + str(y.lettres) + "\n", "in")
+    if traceframe:
+        traceframe.add_To_Trace("Debut revise de :" + str(x.lettres) + " et " + str(y.lettres) + "\n", "in")
     start_time = time.time()
 
     modif = False
@@ -65,7 +70,8 @@ def revise(x,y, traceframe):
                 consistant = True
                 break
         if not consistant:
-            traceframe.add_To_Trace('mot :' + str(mot) + " supprimer du domaine de " + str(x)+ " a cause de " + str(y)+ "\n", "curr")
+            if traceframe:
+                traceframe.add_To_Trace('mot :' + str(mot) + " supprimer du domaine de " + str(x)+ " a cause de " + str(y)+ "\n", "curr")
             tmp.add(mot)
             modif = True
 
@@ -73,10 +79,10 @@ def revise(x,y, traceframe):
     s = [i+" " for i in tmp]
     s = "".join(s)
     elapsed_time = time.time() - start_time
-    traceframe.add_To_Trace("Les mots " + str(s) + " sont supprimés de " + str(x.lettres) + "\n", "curr")
-    traceframe.add_To_Trace("Fin revise de :" + str(x.lettres) + " et " + str(y.lettres), "out")
-
-    traceframe.add_To_Trace(" Temps :" + str(elapsed_time) + "\n", "time")
+    if traceframe:
+        traceframe.add_To_Trace("Les mots " + str(s) + " sont supprimés de " + str(x.lettres) + "\n", "curr")
+        traceframe.add_To_Trace("Fin revise de :" + str(x.lettres) + " et " + str(y.lettres), "out")
+        traceframe.add_To_Trace(" Temps :" + str(elapsed_time) + "\n", "time")
     return modif
             
                     
@@ -84,11 +90,10 @@ def revise(x,y, traceframe):
 def consistance((x, mot), (y, mot2), traceframe):
 
     if mot == mot2:
-        #print str(x)+" "+str(mot) + " egal " + str(mot2)+ " " + str(y)
-
-        if len(y.domaine) == 1:
+        if traceframe:
             traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant ==\n", "err")
-            return False
+        return False
+
 
 
     crossPosX = [cont[1] for cont in x.contrainteListe if cont[0] is y]
@@ -96,11 +101,13 @@ def consistance((x, mot), (y, mot2), traceframe):
     if(len(crossPosX) > 0):
         crossPosX = [item for item in crossPosX if item != -1]
     if not crossPosX:
-        traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Consistant \n", "curr")
+        if traceframe:
+            traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Consistant \n", "curr")
         return True
 
     elif len(crossPosX) > 1:
-        traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant ???\n", "err")
+        if traceframe:
+            traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant ???\n", "err")
         return False
 
     crossPosY = [cont[1] for cont in y.contrainteListe if cont[0] is x]
@@ -108,20 +115,24 @@ def consistance((x, mot), (y, mot2), traceframe):
     if(len(crossPosY) > 0):
         crossPosY = [item for item in crossPosY if item != -1]
     if not crossPosY:
-        traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Consistant \n", "curr")
+        if traceframe:
+            traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Consistant \n", "curr")
         return True
 
     if len(crossPosY) > 1:
-        traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant ???\n", "err")
+        if traceframe:
+            traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant ???\n", "err")
         return False
 
     #print str(x)+" "+str(mot) + " end " + str(mot2) + " " + str(y) + " " + str(mot[crossPosX[0]] is mot2[crossPosY[0]])
     b = mot[crossPosX[0]] is mot2[crossPosY[0]]
     if b:
-        traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Consistant \n", "curr")
+        if traceframe:
+            traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Consistant \n", "curr")
     else:
-        traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant Lettre\n", "err")
-    return mot[crossPosX[0]] is mot2[crossPosY[0]]
+        if traceframe:
+            traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant Lettre\n", "err")
+    return b
     
     
 
@@ -173,3 +184,60 @@ def forward_checking(V,i):
             return forward_checking(V, i+[(xk, v)])
 
     return None
+
+
+
+def RAC(i,V):
+    """
+    si V = vide alors retourner la solution
+    sinon
+        choisir xk dans V
+        faire pour tout v dans Dxk
+            si i U (xk -> v) est localement consistant
+                alors RAC(i U (xk -> v), V \ {xk},D,C)
+        fait
+    fsi
+    """
+    if not V:
+        return i
+
+    xk = V [0]
+    for v in xk.domaine:
+        if consistance_locale(i, (xk,v)):
+            RAC(i + [(xk,v)], V[1:])
+
+    return None
+
+
+def consistance_locale(i, y):
+    for x in i:
+        if not consistance(x, y):
+            return False
+    return True
+
+
+def CBJ(V, i):
+    '''
+
+    '''
+    if not V:
+        return []
+    xk = V[0]
+    conflit = []
+    nonBJ = True
+    for v in xk.domaine:
+        if not nonBJ:
+            return conflit
+        conflit_local = consistante(i+[(xk,v)])
+        if not conflit_local:
+            conflit_fils = CBJ(V[1:], i+[(xk,v)])
+            if xk in conflit_fils:
+                conflit += conflit_fils
+            else:
+                conflit = conflit_fils
+                nonBJ = False
+        conflit += conflit_local
+
+
+def consistante(i):
+    return "on est trop fort"

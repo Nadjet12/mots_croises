@@ -100,14 +100,3 @@ class MainFrame(Frame):
 
     def file_saver(self):
         filename = asksaveasfilename(**self.options)
-
-
-if __name__ == "__main__":
-    root = Tk()
-
-    interface = MainFrame(master=root)
-    interface.master.title("Mots Croisés")
-    # interface.master.geometry('{}x{}'.format(800, 600))
-    interface.pack(fill="both", expand=True)
-
-    interface.mainloop()

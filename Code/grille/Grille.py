@@ -6,6 +6,9 @@ Created on Sat Feb 20 13:06:47 2016
 """
 
 from codecs import *
+
+import time
+
 from Dictionnaire import Dico
 from Mot import Mot
 import random
@@ -19,7 +22,11 @@ class Grille:
         self.mots_horizontaux = []
         self.cases_noires = []
         self.taille = taille
+        start_time = time.time()
         self.dico = Dico(dictionnaire)
+        elapsed_time = time.time() - start_time
+        print "Creation dictionnaire " + dictionnaire.split("/")[-1] + " Temps : " + str(elapsed_time)
+
         
         if alea:
             filePath = self.genereGrilleAlea(taille)
@@ -156,11 +163,11 @@ class Grille:
                     mot.ajoute_contrainte(mot2, mot2.yStart - mot.yStart)
                     mot2.ajoute_contrainte(mot, mot.xStart - mot2.xStart)
             
-            print mot
-            print mot.contrainteListe
+            #print mot
+            #print mot.contrainteListe
            # print mot.egalContrainteListe
             #print mot.difContraintesListe
-            print
+            #print
 
         for mot in self.mots_verticaux:
             for mot2 in self.mots_verticaux:
@@ -193,10 +200,10 @@ class Grille:
             m.initDomaine(self.dico)
 
 
-t = (20,20)
+#t = (20,20)
 #g = Grille(taille=t,alea=True)
 
 # 
-g = Grille(filePath="./grillesVides/sortie.mc")
+#g = Grille(filePath="./grillesVides/sortie.mc")
 #print(g.taille)
 #print(type(g.taille[0]))

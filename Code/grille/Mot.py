@@ -67,3 +67,10 @@ class Mot:
         d = dico.get_New_Domaine(m)
         for i in d:
             self.domaine.add(str(i.encode('utf-8')))
+
+
+    def printDomaine(self):
+        s = ""
+        for m in self.domaine:
+            s += str(m)+" "
+        print str(self) + " ->" + s
