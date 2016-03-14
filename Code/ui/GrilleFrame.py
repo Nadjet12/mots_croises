@@ -4,7 +4,7 @@ import threading
 import tkFont
 from Tkinter import *
 
-import Algos
+from grille import Algos
 from ui.Case import Case
 from ui.MotsFrame import MotsFrame
 from ui.UiMot import UiMot

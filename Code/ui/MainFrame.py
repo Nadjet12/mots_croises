@@ -4,14 +4,14 @@ import os
 from Tkinter import *
 from tkFileDialog import askopenfilename, asksaveasfilename
 
-from Grille import Grille
+from grille.Grille import Grille
 from ui.GrilleFrame import GrilleFrame
 from ui.TraceFrame import TraceFrame
 
 
 class MainFrame(Frame):
 
-    def __init__(self, master=None):
+    def __init__(self, master=None, root=None):
 
         Frame.__init__(self, master)
 
@@ -59,10 +59,10 @@ class MainFrame(Frame):
         self.radio_dico = IntVar()
         self.listDico = []
         self.dliste = []
-        for dirname, dirnames, filenames in os.walk('../mots'):
+        for dirname, dirnames, filenames in os.walk('./mots'):
             # print path to all filenames.
             for filename in filenames:
-                self.dliste += ["".join(['../mots/', filename])]
+                self.dliste += ["".join(['./mots/', filename])]
                 filename = filename[:-4]
                 print(filename)
 

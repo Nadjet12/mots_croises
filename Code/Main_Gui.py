@@ -7,7 +7,7 @@ from ui.MainFrame import MainFrame
 if __name__ == "__main__":
     root = Tk()
 
-    interface = MainFrame(master=root)
+    interface = MainFrame(master=root, root=root)
     interface.master.title("Mots Croisés")
     # interface.master.geometry('{}x{}'.format(800, 600))
     interface.pack(fill="both", expand=True)
