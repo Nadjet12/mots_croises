@@ -6,7 +6,7 @@ Created on Sat Mar 05 12:16:39 2016
 """
 import time
 
-from Grille import Grille
+from grille import Grille
 import Mot
 
 
