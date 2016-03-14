@@ -4,8 +4,9 @@ import os
 from Tkinter import *
 from tkFileDialog import askopenfilename, asksaveasfilename
 
-from GrilleFrame import GrilleFrame
-from TraceFrame import TraceFrame
+from Grille import Grille
+from ui.GrilleFrame import GrilleFrame
+from ui.TraceFrame import TraceFrame
 
 
 class MainFrame(Frame):
@@ -99,3 +100,14 @@ class MainFrame(Frame):
 
     def file_saver(self):
         filename = asksaveasfilename(**self.options)
+
+
+if __name__ == "__main__":
+    root = Tk()
+
+    interface = MainFrame(master=root)
+    interface.master.title("Mots Croisés")
+    # interface.master.geometry('{}x{}'.format(800, 600))
+    interface.pack(fill="both", expand=True)
+
+    interface.mainloop()

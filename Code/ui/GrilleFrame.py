@@ -4,10 +4,10 @@ import threading
 import tkFont
 from Tkinter import *
 
-import grille.Algos
-from Case import Case
-from MotsFrame import MotsFrame
-from UiMot import UiMot
+import Algos
+from ui.Case import Case
+from ui.MotsFrame import MotsFrame
+from ui.UiMot import UiMot
 
 
 class GrilleFrame(Frame):
