@@ -2,14 +2,29 @@
 # -*- coding: utf-8 -*-
 from Tkinter import Tk
 
-from ui.MainFrame import MainFrame
+import time
+
+from grille.Algos import Algo
+from grille.Grille import Grille
+from gui.Gui import Gui
+
+
+Grille_Var = "./grillesVides/td3vide.mc"
+Dictionnaire_Var = "./mots/td3.txt"
+Algo_Var = "AC3"
+
+
 
 if __name__ == "__main__":
     root = Tk()
 
-    interface = MainFrame(master=root, root=root)
-    interface.master.title("Mots Croisés")
-    # interface.master.geometry('{}x{}'.format(800, 600))
+    start_time = time.time()
+    grille = Grille(filePath=Grille_Var, dictionnaire=Dictionnaire_Var)
+    elapsed_time = time.time() - start_time
+    print "Creation grille " + Grille_Var.split("/")[-1] + " Temps :" + str(elapsed_time)
+    algo = Algo(grille=grille, algo=Algo_Var)
+    interface = Gui(master=root, root=root, algo=algo)
+    interface.master.title("RP : Mots Croisés (Bourdache Nadjet Adequin Renaud)")
     interface.pack(fill="both", expand=True)
 
     interface.mainloop()
