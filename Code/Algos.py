@@ -170,6 +170,99 @@ def forward_checking(V,i):
     xk = V[0]
     for v in xk.domaine:
         if check_forward(xk, v, V[1:]):
-            return forward_checking(V, i+[(xk, v)])
+            forward_checking(V, i+[(xk, v)])
 
     return None
+    
+def RAC(i,V):
+    """    
+    si V = vide alors retourner la solution
+    sinon
+        choisir xk dans V
+        faire pour tout v dans Dxk
+            si i U (xk -> v) est localement consistant
+                alors RAC(i U (xk -> v), V \ {xk},D,C)
+        fait
+    fsi
+    """
+    if not V:
+        return i
+    
+    xk = V [0]
+    for v in xk.domaine:
+        if consistance_locale(i, (xk,v)):
+            RAC(i + [(xk,v)], V[1:])
+            
+    return None
+        
+            
+def consistance_locale(i, y):
+    for x in i:
+        if not consistance(x, y):
+            return False
+    return True
+    
+
+def CBJ(V, i):
+    '''
+    
+    '''
+    if not V:
+        return []
+    xk = V[0]
+    conflit = []
+    nonBJ = True
+    for v in xk.domaine:
+        if not nonBJ:
+            return conflit
+        conflit_local = consistante(i+[(xk,v)])
+        if not conflit_local:
+            conflit_fils = CBJ(V[1:], i+[(xk,v)])
+            if xk in conflit_fils:
+                conflit += conflit_fils
+            else:
+                conflit = conflit_fils
+                nonBJ = False
+        conflit += conflit_local
+        
+        
+def consistante(i):
+    return "on est trop fort"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
