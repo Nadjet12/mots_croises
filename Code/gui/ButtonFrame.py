@@ -19,22 +19,19 @@ class ButtonFrame(Frame):
                                          variable=self.showMot, command=self.toggle_Mot)
         self.advanceButton.grid(row=0, column=1, sticky=E)
         self.traceButton = Checkbutton(self, text="Trace Algo",
-                                      variable=self.showTrace, command=None)
+                                      variable=self.showTrace, command=self.toggle_Trace)
         self.traceButton.grid(row=0, column=2, sticky=E)
         self.queue = queue
         self.algo = algo
         self.grille = algo.grille
         self.traceFrame = traceFrame
         self.motFrame = motFrame
-        print "buttonFra"
 
 
 
     def play(self):
-        print "AVANT"
 
         self.algo.start()
-        print "apres"
 
         self.master.after(100, self.process_queue)
         '''
@@ -47,7 +44,7 @@ class ButtonFrame(Frame):
         for m in self.motVert:
             m.printD()
         '''
-        #self.algo.join()
+
         print "MOT VERT"
         for mot in self.grille.mots_verticaux:
             print mot.printDomaine()
@@ -84,7 +81,7 @@ class ButtonFrame(Frame):
         else:
             self.master.toggle_Mot(False)
             #self.c.grid_forget()
-    '''
+
     def toggle_Trace(self):
         if self.showTrace.get() and self.traceFrame:
             self.master.toggle_Trace(True)
@@ -92,4 +89,3 @@ class ButtonFrame(Frame):
         else:
             self.master.toggle_Trace(False)
             #self.traceFrame.grid_forget()
-    '''
