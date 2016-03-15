@@ -10,6 +10,7 @@ import time
 from grille import Grille
 import Mot
 
+
 class Algo(threading.Thread):
     def __init__(self, queue=None, grille=None, traceframe=None, algo=None):
         threading.Thread.__init__(self)
@@ -41,27 +42,25 @@ class Algo(threading.Thread):
         contrainte_Liste = self.grille.getContraintes()
         file_L = contrainte_Liste[::]
         while file_L:
-            (x,y) = file_L[0]
+            (x, y) = file_L[0]
             file_L = file_L[1:]
-            if self.revise(x,y):
-                if not x.domaine :
+            if self.revise(x, y):
+                if not x.domaine:
                     return False
-                for (i,j) in contrainte_Liste:
-                    if j == x or i==x:
-                        file_L += [(i,j)]
+                for (i, j) in contrainte_Liste:
+                    if j == x or i == x:
+                        file_L += [(i, j)]
 
         elapsed_time = time.time() - start_time
         if self.traceframe:
             self.traceframe.add_To_Trace("Fin de l'AC3", "out")
             self.traceframe.add_To_Trace(" Temps :" + str(elapsed_time) + "\n", "time")
-        else :
+        else:
             print "AC3 Temps :" + str(elapsed_time)
 
         return True
 
-
-
-    def revise(self, x,y):
+    def revise(self, x, y):
         """
         modification ← false
         faire pour chaque v ∈ Di
@@ -81,17 +80,19 @@ class Algo(threading.Thread):
         for mot in x.domaine:
             consistant = False
             for mot2 in y.domaine:
-                if self.consistance((x,mot),(y,mot2)):
+                if self.consistance((x, mot), (y, mot2)):
                     consistant = True
                     break
             if not consistant:
                 if self.traceframe:
-                    self.traceframe.add_To_Trace('mot :' + str(mot) + " supprimer du domaine de " + str(x)+ " a cause de " + str(y)+ "\n", "curr")
+                    self.traceframe.add_To_Trace(
+                        'mot :' + str(mot) + " supprimer du domaine de " + str(x) + " a cause de " + str(y) + "\n",
+                        "curr")
                 tmp.add(mot)
                 modif = True
 
         x.remove(tmp)
-        s = [i+" " for i in tmp]
+        s = [i + " " for i in tmp]
         s = "".join(s)
         elapsed_time = time.time() - start_time
         if self.traceframe:
@@ -100,8 +101,6 @@ class Algo(threading.Thread):
             self.traceframe.add_To_Trace(" Temps :" + str(elapsed_time) + "\n", "time")
         return modif
 
-
-
     def consistance(self, (x, mot), (y, mot2)):
 
         if mot == mot2:
@@ -109,11 +108,9 @@ class Algo(threading.Thread):
                 self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant ==\n", "err")
             return False
 
-
-
         crossPosX = [cont[1] for cont in x.contrainteListe if cont[0] is y]
 
-        if(len(crossPosX) > 0):
+        if (len(crossPosX) > 0):
             crossPosX = [item for item in crossPosX if item != -1]
         if not crossPosX:
             if self.traceframe:
@@ -127,7 +124,7 @@ class Algo(threading.Thread):
 
         crossPosY = [cont[1] for cont in y.contrainteListe if cont[0] is x]
 
-        if(len(crossPosY) > 0):
+        if (len(crossPosY) > 0):
             crossPosY = [item for item in crossPosY if item != -1]
         if not crossPosY:
             if self.traceframe:
@@ -139,7 +136,7 @@ class Algo(threading.Thread):
                 self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant ???\n", "err")
             return False
 
-        #print str(x)+" "+str(mot) + " end " + str(mot2) + " " + str(y) + " " + str(mot[crossPosX[0]] is mot2[crossPosY[0]])
+        # print str(x)+" "+str(mot) + " end " + str(mot2) + " " + str(y) + " " + str(mot[crossPosX[0]] is mot2[crossPosY[0]])
         b = mot[crossPosX[0]] is mot2[crossPosY[0]]
         if b:
             if self.traceframe:
@@ -149,9 +146,7 @@ class Algo(threading.Thread):
                 self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant Lettre\n", "err")
         return b
 
-
-
-    def check_forward(self, xk,v,V):
+    def check_forward(self, xk, v, V):
         """
         consistant ← true
         pour chaque xj ∈ V \ {xk } et tant que consistant
@@ -175,7 +170,7 @@ class Algo(threading.Thread):
                     return False
         return True
 
-    def forward_checking(self, V,i):
+    def forward_checking(self, V, i):
         """
         si V = ∅ alors i est une solution
         sinon
@@ -190,19 +185,17 @@ class Algo(threading.Thread):
         fsi
         """
 
-        if not V :
+        if not V:
             return i
 
         xk = V[0]
         for v in xk.domaine:
             if self.check_forward(xk, v, V[1:]):
-                return self.forward_checking(V, i+[(xk, v)])
+                return self.forward_checking(V, i + [(xk, v)])
 
         return None
 
-
-
-    def RAC(self, i,V):
+    def RAC(self, i, V):
         """
         si V = vide alors retourner la solution
         sinon
@@ -216,13 +209,12 @@ class Algo(threading.Thread):
         if not V:
             return i
 
-        xk = V [0]
+        xk = self.heuristique_triviale
         for v in xk.domaine:
-            if self.consistance_locale(i, (xk,v)):
-                self.RAC(i + [(xk,v)], V[1:])
+            if self.consistance_locale(i, (xk, v)):
+                self.RAC(i + [(xk, v)], V.remove(xk))
 
         return None
-
 
     def consistance_locale(self, i, y):
         for x in i:
@@ -230,22 +222,21 @@ class Algo(threading.Thread):
                 return False
         return True
 
-
     def CBJ(self, V, i):
         '''
 
         '''
         if not V:
             return []
-        xk = V[0]
+        xk = self.heurisrique_triviale(V)
         conflit = []
         nonBJ = True
         for v in xk.domaine:
             if not nonBJ:
                 return conflit
-            conflit_local = self.consistante(i+[(xk,v)])
+            conflit_local = self.consistante(i + [(xk, v)])
             if not conflit_local:
-                conflit_fils = self.CBJ(V[1:], i+[(xk,v)])
+                conflit_fils = self.CBJ(V.remove(xk), i + [(xk, v)])
                 if xk in conflit_fils:
                     conflit += conflit_fils
                 else:
@@ -253,6 +244,33 @@ class Algo(threading.Thread):
                     nonBJ = False
             conflit += conflit_local
 
+    def consistante(self, inst):
+        conflit = []
+        for i in range(len(inst)):
+            x1 = inst[i]
+            for j in range(i + 1, len(inst)):
+                x2 = inst[j]
+                if not self.consistance(x1, x2):
+                    conflit += [x1[0], x2[0]]
+        return conflit
 
-    def consistante(self, i):
-        return "on est trop fort"
+    def heristique_triviale(self, V):
+        return V[0]
+
+    def heuristique_dom_mim(self, V):
+        indMin = 0
+        cardMin = len(V[0].domaine)
+        for i in range(1, len(V)):
+            if len(V[i].domaine) < cardMin:
+                cardMin = len(V[i].domaine)
+                indMin = i
+        return V[indMin]
+
+    def heuristique_contr_max(self,V):
+        indMax = 0
+        contrMax = len(V[0].contrainteListe)
+        for i in range(1, len(V)):
+            if len(V[i].contrainteListe) > contrMax:
+                contrMax = len(V[i].contrainteListe)
+                indMax = i
+        return V[indMax]
