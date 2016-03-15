@@ -6,6 +6,7 @@ from gui.Case import Case
 from gui.GMot import GMot
 from gui.GrilleFrame import GrilleFrame
 from gui.MotFrame import MotFrame
+from gui.TraceFrame import TraceFrame
 
 
 class MainFrame(Frame):
@@ -15,20 +16,20 @@ class MainFrame(Frame):
         Frame.__init__(self, master)
         self.algo = algo
         self.grille = algo.grille
-        self.traceFrame = None
+        self.traceFrame = TraceFrame(self)
         self.grilleFrame = GrilleFrame(self, self.grille)
         self.motFrame = MotFrame(self)
         algo.traceframe = self.traceFrame
         self.queue = queue
         self.buttonFrame = ButtonFrame(self, self.queue, self.algo, self.traceFrame, self.motFrame)
 
-
-        self.set_Grille()
-
+        self.algo.traceframe = self.traceFrame
+        liste_mots = self.set_Grille()
+        self.motFrame.listes = liste_mots
+        self.motFrame.set_Mots()
 
         self.buttonFrame.grid(row=0, column=0, sticky=N+E+S+W)
         self.grilleFrame.grid(row=1, column=0, sticky=N+E+S+W)
-        print "mainfr"
 
     def set_Grille(self):
 
@@ -87,15 +88,15 @@ class MainFrame(Frame):
 
     def toggle_Mot(self, bool):
         if bool:
-            self.motFrame.ff.grid(row=1, column=1, rowspan=3, sticky=N+E+S+W)
+            self.motFrame.ff.grid(row=1, column=1, sticky=N+E+S+W)
             print "n"
         else:
             self.motFrame.ff.grid_forget()
 
-    '''
+
     def toggle_Trace(self, bool):
         if bool:
-            self.traceFrame.grid(row=2, column=0, sticky=N+E+S+W)
+            print "sdfghj"
+            self.traceFrame.grid(row=2, column=0, columnspan=2, sticky=N+E+S+W)
         else:
             self.traceFrame.grid_forget()
-    '''

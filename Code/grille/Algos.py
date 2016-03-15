@@ -22,7 +22,8 @@ class Algo(threading.Thread):
     def run(self):
         if self.algo is "AC3":
             bool = self.ac3()
-            self.queue.put(bool)
+            if self.queue:
+                self.queue.put(bool)
         else:
             print "Error"
 
