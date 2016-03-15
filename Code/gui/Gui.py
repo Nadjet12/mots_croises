@@ -148,4 +148,4 @@ class ThreadedTask(threading.Thread):
         s
         print "guiFrame"elf.queue.put("Task finished")
     '''
-    
+
