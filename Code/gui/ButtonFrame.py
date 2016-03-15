@@ -16,11 +16,11 @@ class ButtonFrame(Frame):
         self.playButton = Button(self, text="Play", command=self.play)
         self.playButton.grid(row=0, column=0)
         self.advanceButton = Checkbutton(self, text="Voir les mots",
-                                         variable=self.showMot, command=None)
+                                         variable=self.showMot, command=self.toggle_Mot)
         self.advanceButton.grid(row=0, column=1, sticky=E)
-        self.taceButton = Checkbutton(self, text="Trace Algo",
+        self.traceButton = Checkbutton(self, text="Trace Algo",
                                       variable=self.showTrace, command=None)
-        self.taceButton.grid(row=0, column=2, sticky=E)
+        self.traceButton.grid(row=0, column=2, sticky=E)
         self.queue = queue
         self.algo = algo
         self.grille = algo.grille
@@ -61,11 +61,22 @@ class ButtonFrame(Frame):
             msg = self.queue.get(0)
             print msg
             # Show result of the task if needed
-            self.prog_bar.stop()
+            #self.prog_bar.stop()
+            message = "Non Arc-Consistant"
+            if msg:
+                self.master.updateGrille()
+                message = "Arc-Consistant"
+
+            top = Toplevel()
+            top.title("Resultat")
+
+            msg = Message(top, text=message)
+            msg.pack()
+
         except Queue.Empty:
             self.master.after(100, self.process_queue)
 
-    '''
+
     def toggle_Mot(self):
         if self.showMot.get() and self.motFrame:
             self.master.toggle_Mot(True)
@@ -73,7 +84,7 @@ class ButtonFrame(Frame):
         else:
             self.master.toggle_Mot(False)
             #self.c.grid_forget()
-
+    '''
     def toggle_Trace(self):
         if self.showTrace.get() and self.traceFrame:
             self.master.toggle_Trace(True)
