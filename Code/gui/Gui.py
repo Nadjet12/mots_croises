@@ -80,7 +80,6 @@ class Gui(Frame):
         self.algo.queue = self.thread_queue
         self.mainFrame = MainFrame(self, self.algo, self.thread_queue)
         self.mainFrame.pack()
-        print "guiFrame"
 
 
 
@@ -146,5 +145,7 @@ class ThreadedTask(threading.Thread):
         self.queue = queue
     def run(self):
         time.sleep(5)  # Simulate long running process
-        self.queue.put("Task finished")
+        s
+        print "guiFrame"elf.queue.put("Task finished")
     '''
+

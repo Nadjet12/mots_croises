@@ -10,8 +10,11 @@ from gui.Gui import Gui
 
 
 Grille_Var = "./grillesVides/td3vide.mc"
+# Grille_Var = "./grillesVides/A.mc"
+# Dictionnaire_Var = "./mots/850-mots-us.txt"
+# Dictionnaire_Var = "./mots/22600-mots-fr.txt"
 Dictionnaire_Var = "./mots/td3.txt"
-Algo_Var = "AC3"
+Algo_Var = "RAC"
 
 
 
@@ -24,7 +27,7 @@ if __name__ == "__main__":
     print "Creation grille " + Grille_Var.split("/")[-1] + " Temps :" + str(elapsed_time)
     algo = Algo(grille=grille, algo=Algo_Var)
     interface = Gui(master=root, root=root, algo=algo)
-    interface.master.title("RP : Mots Croisés (Bourdache Nadjet Adequin Renaud)")
+    interface.master.title("RP : Mots Croisés (Bourdache Nadjet, Adequin Renaud)")
     interface.pack(fill="both", expand=True)
 
     interface.mainloop()

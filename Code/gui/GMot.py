@@ -1,12 +1,12 @@
 import tkFont
 from Tkinter import *
 
-from ui.Case import Case
+from gui.Case import Case
 
 
-class UiMot:
+class GMot:
 
-    def __init__(self, mot, master, master2, font):
+    def __init__(self, mot, master, master2):
 
         self.xStart = mot.xStart
         self.yStart = mot.yStart
@@ -26,12 +26,11 @@ class UiMot:
         # TODO: Update depuis les 3 entrees
 
         for i in range(self.taille):
-            if self.caseG[i].get() != self.mot.lettres[i]:
-               self.caseG[i].setLettre(self.mot.lettres[i])
-            if self.caseD[i].get() != self.mot.lettres[i]:
-                self.caseD[i].setLettre(self.mot.lettres[i])
-    def change(self, param, param1):
-        pass
+            if self.caseGrilleFrame[i].get() != self.mot.lettres[i]:
+               self.caseGrilleFrame[i].setLettre(self.mot.lettres[i])
+            if self.caseMotFrame[i].get() != self.mot.lettres[i]:
+                self.caseMotFrame[i].setLettre(self.mot.lettres[i])
+
 
     def printD(self):
         s = ""

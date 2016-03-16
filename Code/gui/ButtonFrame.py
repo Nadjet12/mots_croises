@@ -16,25 +16,22 @@ class ButtonFrame(Frame):
         self.playButton = Button(self, text="Play", command=self.play)
         self.playButton.grid(row=0, column=0)
         self.advanceButton = Checkbutton(self, text="Voir les mots",
-                                         variable=self.showMot, command=None)
+                                         variable=self.showMot, command=self.toggle_Mot)
         self.advanceButton.grid(row=0, column=1, sticky=E)
-        self.taceButton = Checkbutton(self, text="Trace Algo",
-                                      variable=self.showTrace, command=None)
-        self.taceButton.grid(row=0, column=2, sticky=E)
+        self.traceButton = Checkbutton(self, text="Trace Algo",
+                                      variable=self.showTrace, command=self.toggle_Trace)
+        self.traceButton.grid(row=0, column=2, sticky=E)
         self.queue = queue
         self.algo = algo
         self.grille = algo.grille
         self.traceFrame = traceFrame
         self.motFrame = motFrame
-        print "buttonFra"
 
 
 
     def play(self):
-        print "AVANT"
 
         self.algo.start()
-        print "apres"
 
         self.master.after(100, self.process_queue)
         '''
@@ -47,7 +44,7 @@ class ButtonFrame(Frame):
         for m in self.motVert:
             m.printD()
         '''
-        #self.algo.join()
+
         print "MOT VERT"
         for mot in self.grille.mots_verticaux:
             print mot.printDomaine()
@@ -61,11 +58,26 @@ class ButtonFrame(Frame):
             msg = self.queue.get(0)
             print msg
             # Show result of the task if needed
-            self.prog_bar.stop()
+            #self.prog_bar.stop()
+            message = "Non Arc-Consistant"
+            if msg:
+                print type(msg)
+                if isinstance(msg, list):
+                    self.grille.setResultat(msg)
+                self.master.updateGrille()
+
+                message = "Arc-Consistant"
+
+            top = Toplevel()
+            top.title("Resultat")
+
+            msg = Message(top, text=message)
+            msg.pack()
+
         except Queue.Empty:
             self.master.after(100, self.process_queue)
 
-    '''
+
     def toggle_Mot(self):
         if self.showMot.get() and self.motFrame:
             self.master.toggle_Mot(True)
@@ -81,4 +93,3 @@ class ButtonFrame(Frame):
         else:
             self.master.toggle_Trace(False)
             #self.traceFrame.grid_forget()
-    '''
