@@ -9,7 +9,7 @@ Grille_Var = "./grillesVides/td3vide.mc"
 # Dictionnaire_Var = "./mots/850-mots-us.txt"
 # Dictionnaire_Var = "./mots/22600-mots-fr.txt"
 Dictionnaire_Var = "./mots/td3.txt"
-Algo_Var = "RAC"
+Algo_Var = "AC3"
 
 if __name__ == "__main__":
     start_time = time.time()
