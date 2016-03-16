@@ -106,6 +106,8 @@ class Algo(threading.Thread):
             self.traceframe.add_To_Trace("Les mots " + str(s) + " sont supprimés de " + str(x.lettres) + "\n", "curr")
             self.traceframe.add_To_Trace("Fin revise de :" + str(x.lettres) + " et " + str(y.lettres), "out")
             self.traceframe.add_To_Trace(" Temps :" + str(elapsed_time) + "\n", "time")
+        else:
+            print " Temps :" + str(elapsed_time)
         return modif
 
     def consistance(self, (x, mot), (y, mot2)):

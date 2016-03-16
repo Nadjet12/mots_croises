@@ -9,7 +9,6 @@ Grille_Var = "./grillesVides/td3vide.mc"
 # Dictionnaire_Var = "./mots/850-mots-us.txt"
 # Dictionnaire_Var = "./mots/22600-mots-fr.txt"
 Dictionnaire_Var = "./mots/td3.txt"
-# Algo_Var = "AC3"
 Algo_Var = "RAC"
 
 if __name__ == "__main__":
