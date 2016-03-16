@@ -30,8 +30,7 @@ class GMot:
                self.caseGrilleFrame[i].setLettre(self.mot.lettres[i])
             if self.caseMotFrame[i].get() != self.mot.lettres[i]:
                 self.caseMotFrame[i].setLettre(self.mot.lettres[i])
-    def change(self, param, param1):
-        pass
+
 
     def printD(self):
         s = ""

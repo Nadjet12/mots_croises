@@ -6,6 +6,7 @@ Created on Sat Mar 05 12:16:39 2016
 """
 import threading
 import time
+import random
 
 from grille import Grille
 import Mot
@@ -18,12 +19,17 @@ class Algo(threading.Thread):
         self.grille = grille
         self.traceframe = traceframe
         self.algo = algo
+        self.res = None
 
     def run(self):
         if self.algo is "AC3":
             bool = self.ac3()
             if self.queue:
                 self.queue.put(bool)
+        elif self.algo is "RAC":
+            bool = self.RAC([], self.grille.mots_horizontaux + self.grille.mots_verticaux)
+            if self.queue:
+                self.queue.put(self.res)
         else:
             print "Error"
 
@@ -187,6 +193,7 @@ class Algo(threading.Thread):
         """
 
         if not V:
+            self.res = i
             return i
 
         xk = V[0]
@@ -206,14 +213,21 @@ class Algo(threading.Thread):
                     alors RAC(i U (xk -> v), V \ {xk},D,C)
             fait
         fsi
+        :param V:
+        :param i:
         """
         if not V:
+            if not self.res:
+                self.res = i
             return i
 
-        xk = self.heuristique_triviale
+        xk = self.heuristique_dom_mim(V)
+        #print i, V
+        V.remove(xk)
+
         for v in xk.domaine:
             if self.consistance_locale(i, (xk, v)):
-                self.RAC(i + [(xk, v)], V.remove(xk))
+                self.RAC(i + [(xk, v)], V[::])
 
         return None
 
@@ -228,16 +242,19 @@ class Algo(threading.Thread):
 
         '''
         if not V:
-            return []
-        xk = self.heurisrique_triviale(V)
+            if not self.res:
+                self.res = i
+            return i
+        xk = self.heuristique_triviale(V)
         conflit = []
         nonBJ = True
+        V.remove(xk)
         for v in xk.domaine:
             if not nonBJ:
                 return conflit
             conflit_local = self.consistante(i + [(xk, v)])
             if not conflit_local:
-                conflit_fils = self.CBJ(V.remove(xk), i + [(xk, v)])
+                conflit_fils = self.CBJ(V[::], i + [(xk, v)])
                 if xk in conflit_fils:
                     conflit += conflit_fils
                 else:
@@ -255,23 +272,38 @@ class Algo(threading.Thread):
                     conflit += [x1[0], x2[0]]
         return conflit
 
-    def heristique_triviale(self, V):
+    def heuristique_triviale(self, V):
         return V[0]
 
     def heuristique_dom_mim(self, V):
-        indMin = 0
-        cardMin = len(V[0].domaine)
+        elemMin = [(len(V[0].domaine), 0)]
         for i in range(1, len(V)):
-            if len(V[i].domaine) < cardMin:
-                cardMin = len(V[i].domaine)
-                indMin = i
-        return V[indMin]
+            if len(V[i].domaine) < elemMin[0][0]:
+                elemMin = [(len(V[i].domaine), i)]
+            elif len(V[i].domaine) == elemMin[0][0]:
+                elemMin += [(len(V[i].domaine), i)]
+        if len(elemMin) == 1:
+            return V[elemMin[0][1]]
+        else:
+            return V[(random.choice(elemMin))[1]]
 
-    def heuristique_contr_max(self,V):
-        indMax = 0
-        contrMax = len(V[0].contrainteListe)
+    def heuristique_contr_max(self, V):
+        elemMax = [(len(V[0].contrainteListe), 0)]
         for i in range(1, len(V)):
-            if len(V[i].contrainteListe) > contrMax:
-                contrMax = len(V[i].contrainteListe)
-                indMax = i
-        return V[indMax]
+            if len(V[i].contrainteListe) > elemMax[0][0]:
+                elemMax = [(len(V[i].contrainteListe), i)]
+            elif len(V[i].contrainteListe) == elemMax[0][0]:
+                elemMax += [(len(V[i].contrainteListe), i)]
+        if len(elemMax) == 1:
+            return V[elemMax[0][1]]
+        else:
+            return V[(random.choice(elemMax))[1]]
+
+
+    def heuristique_instance_max(self, V):
+        """
+        variable qui a le plus de contrainte avec les variables déjà instanciées
+        :param V:
+        :return:
+        """
+        pass

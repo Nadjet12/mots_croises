@@ -20,12 +20,10 @@ class Case(Entry):
     def char_callback(self, sv):
         c = sv.get()
         if c is'':
-            for u in self.guis:
-                u[0].update()
-            return
+            c = ' '
         c = c.upper()
         c = c[-1]
-        sv.set(c)
+        #sv.set(c)
 
         s = "".join(c)
         for u in self.guis:

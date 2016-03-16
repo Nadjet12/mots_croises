@@ -199,6 +199,10 @@ class Grille:
         for m in self.mots_verticaux:
             m.initDomaine(self.dico)
 
+    def setResultat(self, list):
+        for m in list:
+            m[0].lettres = m[1]
+
 
 #t = (20,20)
 #g = Grille(taille=t,alea=True)

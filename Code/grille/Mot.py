@@ -21,10 +21,10 @@ class Mot:
 
     def set_lettre(self, i, c):
         s = list(self.lettres)
-        print str(i) + " " + c
+        # print str(i) + " " + c
         s[i] = c
         self.lettres = "".join(s)
-        for c1,c2 in self.contrainteListe:
+        for c1, c2 in self.contrainteListe:
             if c2 is i:
                 c1.update(self, c)
 
@@ -73,4 +73,7 @@ class Mot:
         s = ""
         for m in self.domaine:
             s += str(m)+" "
-        print str(self) + " ->" + s
+        print str(self) + " : " + str(len(self.domaine)) + " ->" + s
+
+    def printDomaineSize(self):
+        print str(self) + " -> " + str(len(self.domaine))

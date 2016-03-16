@@ -61,7 +61,11 @@ class ButtonFrame(Frame):
             #self.prog_bar.stop()
             message = "Non Arc-Consistant"
             if msg:
+                print type(msg)
+                if isinstance(msg, list):
+                    self.grille.setResultat(msg)
                 self.master.updateGrille()
+
                 message = "Arc-Consistant"
 
             top = Toplevel()
