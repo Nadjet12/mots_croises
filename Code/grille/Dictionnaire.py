@@ -16,9 +16,7 @@ class Noeud:
         return self.liste_Noeud[c]
 
     def getFils(self, c):
-        if c in self.liste_Noeud:
-            return self.liste_Noeud[c]
-        return None
+        return self.liste_Noeud[c]
 
     def setPeut_finir(self, peut_finir):
         self.peut_finir |= peut_finir
@@ -42,64 +40,11 @@ class Noeud:
                     liste.update(self.liste_Noeud[pattern[profondeur]].get_list_Mots(pattern, mot+pattern[profondeur], profondeur+1))
         return liste
 
-    def update(self, pattern, mot, profondeur):
-        if profondeur == len(pattern)-1:
-            if pattern[profondeur] in '.':
-                return
-            else:
-                if pattern[profondeur] in self.liste_Noeud:
-                    d = dict()
-                    d[0] = self.liste_Noeud[pattern[profondeur]]
-                    self.liste_Noeud = d
-        else:
-            if pattern[profondeur] in '.':
-                for c, n in self.liste_Noeud.items():
-                    n.update(pattern, mot+c, profondeur+1)
-            else:
-                if pattern[profondeur] in self.liste_Noeud:
-                    d = dict()
-                    d[pattern[profondeur]] = self.liste_Noeud[pattern[profondeur]]
-                    self.liste_Noeud = d
-                    print pattern[profondeur]
-                    print mot
-                    self.liste_Noeud[pattern[profondeur]].update(pattern, mot+pattern[profondeur], profondeur+1)
-
-    def getAllLetter(self,lettres, profondeur):
-        if profondeur == 0:
-            for c, n in self.liste_Noeud.items():
-                    lettres.add(c)
-            return lettres
-
-        else:
-
-            for c, n in self.liste_Noeud.items():
-                lettres.union(n.getAllLetter(lettres, profondeur-1))
-            return lettres
-
-    def updateFromContraintes(self,profondeur, listes):
-        if profondeur == 0:
-            d = dict()
-            for c in listes:
-                if self.getFils(c):
-                    d[c] = self.getFils(c)
-            self.liste_Noeud = d
-            b = len(listes) != len(self.liste_Noeud)
-            return b
-        else:
-            for c, n in self.liste_Noeud.items():
-                return n.updateFromContraintes(profondeur-1, listes)
-
-
 
 class Dico:
-    def __init__(self, file=None, liste=None):
+    def __init__(self, file):
         self.lettres = dict()
-        lines = None
-        if file:
-            lines = open(file, encoding="ISO-8859-1").readlines()
-        elif liste:
-            lines = liste
-
+        lines = open(file, encoding="ISO-8859-1").readlines()
         for line in lines:
             line = line.rstrip()
             self.add_Mot(line)
@@ -128,61 +73,16 @@ class Dico:
                 liste.update(self.lettres[mot_Imcomplet[0]].get_list_Mots(mot_Imcomplet, mot_Imcomplet[0], 1))
         return liste
 
-    def update(self, pattern):
-        pattern = pattern.upper()
-        if pattern[0] in '.':
-            for c, n in self.lettres.items():
-                n.update(pattern, c, 1)
-        else:
-            if pattern[0] in self.lettres:
-                d = dict()
-                d[0] = self.lettres[pattern[0]]
-                self.lettres = d
-                self.lettres[pattern[0]].update(pattern, [pattern[0]],1)
-
     def get_Domaine(self, taille):
         return self.get_New_Domaine(''.join(['.' for i in range(taille)]))
 
-    def getAllLettre(self,profondeur):
-        lettres = set()
-        profondeur -= 1
-        if profondeur == 0:
-            for c, n in self.lettres.items():
-                    lettres.add(c)
-            return lettres
-
-        else:
-
-            for c, n in self.lettres.items():
-                lettres.union(n.getAllLetter(lettres, profondeur-1))
-            return lettres
-
-    def updateFromContraintes(self,profondeur, listes):
-        profondeur -= 1
-        if profondeur == 0:
-            d = dict()
-            b = False
-            for c in listes:
-                if self.get_Lettre(c):
-                    d[c] = self.get_Lettre(c)
-            b = len(listes) != len(self.lettres)
-            return b
-        else:
-            for c, n in self.lettres.items():
-                return n.updateFromContraintes(profondeur-1, listes)
 
 
-file = ["abcd", "abce","abff", "abfg"]
+#file = "./mots/135000-mots-fr.txt"
 #
 #start_time = time.time()
 #
-d = Dico(liste=file)
-print d.get_Domaine(4)
-print 'all : ' + str(d.getAllLettre(4))
-#d.update('..C.')
-print d.get_Domaine(4)
-print 'all : ' + str(d.updateFromContraintes(3, 'c'))
-print d.get_Domaine(4)
+#d = Dico(file)
 #elapsed_time = time.time() - start_time
 #print("creation dictionnaire " + file + " : " + str(elapsed_time))
 #print ""

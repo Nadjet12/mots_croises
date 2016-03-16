@@ -53,7 +53,6 @@ class Algo(threading.Thread):
             file_L = file_L[1:]
             if self.revise(x, y):
                 if not x.domaine:
-
                     return False
                 for (i, j) in contrainte_Liste:
                     if j == x or i == x:
@@ -63,8 +62,8 @@ class Algo(threading.Thread):
         if self.traceframe:
             self.traceframe.add_To_Trace("Fin de l'AC3", "out")
             self.traceframe.add_To_Trace(" Temps :" + str(elapsed_time) + "\n", "time")
-        #else:
-        #    print "AC3 Temps :" + str(elapsed_time)
+        else:
+            print "AC3 Temps :" + str(elapsed_time)
 
         return True
 
@@ -107,53 +106,9 @@ class Algo(threading.Thread):
             self.traceframe.add_To_Trace("Les mots " + str(s) + " sont supprimés de " + str(x.lettres) + "\n", "curr")
             self.traceframe.add_To_Trace("Fin revise de :" + str(x.lettres) + " et " + str(y.lettres), "out")
             self.traceframe.add_To_Trace(" Temps :" + str(elapsed_time) + "\n", "time")
-        #else:
-        #    print " Temps :" + str(elapsed_time)
+        else:
+            print " Temps :" + str(elapsed_time)
         return modif
-
-
-    def revise2(self, x, y):
-        """
-        modification ← false
-        faire pour chaque v ∈ Di
-            si il n'existe pas de v∈ Dj | {xi → v, xj → v} est consistante alors
-                faire Di ← Di \ {v}
-                    modification ← vrai
-                fait
-        fait
-        retourner modification
-        """
-        if self.traceframe:
-            self.traceframe.add_To_Trace("Debut revise de :" + str(x.lettres) + " et " + str(y.lettres) + "\n", "in")
-        start_time = time.time()
-
-        contraints = self.getContrainte(x, y)
-        if not contraints:
-            return False
-        modif = False
-        for c in contraints:
-            if c == -1:
-                # BLABLA
-                modif = False
-            else :
-                yLettre = y.domaine2.getAllLettre(c)
-                bool = x.domaine2.updateFromContraintes(c, yLettre)
-                modif =  bool
-
-        elapsed_time = time.time() - start_time
-        if self.traceframe:
-            #self.traceframe.add_To_Trace("Les mots " + str(s) + " sont supprimés de " + str(x.lettres) + "\n", "curr")
-            self.traceframe.add_To_Trace("Fin revise de :" + str(x.lettres) + " et " + str(y.lettres), "out")
-            self.traceframe.add_To_Trace(" Temps :" + str(elapsed_time) + "\n", "time")
-        #else:
-        #    print " Temps :" + str(elapsed_time)
-
-        return modif
-
-
-
-    def getContrainte(self, x, y):
-        return [cont[1] for cont in y.contrainteListe if cont[0] is x]
 
     def consistance(self, (x, mot), (y, mot2)):
 
@@ -354,5 +309,3 @@ class Algo(threading.Thread):
         :return:
         """
         pass
-
-
