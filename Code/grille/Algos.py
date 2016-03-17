@@ -106,8 +106,32 @@ class Algo(threading.Thread):
             self.traceframe.add_To_Trace("Les mots " + str(s) + " sont supprimés de " + str(x.lettres) + "\n", "curr")
             self.traceframe.add_To_Trace("Fin revise de :" + str(x.lettres) + " et " + str(y.lettres), "out")
             self.traceframe.add_To_Trace(" Temps :" + str(elapsed_time) + "\n", "time")
-        else:
-            print " Temps :" + str(elapsed_time)
+        #else:
+        #    print " Temps :" + str(elapsed_time)
+        return modif
+
+
+    def revise2(self, x, y):
+        """
+
+        :param x:
+        :param y:
+        :return:
+        """
+        contraintsY = y.getContrainte(x)
+        if not contraintsY:
+            return False
+        modif = False
+        for indiceY in contraintsY:
+            if indiceY == -1:
+                # peut-être regarder la taille des domaines si D(y) == 1
+                # D(x) = D(x)\D(y)
+                # modif =
+                modif = False
+            else :
+                yLettre = y.domaine2.getAllLettre(indiceY)
+                bool = x.domaine2.updateFromContraintes(x.getContraintsXE(y), yLettre)
+                modif =  bool
         return modif
 
     def consistance(self, (x, mot), (y, mot2)):

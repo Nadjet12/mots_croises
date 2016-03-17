@@ -77,3 +77,12 @@ class Mot:
 
     def printDomaineSize(self):
         print str(self) + " -> " + str(len(self.domaine))
+
+    def getContraintsX(self, x):
+        return [cont[1] for cont in self.contrainteListe if cont[0] is x]
+
+    def getContraintsXE(self, x):
+        c = [cont[1] for cont in self.contrainteListe if cont[0] is x]
+
+        c = [item for item in c if item != -1]
+        return c[0]
