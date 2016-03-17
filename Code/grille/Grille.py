@@ -193,11 +193,19 @@ class Grille:
         self.dico = Dico(dico)
         self.initDomaine()
 
+    #def initDomaine(self):
+    #    for m in self.mots_horizontaux:
+    #        m.initDomaine(self.dico)
+    #    for m in self.mots_verticaux:
+    #        m.initDomaine(self.dico)
+
     def initDomaine(self):
         for m in self.mots_horizontaux:
-            m.initDomaine(self.dico)
+            m.initDomaine(self.dico.get_Domaine(m.taille))
         for m in self.mots_verticaux:
-            m.initDomaine(self.dico)
+            m.initDomaine(self.dico.get_Domaine(m.taille))
+
+
 
     def setResultat(self, list):
         for m in list:

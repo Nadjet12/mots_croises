@@ -56,7 +56,7 @@ class Noeud:
             for c in listes:
                 if c in self.liste_Noeud:
                     d[c] =self.liste_Noeud[c]
-            b = len(listes) != len(self.liste_Noeud)
+            b = len(d) != len(self.liste_Noeud)
             self.liste_Noeud = d
             return b
         else:
@@ -107,20 +107,24 @@ class Dico:
 
     def getAllLettre(self,profondeur):
         lettres = set()
-        profondeur -= 1
+        #profondeur -= 1
         if profondeur == 0:
             for c, n in self.lettres.items():
                     lettres.add(c)
             return lettres
+        else:
+            for c, n in self.lettres.items():
+                lettres.union(n.getAllLetter(lettres, profondeur-1))
+            return lettres
 
-    def updateFromContraintes(self,profondeur, listes):
-        profondeur -= 1
+    def updateFromContraintes(self, profondeur, listes):
+        #profondeur -= 1
         if profondeur == 0:
             d = dict()
             for c in listes:
                 if c in self.lettres:
                     d[c] = self.lettres[c]
-            b = len(listes) != len(self.lettres)
+            b = len(d) != len(self.lettres)
             self.lettres = d
             return b
         else:
@@ -128,11 +132,15 @@ class Dico:
                 return n.updateFromContraintes(profondeur-1, listes)
 
 
-file = ["abcd", "abce","abff", "abfg"]
+file = ["bbcd", "abce","abff", "abfg"]
 #
 #start_time = time.time()
 #
-#d = Dico(file)
+d = Dico(liste=file)
+print d.getAllLettre(2)
+d.updateFromContraintes(2, 'C')
+print d.getAllLettre(2)
+print d.get_Domaine(4)
 #elapsed_time = time.time() - start_time
 #print("creation dictionnaire " + file + " : " + str(elapsed_time))
 #print ""

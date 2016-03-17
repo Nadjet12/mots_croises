@@ -51,8 +51,14 @@ class Algo(threading.Thread):
         while file_L:
             (x, y) = file_L[0]
             file_L = file_L[1:]
-            if self.revise(x, y):
-                if not x.domaine:
+            if self.revise2(x, y):
+                print "Mots Verticaux :"
+                for m in self.grille.mots_verticaux:
+                    m.printDomaine()
+                print "Mots Horizontaux :"
+                for m in self.grille.mots_horizontaux:
+                    m.printDomaine()
+                if not x.domaine2:
                     return False
                 for (i, j) in contrainte_Liste:
                     if j == x or i == x:
@@ -118,19 +124,37 @@ class Algo(threading.Thread):
         :param y:
         :return:
         """
-        contraintsY = y.getContrainte(x)
+        contraintsY = y.getContraintsX(x)
         if not contraintsY:
             return False
         modif = False
         for indiceY in contraintsY:
             if indiceY == -1:
+                s = y.getDomaine()
+                if len(s) == 1:
+                    s = s.pop()
+                    d = x.getDomaine()
+                    if s in d:
+                        d.remove(s)
+                        x.initDomaine(d)
+                        return True
                 # peut-être regarder la taille des domaines si D(y) == 1
                 # D(x) = D(x)\D(y)
                 # modif =
                 modif = False
             else :
                 yLettre = y.domaine2.getAllLettre(indiceY)
+                print "indice" + str(indiceY)
+                print "ylettre :" + str(yLettre)
+                print 'avant'
+                print "x :" + str(x)
+                print "y :" + str(y)
                 bool = x.domaine2.updateFromContraintes(x.getContraintsXE(y), yLettre)
+                print 'apres'
+                print "x :" + str(x)
+                print bool
+                #print bool
+                #x.printDomaineSize()
                 modif =  bool
         return modif
 

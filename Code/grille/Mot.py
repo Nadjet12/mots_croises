@@ -4,6 +4,8 @@ Created on Mon Feb 15 16:54:07 2016
 
 @author: Nadjet BOURDACHE
 """
+from grille.Dictionnaire import Dico
+
 
 class Mot:
     
@@ -12,10 +14,13 @@ class Mot:
         self.taille = len(lettres)
         self.xStart = coord[0]
         self.yStart = coord[1]
-        self.domaine = set()
+        #self.domaine = set()
+        self.domaine2 = None
         self.contrainteListe = []
         
-        
+    def getDomaine(self):
+        return list(self.domaine2.get_Domaine(self.taille))
+
     def ajoute_contrainte(self, obj, i):
         self.contrainteListe += [(obj, i)]
 
@@ -44,7 +49,7 @@ class Mot:
                 self.lettres = d
         
     def __repr__(self):
-        return str(self.xStart) + "," + str(self.yStart) + ":" + self.lettres + ":" + str(self.taille)
+        return str(self.xStart) + "," + str(self.yStart) + ":" + self.lettres + ":" + str(self.taille) + "-> " + str(self.getDomaine())
 
     def get_Contrainte(self, mot):
         c1 = None
@@ -62,21 +67,25 @@ class Mot:
 
         return c1, c2
 
-    def initDomaine(self, dico):
-        m = self.lettres.replace(' ', '.')
-        d = dico.get_New_Domaine(m)
-        for i in d:
-            self.domaine.add(str(i.encode('utf-8')))
+    #def initDomaine(self, dico):
+    #    m = self.lettres.replace(' ', '.')
+    #    d = dico.get_New_Domaine(m)
+    #    for i in d:
+    #        self.domaine.add(str(i.encode('utf-8')))
+
+    def initDomaine(self, liste):
+
+        self.domaine2 = Dico(liste=liste)
 
 
     def printDomaine(self):
-        s = ""
-        for m in self.domaine:
-            s += str(m)+" "
-        print str(self) + " : " + str(len(self.domaine)) + " ->" + s
+        #s = ""
+        #for m in self.domaine2:
+        #    s += str(m)+" "
+        print str(self) + " : " + str(len(self.domaine2.get_Domaine(self.taille))) + " ->" + str(self.getDomaine())
 
     def printDomaineSize(self):
-        print str(self) + " -> " + str(len(self.domaine))
+        print str(self) + " -> " + str(len(self.domaine2.get_Domaine(self.taille)))
 
     def getContraintsX(self, x):
         return [cont[1] for cont in self.contrainteListe if cont[0] is x]
