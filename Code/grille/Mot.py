@@ -8,8 +8,12 @@ from grille.Dictionnaire import Dico
 
 
 class Mot:
-    
+
+    ID = 1
+
     def __init__(self, lettres, coord):
+        self.id = Mot.ID
+        Mot.ID = Mot.ID + 1
         self.lettres = lettres
         self.taille = len(lettres)
         self.xStart = coord[0]
@@ -49,7 +53,7 @@ class Mot:
                 self.lettres = d
         
     def __repr__(self):
-        return str(self.xStart) + "," + str(self.yStart) + ":" + self.lettres + ":" + str(self.taille) + "-> " + str(self.getDomaine())
+        return "id : " + str(self.id) + " " +str(self.xStart) + "," + str(self.yStart) + ":" + self.lettres + ":" + str(self.taille) + "-> " + str(self.getDomaine())
 
     def get_Contrainte(self, mot):
         c1 = None
@@ -82,7 +86,7 @@ class Mot:
         #s = ""
         #for m in self.domaine2:
         #    s += str(m)+" "
-        print str(self) + " : " + str(len(self.domaine2.get_Domaine(self.taille))) + " ->" + str(self.getDomaine())
+        print str(self)
 
     def printDomaineSize(self):
         print str(self) + " -> " + str(len(self.domaine2.get_Domaine(self.taille)))
@@ -95,3 +99,11 @@ class Mot:
 
         c = [item for item in c if item != -1]
         return c[0]
+
+    def getAllLettre(self, indiceY):
+        if self.lettres[indiceY] is ' ':
+            return self.domaine2.getAllLettre(indiceY)
+        return self.lettres[indiceY]
+
+    def updateFromContraintes(self, contrainte, yLettre):
+        return self.domaine2.updateFromContraintes(contrainte, yLettre)

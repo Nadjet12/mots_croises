@@ -52,12 +52,14 @@ class Algo(threading.Thread):
             (x, y) = file_L[0]
             file_L = file_L[1:]
             if self.revise2(x, y):
+                '''
                 print "Mots Verticaux :"
                 for m in self.grille.mots_verticaux:
                     m.printDomaine()
                 print "Mots Horizontaux :"
                 for m in self.grille.mots_horizontaux:
                     m.printDomaine()
+                '''
                 if not x.domaine2:
                     return False
                 for (i, j) in contrainte_Liste:
@@ -143,18 +145,23 @@ class Algo(threading.Thread):
                 # modif =
                 modif = False
             else :
-                yLettre = y.domaine2.getAllLettre(indiceY)
-                print "indice" + str(indiceY)
-                print "ylettre :" + str(yLettre)
+                yLettre = y.getAllLettre(indiceY)
+                '''
                 print 'avant'
                 print "x :" + str(x)
                 print "y :" + str(y)
-                bool = x.domaine2.updateFromContraintes(x.getContraintsXE(y), yLettre)
+                print "indiceX :" + str(x.getContraintsXE(y))
+                print "indiceY " + str(indiceY)
+                print "ylettre :" + str(yLettre)
+                '''
+                bool = x.updateFromContraintes(x.getContraintsXE(y), yLettre)
+                '''
                 print 'apres'
                 print "x :" + str(x)
                 print bool
                 #print bool
                 #x.printDomaineSize()
+                '''
                 modif =  bool
         return modif
 

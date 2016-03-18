@@ -60,9 +60,10 @@ class Noeud:
             self.liste_Noeud = d
             return b
         else:
+            bool = False
             for c, n in self.liste_Noeud.items():
-                return n.updateFromContraintes(profondeur-1, listes)
-
+                bool |= n.updateFromContraintes(profondeur-1, listes)
+            return bool
 
 
 class Dico:
@@ -128,18 +129,21 @@ class Dico:
             self.lettres = d
             return b
         else:
+            bool = False
             for c, n in self.lettres.items():
-                return n.updateFromContraintes(profondeur-1, listes)
+                bool |= n.updateFromContraintes(profondeur-1, listes)
+            return bool
 
 
-file = ["bbcd", "abce","abff", "abfg"]
+file = ["abca", "abce","abcb", "abfg"]
 #
 #start_time = time.time()
 #
 d = Dico(liste=file)
-print d.getAllLettre(2)
-d.updateFromContraintes(2, 'C')
-print d.getAllLettre(2)
+print d.get_Domaine(4)
+print d.getAllLettre(3)
+d.updateFromContraintes(3, 'E')
+print d.getAllLettre(3)
 print d.get_Domaine(4)
 #elapsed_time = time.time() - start_time
 #print("creation dictionnaire " + file + " : " + str(elapsed_time))
