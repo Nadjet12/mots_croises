@@ -89,14 +89,12 @@ class MainFrame(Frame):
     def toggle_Mot(self, bool):
         if bool:
             self.motFrame.ff.grid(row=1, column=1, sticky=N+E+S+W)
-            print "n"
         else:
             self.motFrame.ff.grid_forget()
 
 
     def toggle_Trace(self, bool):
         if bool:
-            print "sdfghj"
             self.traceFrame.grid(row=2, column=0, columnspan=2, sticky=N+E+S+W)
         else:
             self.traceFrame.grid_forget()

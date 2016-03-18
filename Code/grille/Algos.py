@@ -12,23 +12,42 @@ from grille import Grille
 import Mot
 
 
+class StoppableThread(object):
+    pass
+
+
 class Algo(threading.Thread):
     def __init__(self, queue=None, grille=None, traceframe=None, algo=None):
+        #super(StoppableThread, self).__init__()
         threading.Thread.__init__(self)
+
+        self.wait = False
         self.queue = queue
         self.grille = grille
         self.traceframe = traceframe
         self.algo = algo
         self.res = None
 
+        self._stop = threading.Event()
+    def stop(self):
+        self._stop.set()
+
+    def stopped(self):
+        return self._stop.isSet()
     def run(self):
         if self.algo is "AC3":
             bool = self.ac3()
             if self.queue:
                 self.queue.put(bool)
         elif self.algo is "RAC":
-            bool = self.RAC([], self.grille.mots_horizontaux + self.grille.mots_verticaux)
+            self.RAC([], self.grille.mots_horizontaux + self.grille.mots_verticaux)
             if self.queue:
+                self.queue.put(None)
+
+        elif self.algo is "CBJ":
+            self.RAC([], self.grille.mots_horizontaux + self.grille.mots_verticaux)
+            print "res =" + str(self.res)
+            if self.queue and self.res:
                 self.queue.put(self.res)
         else:
             print "Error"
@@ -168,8 +187,8 @@ class Algo(threading.Thread):
     def consistance(self, (x, mot), (y, mot2)):
 
         if mot == mot2:
-            if self.traceframe:
-                self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant ==\n", "err")
+            #if self.traceframe:
+            #    self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant ==\n", "err")
             return False
 
         crossPosX = [cont[1] for cont in x.contrainteListe if cont[0] is y]
@@ -177,13 +196,13 @@ class Algo(threading.Thread):
         if (len(crossPosX) > 0):
             crossPosX = [item for item in crossPosX if item != -1]
         if not crossPosX:
-            if self.traceframe:
-                self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Consistant \n", "curr")
+            #if self.traceframe:
+            #    self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Consistant \n", "curr")
             return True
 
         elif len(crossPosX) > 1:
-            if self.traceframe:
-                self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant ???\n", "err")
+            #if self.traceframe:
+            #    self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant ???\n", "err")
             return False
 
         crossPosY = [cont[1] for cont in y.contrainteListe if cont[0] is x]
@@ -191,23 +210,25 @@ class Algo(threading.Thread):
         if (len(crossPosY) > 0):
             crossPosY = [item for item in crossPosY if item != -1]
         if not crossPosY:
-            if self.traceframe:
-                self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Consistant \n", "curr")
+            #if self.traceframe:
+            #    self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Consistant \n", "curr")
             return True
 
         if len(crossPosY) > 1:
-            if self.traceframe:
-                self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant ???\n", "err")
+            #if self.traceframe:
+            #    self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant ???\n", "err")
             return False
 
         # print str(x)+" "+str(mot) + " end " + str(mot2) + " " + str(y) + " " + str(mot[crossPosX[0]] is mot2[crossPosY[0]])
         b = mot[crossPosX[0]] is mot2[crossPosY[0]]
+        '''
         if b:
             if self.traceframe:
                 self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Consistant \n", "curr")
         else:
             if self.traceframe:
                 self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant Lettre\n", "err")
+        '''
         return b
 
     def check_forward(self, xk, v, V):
@@ -274,19 +295,24 @@ class Algo(threading.Thread):
         :param i:
         """
         if not V:
-            if not self.res:
-                self.res = i
-            return i
+            print i
+            self.res = i
+            self.wait = True
+            if self.queue:
+                self.queue.put(self.res)
+            self.waitContinue()
+            return
+
 
         xk = self.heuristique_dom_mim(V)
         #print i, V
         V.remove(xk)
 
         for v in xk.get_Domaine():
+
             if self.consistance_locale(i, (xk, v)):
                 self.RAC(i + [(xk, v)], V[::])
 
-        return None
 
     def consistance_locale(self, i, y):
         for x in i:
@@ -364,3 +390,8 @@ class Algo(threading.Thread):
         :return:
         """
         pass
+
+    def waitContinue(self):
+        while self.wait:
+            pass
+            #print "a"

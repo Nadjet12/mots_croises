@@ -108,4 +108,15 @@ class Mot:
         return self.lettres[indiceY]
 
     def updateFromContraintes(self, contrainte, yLettre):
+        do= self.get_Domaine()
+        if len(do) == 1:
+            for d in do:
+                self.lettres = d
         return self.domaine2.updateFromContraintes(contrainte, yLettre)
+
+    def updateResultat(self):
+        do= self.get_Domaine()
+        if len(do) == 1:
+            print self
+            for d in do:
+                self.lettres = d

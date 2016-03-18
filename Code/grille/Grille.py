@@ -212,6 +212,7 @@ class Grille:
             m[0].lettres = m[1]
 
 
+
 #t = (20,20)
 #g = Grille(taille=t,alea=True)
 
