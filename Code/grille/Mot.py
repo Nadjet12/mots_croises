@@ -81,6 +81,8 @@ class Mot:
 
         self.domaine2 = Dico(liste=liste)
 
+    def get_Domaine(self):
+        return self.domaine2.get_Domaine(self.taille)
 
     def printDomaine(self):
         #s = ""

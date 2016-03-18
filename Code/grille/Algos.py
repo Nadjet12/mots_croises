@@ -282,7 +282,7 @@ class Algo(threading.Thread):
         #print i, V
         V.remove(xk)
 
-        for v in xk.domaine:
+        for v in xk.get_Domaine():
             if self.consistance_locale(i, (xk, v)):
                 self.RAC(i + [(xk, v)], V[::])
 
@@ -333,12 +333,12 @@ class Algo(threading.Thread):
         return V[0]
 
     def heuristique_dom_mim(self, V):
-        elemMin = [(len(V[0].domaine), 0)]
+        elemMin = [(len(V[0].get_Domaine()), 0)]
         for i in range(1, len(V)):
-            if len(V[i].domaine) < elemMin[0][0]:
-                elemMin = [(len(V[i].domaine), i)]
-            elif len(V[i].domaine) == elemMin[0][0]:
-                elemMin += [(len(V[i].domaine), i)]
+            if len(V[i].get_Domaine()) < elemMin[0][0]:
+                elemMin = [(len(V[i].get_Domaine()), i)]
+            elif len(V[i].get_Domaine()) == elemMin[0][0]:
+                elemMin += [(len(V[i].get_Domaine()), i)]
         if len(elemMin) == 1:
             return V[elemMin[0][1]]
         else:

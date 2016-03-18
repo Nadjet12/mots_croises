@@ -134,55 +134,55 @@ class Dico:
                 bool |= n.updateFromContraintes(profondeur-1, listes)
             return bool
 
-
-file = ["abca", "abce","abcb", "abfg"]
-#
-#start_time = time.time()
-#
-d = Dico(liste=file)
-print d.get_Domaine(4)
-print d.getAllLettre(3)
-d.updateFromContraintes(3, 'E')
-print d.getAllLettre(3)
-print d.get_Domaine(4)
-#elapsed_time = time.time() - start_time
-#print("creation dictionnaire " + file + " : " + str(elapsed_time))
-#print ""
-#
-#
-#taille = 15
-#start_time = time.time()
-#res = d.get_Domaine(taille)
-#
-#elapsed_time = time.time() - start_time
-#print("recherche taille "+ str(taille) + " dictionnaire " + str(len(res)) + " : " + str(elapsed_time))
-#print()
-#
-#pattern = "....k"
-#start_time = time.time()
-#res = d.get_New_Domaine(pattern)
-#elapsed_time = time.time() - start_time
-#print("recherche mot \"" + pattern + "\" dictionnaire " + str(len(res)) + " : " + str(elapsed_time))
-#print(res)
-#print()
-#
-#
-#pattern = " "+pattern+" "
-#pattern = pattern.replace('.', '[a-zA-Z]')
-#string = ' '.join([line.rstrip() for line in open(file, encoding="ISO-8859-1")])+' '
-#start_time = time.time()
-#p = re.compile(pattern)
-#res = p.findall(string)
-#elapsed_time = time.time() - start_time
-#print("recherche mot \"" + pattern + "\" regex " + str(len(res)) + " : " + str(elapsed_time))
-#print(res)
-#print()
-#
-#pattern = " stock "
-#start_time = time.time()
-#string = ' '.join([line.rstrip() for line in open(file, encoding="ISO-8859-1")])+' '
-#elapsed_time = time.time() - start_time
-#res = re.findall(pattern, string)
-#print("recherche mot \"" + pattern + "\" regex " + str(len(res)) + " : " + str(elapsed_time))
-#print(res)
-#print()
+if __name__ == "__main__":
+    file = ["abca", "abce","abcb", "abfg"]
+    #
+    #start_time = time.time()
+    #
+    d = Dico(liste=file)
+    print d.get_Domaine(4)
+    print d.getAllLettre(3)
+    d.updateFromContraintes(3, 'E')
+    print d.getAllLettre(3)
+    print d.get_Domaine(4)
+    #elapsed_time = time.time() - start_time
+    #print("creation dictionnaire " + file + " : " + str(elapsed_time))
+    #print ""
+    #
+    #
+    #taille = 15
+    #start_time = time.time()
+    #res = d.get_Domaine(taille)
+    #
+    #elapsed_time = time.time() - start_time
+    #print("recherche taille "+ str(taille) + " dictionnaire " + str(len(res)) + " : " + str(elapsed_time))
+    #print()
+    #
+    #pattern = "....k"
+    #start_time = time.time()
+    #res = d.get_New_Domaine(pattern)
+    #elapsed_time = time.time() - start_time
+    #print("recherche mot \"" + pattern + "\" dictionnaire " + str(len(res)) + " : " + str(elapsed_time))
+    #print(res)
+    #print()
+    #
+    #
+    #pattern = " "+pattern+" "
+    #pattern = pattern.replace('.', '[a-zA-Z]')
+    #string = ' '.join([line.rstrip() for line in open(file, encoding="ISO-8859-1")])+' '
+    #start_time = time.time()
+    #p = re.compile(pattern)
+    #res = p.findall(string)
+    #elapsed_time = time.time() - start_time
+    #print("recherche mot \"" + pattern + "\" regex " + str(len(res)) + " : " + str(elapsed_time))
+    #print(res)
+    #print()
+    #
+    #pattern = " stock "
+    #sta    rt_time = time.time()
+    #string = ' '.join([line.rstrip() for line in open(file, encoding="ISO-8859-1")])+' '
+    #elapsed_time = time.time() - start_time
+    #res = re.findall(pattern, string)
+    #print("recherche mot \"" + pattern + "\" regex " + str(len(res)) + " : " + str(elapsed_time))
+    #print(res)
+#pri    nt()
