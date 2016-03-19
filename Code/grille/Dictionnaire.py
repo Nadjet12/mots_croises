@@ -74,7 +74,6 @@ class Dico:
             lines = open(file, encoding="ISO-8859-1").readlines()
         elif liste:
             lines = liste
-        #print lines
         for line in lines:
             line = line.rstrip()
             self.add_Mot(line)

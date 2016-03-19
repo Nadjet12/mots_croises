@@ -55,7 +55,13 @@ class Grille:
 #            self.mots_verticaux += [Mot(str(mot[0]), eval(mot[1]))]
 #            mot = fichier.readline()
 #        fichier.close
-            
+
+
+    def get_Domaines_Sizes(self):
+        s = 0
+        for m in self.mots_horizontaux+self.mots_verticaux:
+            s += len(m.getDomaine())
+        return s
         
     def detecte_mots(self, filePath):
         

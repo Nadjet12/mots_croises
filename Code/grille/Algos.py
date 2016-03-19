@@ -31,11 +31,13 @@ class Algo(threading.Thread):
         self.res = None
 
         self._stop = threading.Event()
+
     def stop(self):
         self._stop.set()
 
     def stopped(self):
         return self._stop.isSet()
+
     def run(self):
         if self.algo is "AC3":
             bool = self.ac3()
@@ -142,7 +144,6 @@ class Algo(threading.Thread):
         #else:
         #    print " Temps :" + str(elapsed_time)
         return modif
-
 
     def revise2(self, x, y):
         """
@@ -308,30 +309,6 @@ class Algo(threading.Thread):
 
         return None
 
-    def forward_checking2(self,V, I):
-
-        liste = set()
-        for i in I:
-            contraints = i[0].contrainteListe
-            contraints = [c[0] for c in contraints if c[0] in V]
-            contraints = set(contraints)
-            liste.union(contraints)
-
-        for mot in liste:
-            for y in I:
-                self.revise2(mot, y[0])
-
-    def saveres(self, I):
-        for ind in range(len(self.grille.mots_verticaux)):
-            for i in I:
-                if i[0].id == self.grille.mots_verticaux[ind].id:
-                    self.grille.mots_verticaux[ind].lettres = i[1]
-        for ind in range(len(self.grille.mots_horizontaux)):
-            for i in I:
-                if i[0].id == self.grille.mots_horizontaux[ind].id:
-                    self.grille.mots_horizontaux[ind].lettres = i[1]
-
-
     def RAC(self, i, V):
         """
         si V = vide alors retourner la solution
@@ -345,31 +322,25 @@ class Algo(threading.Thread):
         :param V:
         :param i:
         """
-        #print len(V)
         if not V:
-            self.saveres(i)
-            #print i
+            print i
             self.res = i
             self.wait = True
             if self.queue:
                 self.queue.put(self.res)
-            #self.waitContinue()
+            self.waitContinue()
             print "fin"
             return
 
 
         xk = self.heuristique_contr_max(V)
-        #print i, V
+        print len(V)
         V.remove(xk)
 
         for v in xk.get_Domaine():
-            VV = deepcopy(V)
-            print xk
-            print VV
-            I = i[:] + [(xk, v)]
-            self.forward_checking2(VV, I)
+
             if self.consistance_locale(i, (xk, v)):
-                self.RAC(I, VV)
+                self.RAC(i + [(xk, v)], V[:])
 
 
     def consistance_locale(self, i, y):
@@ -381,7 +352,6 @@ class Algo(threading.Thread):
     def CBJ(self, V, i):
         print len(V)
         if not V:
-            self.saveres(i)
             self.res = i
             self.wait = True
             if self.queue:
@@ -398,16 +368,14 @@ class Algo(threading.Thread):
         nonBJ = True
         V.remove(xk)
 
-        VV = deepcopy(V)
 
         for v in xk.get_Domaine():
             if not nonBJ:
                 return conflit
             I = i[:] + [(xk, v)]
-            self.forward_checking2(VV, I)
             conflit_local = self.consistante(i, (xk, v))
             if not conflit_local:
-                conflit_fils = self.CBJ(VV[:], I)
+                conflit_fils = self.CBJ(V[:], I)
                 #print conflit_fils
                 if xk in conflit_fils:
                     conflit += conflit_fils

@@ -96,10 +96,10 @@ class Mot:
         print str(self) + " -> " + str(len(self.domaine2.get_Domaine(self.taille)))
 
     def getContraintsX(self, x):
-        return [cont[1] for cont in self.contrainteListe if cont[0] is x]
+        return [cont[1] for cont in self.contrainteListe if cont[0].id is x.id]
 
     def getContraintsXE(self, x):
-        c = [cont[1] for cont in self.contrainteListe if cont[0] is x]
+        c = [cont[1] for cont in self.contrainteListe if cont[0].id is x.id]
 
         c = [item for item in c if item != -1]
         return c[0]
