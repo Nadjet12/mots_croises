@@ -330,15 +330,15 @@ class Algo(threading.Thread):
             fait
         fsi
         """
-        print len(V)
+        #print len(V)
         if not V:
-            print i
+            #print i
             self.res = i
             self.wait = True
             if self.queue:
                 self.queue.put(self.res)
-            self.waitContinue()
-            print "fin"
+            #self.waitContinue()
+            #print "fin"
             return
 
         xk = V[0]
@@ -348,12 +348,13 @@ class Algo(threading.Thread):
             savedDom += [(v, v.getDomaine())]
 
         for v in xk.get_Domaine():
+
             I = i[:] + [(xk, v)]
             if self.check_forward2(xk, v, V):
                 self.forward_checking(V[:], I)
             for mot, dom in savedDom:
                 mot.initDomaine(dom)
-        print 'BACK'
+        #print 'BACK'
         return
 
     def RAC(self, i, V):

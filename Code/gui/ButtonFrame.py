@@ -55,7 +55,7 @@ class ButtonFrame(Frame):
             self.show(result)
         except Queue.Empty:
             #print "empty"
-            self.master.after(100, self.process_queue)
+            self.master.after(10, self.process_queue)
 
 
     def toggle_Mot(self):
@@ -75,7 +75,11 @@ class ButtonFrame(Frame):
             #self.traceFrame.grid_forget()
 
     def show(self, result):
-        if self.algo.algo is 'AC3':
+
+        if result == 'updateMot':
+            self.master.updateGrille()
+
+        elif self.algo.algo is 'AC3':
             mess = 'Non Arc-Consistant'
             if result:
                 mess = 'Arc-Consistant'

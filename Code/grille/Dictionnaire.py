@@ -75,6 +75,7 @@ class Dico:
         elif liste:
             lines = liste
         for line in lines:
+            #line = line.decode('ISO-8859-1').encode('utf8')
             line = line.rstrip()
             self.add_Mot(line)
 
