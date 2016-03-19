@@ -33,6 +33,8 @@ class MotFrame(Frame):
         max = 0
         for l in self.listes:
             for l2 in l:
+                l2.number.grid(row=line, column=col, ipady=10)
+                col += 1
                 for case in l2.caseMotFrame:
                     case.grid(row=line, column=col, ipady=10)
                     col += 1

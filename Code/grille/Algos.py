@@ -47,7 +47,7 @@ class Algo(threading.Thread):
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
             self.ac3()
             random.shuffle(liste)
-            self.RAC([],liste)
+            self.forward_checking(liste, [])
             if self.queue:
                 self.queue.put(None)
 
@@ -172,7 +172,7 @@ class Algo(threading.Thread):
                             print y
                             print s
                             print x.getDomaine()
-                        return True
+                        return len(x.getDomaine()) != 0
                 # peut-être regarder la taille des domaines si D(y) == 1
                 # D(x) = D(x)\D(y)
                 # modif =
@@ -259,6 +259,38 @@ class Algo(threading.Thread):
         '''
         return b
 
+    def check_forward2(self, xk, v, V):
+        for xj in V:
+            #print '--------------------------------'
+            #print xk
+            #print v
+            #print xj
+            contraintsY = xk.getContraintsX(xj)
+            #print contraintsY
+            if not contraintsY:
+                continue
+            else:
+                for indiceY in contraintsY:
+                    if indiceY == -1:
+                        s = xj.getDomaine()
+                        s = list(s)
+                        if v in s:
+                            s.remove(v)
+                            if len(s) == 0:
+                                return False
+                            xj.initDomaine(s)
+                        #print xj
+                    else :
+                        yLettre = v[indiceY]
+                        xj.updateFromContraintes(xj.getContraintsXE(xk), yLettre)
+                        #print xj
+                        if len(xj.getDomaine()) == 0:
+                            return False
+            if len(xj.getDomaine()) == 0:
+                return False
+        return True
+
+
     def check_forward(self, xk, v, V):
         """
         consistant ← true
@@ -272,10 +304,11 @@ class Algo(threading.Thread):
         retourner consistant
         """
 
+
         for xj in V:
             if not xj == xk:
                 sup = set()
-                for vv in xj.domaine:
+                for vv in xj.getDomaine():
                     if not self.consistance((xk, v), (xj, vv)):
                         sup.add(vv)
                 xj.remove(sup)
@@ -297,17 +330,31 @@ class Algo(threading.Thread):
             fait
         fsi
         """
-
+        print len(V)
         if not V:
+            print i
             self.res = i
-            return i
+            self.wait = True
+            if self.queue:
+                self.queue.put(self.res)
+            self.waitContinue()
+            print "fin"
+            return
 
         xk = V[0]
-        for v in xk.domaine:
-            if self.check_forward(xk, v, V[1:]):
-                return self.forward_checking(V[:], i + [(xk, v)])
+        V.remove(xk)
+        savedDom = []
+        for v in V:
+            savedDom += [(v, v.getDomaine())]
 
-        return None
+        for v in xk.get_Domaine():
+            I = i[:] + [(xk, v)]
+            if self.check_forward2(xk, v, V):
+                self.forward_checking(V[:], I)
+            for mot, dom in savedDom:
+                mot.initDomaine(dom)
+        print 'BACK'
+        return
 
     def RAC(self, i, V):
         """
