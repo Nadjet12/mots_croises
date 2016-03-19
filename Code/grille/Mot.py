@@ -11,9 +11,10 @@ class Mot:
 
     ID = 1
 
-    def __init__(self, lettres, coord):
+    def __init__(self, lettres, coord, dir):
         self.id = Mot.ID
         Mot.ID = Mot.ID + 1
+        self.dir = dir
         self.lettres = lettres
         self.taille = len(lettres)
         self.xStart = coord[0]
@@ -53,7 +54,8 @@ class Mot:
                 self.lettres = d
         
     def __repr__(self):
-        return "id : " + str(self.id) + " " +str(self.xStart) + "," + str(self.yStart) + ":" + self.lettres + ":" + str(self.taille) + "-> " + str(self.getDomaine())
+        dom = self.getDomaine()
+        return self.dir + " id : " + str(self.id) + " " +str(self.xStart) + "," + str(self.yStart) + ":" + self.lettres + ":" + str(self.taille) + " size:" + str(len(dom)) # + " -> " + str(dom)
 
     def get_Contrainte(self, mot):
         c1 = None
@@ -108,11 +110,13 @@ class Mot:
         return self.lettres[indiceY]
 
     def updateFromContraintes(self, contrainte, yLettre):
+        bool = self.domaine2.updateFromContraintes(contrainte, yLettre)
         do= self.get_Domaine()
         if len(do) == 1:
             for d in do:
                 self.lettres = d
-        return self.domaine2.updateFromContraintes(contrainte, yLettre)
+        return bool
+
 
     def updateResultat(self):
         do= self.get_Domaine()

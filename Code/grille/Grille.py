@@ -24,6 +24,7 @@ class Grille:
         self.taille = taille
         start_time = time.time()
         self.dico = Dico(dictionnaire)
+        #print len(self.dico.get_Domaine(4))
         elapsed_time = time.time() - start_time
         print "Creation dictionnaire " + dictionnaire.split("/")[-1] + " Temps : " + str(elapsed_time)
 
@@ -76,11 +77,11 @@ class Grille:
                         start[1] = j
                     mot += tab[i][j]
                     if j == (len(tab[0])-1) and len(mot) > 1:
-                        self.mots_horizontaux += [Mot(''.join([k for k in mot]), start)]
+                        self.mots_horizontaux += [Mot(''.join([k for k in mot]), start, "Hor")]
                 elif tab[i][j] == "$":
                     self.cases_noires += [(i,j)]
                     if len(mot) > 1:
-                        self.mots_horizontaux += [Mot(''.join([k for k in mot]), start)]
+                        self.mots_horizontaux += [Mot(''.join([k for k in mot]), start, "Hor")]
                     if len(mot) > 0:
                         mot = ""
                     
@@ -93,11 +94,11 @@ class Grille:
                         start[0] = i
                     mot += tab[i][j]
                     if i == (len(tab)-1) and len(mot) > 1:
-                        self.mots_verticaux += [Mot(''.join([k for k in mot]), start)]
+                        self.mots_verticaux += [Mot(''.join([k for k in mot]), start, "Ver")]
                 elif tab[i][j] == "$" or i == (len(tab)-1):
                     self.cases_noires += [(i,j)]
                     if len(mot) > 1:
-                        self.mots_verticaux += [Mot(''.join([k for k in mot]), start)]
+                        self.mots_verticaux += [Mot(''.join([k for k in mot]), start, "Ver")]
                     if len(mot) > 0:
                         mot = ""
                     
@@ -210,6 +211,9 @@ class Grille:
     def setResultat(self, list):
         for m in list:
             m[0].lettres = m[1]
+
+    def motSize(self):
+        return len(self.mots_horizontaux) + len(self.mots_verticaux)
 
 
 

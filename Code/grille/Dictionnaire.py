@@ -74,7 +74,7 @@ class Dico:
             lines = open(file, encoding="ISO-8859-1").readlines()
         elif liste:
             lines = liste
-
+        #print lines
         for line in lines:
             line = line.rstrip()
             self.add_Mot(line)
@@ -135,14 +135,14 @@ class Dico:
             return bool
 
 if __name__ == "__main__":
-    file = ["abca", "abce","abcb", "abfg"]
+    file = ["abca", "acbe","abcb", "fbfc"]
     #
     #start_time = time.time()
     #
     d = Dico(liste=file)
     print d.get_Domaine(4)
     print d.getAllLettre(3)
-    d.updateFromContraintes(3, 'E')
+    d.updateFromContraintes(3, ["B", "C"])
     print d.getAllLettre(3)
     print d.get_Domaine(4)
     #elapsed_time = time.time() - start_time

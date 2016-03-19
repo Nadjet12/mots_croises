@@ -54,7 +54,7 @@ class ButtonFrame(Frame):
             print "res :"+str(result)
             self.show(result)
         except Queue.Empty:
-            print "empty"
+            #print "empty"
             self.master.after(100, self.process_queue)
 
 

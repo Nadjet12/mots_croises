@@ -7,6 +7,8 @@ Created on Sat Mar 05 12:16:39 2016
 import threading
 import time
 import random
+from copy import deepcopy
+from types import NoneType
 
 from grille import Grille
 import Mot
@@ -40,15 +42,19 @@ class Algo(threading.Thread):
             if self.queue:
                 self.queue.put(bool)
         elif self.algo is "RAC":
-            self.RAC([], self.grille.mots_horizontaux + self.grille.mots_verticaux)
+            liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
+            self.ac3()
+            random.shuffle(liste)
+            self.RAC([],liste)
             if self.queue:
                 self.queue.put(None)
 
         elif self.algo is "CBJ":
-            self.RAC([], self.grille.mots_horizontaux + self.grille.mots_verticaux)
-            print "res =" + str(self.res)
-            if self.queue and self.res:
-                self.queue.put(self.res)
+            liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
+            random.shuffle(liste)
+            self.CBJ(liste, [])
+            #if self.queue:
+            #    self.queue.put(None)
         else:
             print "Error"
 
@@ -157,7 +163,14 @@ class Algo(threading.Thread):
                     d = x.getDomaine()
                     if s in d:
                         d.remove(s)
-                        x.initDomaine(d)
+                        try:
+                            x.initDomaine(d)
+                        except TypeError:
+                            print '-----EXECPT'
+                            print x
+                            print y
+                            print s
+                            print x.getDomaine()
                         return True
                 # peut-être regarder la taille des domaines si D(y) == 1
                 # D(x) = D(x)\D(y)
@@ -173,7 +186,21 @@ class Algo(threading.Thread):
                 print "indiceY " + str(indiceY)
                 print "ylettre :" + str(yLettre)
                 '''
+                '''
+                print '!= AVANT-----------------'
+                print x
+                print y
+                print x.getContraintsXE(y)
+                print indiceY
+                print yLettre
+                '''
                 bool = x.updateFromContraintes(x.getContraintsXE(y), yLettre)
+                '''
+                print '!= APRES-----------------'
+                print x
+                print y
+                #h = raw_input()
+                '''
                 '''
                 print 'apres'
                 print "x :" + str(x)
@@ -277,9 +304,33 @@ class Algo(threading.Thread):
         xk = V[0]
         for v in xk.domaine:
             if self.check_forward(xk, v, V[1:]):
-                return self.forward_checking(V, i + [(xk, v)])
+                return self.forward_checking(V[:], i + [(xk, v)])
 
         return None
+
+    def forward_checking2(self,V, I):
+
+        liste = set()
+        for i in I:
+            contraints = i[0].contrainteListe
+            contraints = [c[0] for c in contraints if c[0] in V]
+            contraints = set(contraints)
+            liste.union(contraints)
+
+        for mot in liste:
+            for y in I:
+                self.revise2(mot, y[0])
+
+    def saveres(self, I):
+        for ind in range(len(self.grille.mots_verticaux)):
+            for i in I:
+                if i[0].id == self.grille.mots_verticaux[ind].id:
+                    self.grille.mots_verticaux[ind].lettres = i[1]
+        for ind in range(len(self.grille.mots_horizontaux)):
+            for i in I:
+                if i[0].id == self.grille.mots_horizontaux[ind].id:
+                    self.grille.mots_horizontaux[ind].lettres = i[1]
+
 
     def RAC(self, i, V):
         """
@@ -294,24 +345,31 @@ class Algo(threading.Thread):
         :param V:
         :param i:
         """
+        #print len(V)
         if not V:
-            print i
+            self.saveres(i)
+            #print i
             self.res = i
             self.wait = True
             if self.queue:
                 self.queue.put(self.res)
-            self.waitContinue()
+            #self.waitContinue()
+            print "fin"
             return
 
 
-        xk = self.heuristique_dom_mim(V)
+        xk = self.heuristique_contr_max(V)
         #print i, V
         V.remove(xk)
 
         for v in xk.get_Domaine():
-
+            VV = deepcopy(V)
+            print xk
+            print VV
+            I = i[:] + [(xk, v)]
+            self.forward_checking2(VV, I)
             if self.consistance_locale(i, (xk, v)):
-                self.RAC(i + [(xk, v)], V[::])
+                self.RAC(I, VV)
 
 
     def consistance_locale(self, i, y):
@@ -321,38 +379,85 @@ class Algo(threading.Thread):
         return True
 
     def CBJ(self, V, i):
-        '''
-
-        '''
+        print len(V)
         if not V:
-            if not self.res:
-                self.res = i
-            return i
-        xk = self.heuristique_triviale(V)
+            self.saveres(i)
+            self.res = i
+            self.wait = True
+            if self.queue:
+                self.queue.put(self.res)
+            self.waitContinue()
+            print "fin"
+            return []
+
+
+        xk = self.heuristique_instance_max(V, i)
+
+        #print xk
         conflit = []
         nonBJ = True
         V.remove(xk)
-        for v in xk.domaine:
+
+        VV = deepcopy(V)
+
+        for v in xk.get_Domaine():
             if not nonBJ:
                 return conflit
-            conflit_local = self.consistante(i + [(xk, v)])
+            I = i[:] + [(xk, v)]
+            self.forward_checking2(VV, I)
+            conflit_local = self.consistante(i, (xk, v))
             if not conflit_local:
-                conflit_fils = self.CBJ(V[::], i + [(xk, v)])
+                conflit_fils = self.CBJ(VV[:], I)
+                #print conflit_fils
                 if xk in conflit_fils:
                     conflit += conflit_fils
                 else:
                     conflit = conflit_fils
                     nonBJ = False
             conflit += conflit_local
+        return conflit
 
-    def consistante(self, inst):
+    def CBJ2(self, V, i):
+        print len(V)
+        if not V:
+            self.res = i
+            self.wait = True
+            if self.queue:
+                self.queue.put(self.res)
+            self.waitContinue()
+            print "fin"
+            return []
+
+
+        xk = self.heuristique_instance_max(V, i)
+        #print xk
         conflit = []
-        for i in range(len(inst)):
-            x1 = inst[i]
-            for j in range(i + 1, len(inst)):
-                x2 = inst[j]
-                if not self.consistance(x1, x2):
-                    conflit += [x1[0], x2[0]]
+        nonBJ = True
+        V.remove(xk)
+        Dxk = list(xk.get_Domaine())[:]
+
+        while Dxk and nonBJ:
+            v = Dxk.pop()
+            I = i[:] + [(xk, v)]
+            conflit_local = self.consistante(i, (xk, v))
+            if not conflit_local:
+                conflit_fils = self.CBJ2(V[:], I)
+                if xk in conflit_fils:
+                    conflit = conflit_fils
+                else:
+                    conflit += conflit_fils
+                    nonBJ = False
+            else:
+                conflit += conflit_local
+        return conflit
+
+
+
+    def consistante(self, inst, (xk, v)):
+        conflit = []
+        for y in inst:
+            if not self.consistance(y, (xk, v)):
+                conflit += [y[0]]
         return conflit
 
     def heuristique_triviale(self, V):
@@ -382,13 +487,40 @@ class Algo(threading.Thread):
         else:
             return V[(random.choice(elemMax))[1]]
 
+    def getcontraintesNB(self, x, i):
+        c = x.contrainteListe
+        nb = 0
+        if not i:
+            return 0
+        t = [v[0] for v in i]
+        cc = [v[0] for v in c]
+        for el in cc:
+            if el in t:
+                nb += 1
+        return nb
 
-    def heuristique_instance_max(self, V):
+
+    def heuristique_instance_max(self, V, inst):
         """
         variable qui a le plus de contrainte avec les variables déjà instanciées
         :param V:
         :return:
         """
+        elemMax = [(self.getcontraintesNB(V[0], inst), 0)]
+        for i in range(1, len(V)):
+            nb = self.getcontraintesNB(V[i], inst)
+            if  nb > elemMax[0][0]:
+                elemMax = [(nb, i)]
+            elif len(V[i].contrainteListe) == elemMax[0][0]:
+                elemMax += [(nb, i)]
+        if len(elemMax) == 1:
+            return V[elemMax[0][1]]
+        else:
+           return V[(random.choice(elemMax))[1]]
+
+
+
+
         pass
 
     def waitContinue(self):
