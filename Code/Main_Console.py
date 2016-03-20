@@ -4,14 +4,14 @@ import time
 from grille.Algos import Algo
 from grille.Grille import Grille
 
-Grille_Var = "./grillesVides/td3vide.mc"
+#Grille_Var = "./grillesVides/td3vide.mc"
 #Grille_Var = "./grillesVides/A.mc"
-# Grille_Var = "./grillesVides/C.mc"
+Grille_Var = "./grillesVides/C.mc"
 #Grille_Var = "./grillesVides/7.mc"
-Dictionnaire_Var = "./mots/850-mots-us.txt"
+#Dictionnaire_Var = "./mots/850-mots-us.txt"
 #Dictionnaire_Var = "./mots/test2.txt"
-#Dictionnaire_Var = "./mots/test2.txt"
-#Dictionnaire_Var = "./mots/22600-mots-fr.txt"
+#Dictionnaire_Var = "./mots/test.txt"
+Dictionnaire_Var = "./mots/58000-mots-us.txt"
 #Dictionnaire_Var = "./mots/135000-mots-fr.txt"
 #Dictionnaire_Var = "./mots/td3.txt"
 #Algo_Var = "AC3"

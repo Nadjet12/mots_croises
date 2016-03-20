@@ -29,7 +29,7 @@ class Algo(threading.Thread):
         self.traceframe = traceframe
         self.algo = algo
         self.res = None
-
+        self.fini = False
         self._stop = threading.Event()
 
     def stop(self):
@@ -43,7 +43,15 @@ class Algo(threading.Thread):
             bool = self.ac3()
             if self.queue:
                 self.queue.put(bool)
-        elif self.algo is "RAC":
+        elif self.algo is "FC":
+            liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
+            #self.ac3()
+            random.shuffle(liste)
+            self.forward_checking(liste, [])
+            if self.queue:
+                self.queue.put(None)
+
+        elif self.algo is "FC/AC3":
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
             self.ac3()
             random.shuffle(liste)
@@ -330,28 +338,28 @@ class Algo(threading.Thread):
             fait
         fsi
         """
-        #print len(V)
+        print len(V)
         if not V:
             #print i
             self.res = i
             self.wait = True
             if self.queue:
                 self.queue.put(self.res)
-            #self.waitContinue()
+            self.waitContinue()
             #print "fin"
             return
 
-        xk = V[0]
+        xk = self.heuristique_instance_max(V, i)
         V.remove(xk)
         savedDom = []
         for v in V:
             savedDom += [(v, v.getDomaine())]
 
         for v in xk.get_Domaine():
-
             I = i[:] + [(xk, v)]
             if self.check_forward2(xk, v, V):
                 self.forward_checking(V[:], I)
+
             for mot, dom in savedDom:
                 mot.initDomaine(dom)
         #print 'BACK'
