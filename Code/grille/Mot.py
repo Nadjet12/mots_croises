@@ -19,12 +19,12 @@ class Mot:
         self.taille = len(lettres)
         self.xStart = coord[0]
         self.yStart = coord[1]
-        #self.domaine = set()
+        self.domaineListe = []
         self.domaine2 = None
         self.contrainteListe = []
         
     def getDomaine(self):
-        return list(self.domaine2.get_Domaine(self.taille))
+        return self.domaineListe
 
     def ajoute_contrainte(self, obj, i):
         self.contrainteListe += [(obj, i)]
@@ -82,9 +82,8 @@ class Mot:
     def initDomaine(self, liste):
 
         self.domaine2 = Dico(liste=liste)
+        self.domaineListe = list(self.domaine2.get_Domaine(self.taille))
 
-    def get_Domaine(self):
-        return self.domaine2.get_Domaine(self.taille)
 
     def printDomaine(self):
         #s = ""
@@ -111,11 +110,16 @@ class Mot:
 
     def updateFromContraintes(self, contrainte, yLettre):
         bool = self.domaine2.updateFromContraintes(contrainte, yLettre)
-        do= self.get_Domaine()
+        self.domaineListe = list(self.domaine2.get_Domaine(self.taille))
+        do= self.getDomaine()
         if len(do) == 1:
             for d in do:
                 self.lettres = d
         return bool
+
+    def removeMotFromDomaine(self, mot):
+        self.domaine2.removeMot(mot)
+        self.domaineListe = list(self.domaine2.get_Domaine(self.taille))
 
 
     def updateResultat(self):

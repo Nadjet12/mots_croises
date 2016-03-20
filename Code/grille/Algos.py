@@ -179,14 +179,7 @@ class Algo(threading.Thread):
                     d = x.getDomaine()
                     if s in d:
                         d.remove(s)
-                        try:
-                            x.initDomaine(d)
-                        except TypeError:
-                            print '-----EXECPT'
-                            print x
-                            print y
-                            print s
-                            print x.getDomaine()
+                        x.initDomaine(d)
                         return len(x.getDomaine()) != 0
                 # peut-être regarder la taille des domaines si D(y) == 1
                 # D(x) = D(x)\D(y)
@@ -293,7 +286,7 @@ class Algo(threading.Thread):
                             s.remove(v)
                             if len(s) == 0:
                                 return False
-                            xj.initDomaine(s)
+                            xj.removeMotFromDomaine(s)
                         #print xj
                     else :
                         yLettre = v[indiceY]
@@ -362,11 +355,10 @@ class Algo(threading.Thread):
         for v in V:
             savedDom += [(v, v.getDomaine())]
 
-        for v in xk.get_Domaine():
+        for v in xk.getDomaine():
             I = i[:] + [(xk, v)]
             if self.check_forward2(xk, v, V):
                 self.forward_checking(V[:], I)
-
             for mot, dom in savedDom:
                 mot.initDomaine(dom)
         #print 'BACK'

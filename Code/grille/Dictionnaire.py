@@ -65,6 +65,13 @@ class Noeud:
                 bool |= n.updateFromContraintes(profondeur-1, listes)
             return bool
 
+    def removeMot(self, mot):
+        mot = mot.upper()
+        if len(mot) == 1:
+            self.liste_Noeud[mot[0]].peut_finir= False
+        else:
+            self.liste_Noeud[mot[0]].removeMot(mot[1:])
+
 
 class Dico:
     def __init__(self, file=None, liste=None):
@@ -102,6 +109,14 @@ class Dico:
             if mot_Imcomplet[0] in self.lettres:
                 liste.update(self.lettres[mot_Imcomplet[0]].get_list_Mots(mot_Imcomplet, mot_Imcomplet[0], 1))
         return liste
+
+    def removeMot(self, mot):
+        mot = mot.upper()
+        if len(mot) == 1:
+            self.lettres[mot[0]].peut_finir= False
+        else:
+            self.lettres[mot[0]].removeMot(mot[1:])
+
 
     def get_Domaine(self, taille):
         return self.get_New_Domaine(''.join(['.' for i in range(taille)]))
