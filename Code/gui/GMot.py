@@ -20,6 +20,9 @@ class GMot:
                                   font=font, width=5, justify=CENTER, m=mot, ui=self, pos=i)
                              for i in range(mot.taille)]
         self.button = Button(master2, text="Domaine", command=self.showDomaine)
+        self.number = Entry(master2, validate="key", state=NORMAL, bg='grey',
+                                     font=font, width=5, justify=CENTER)
+        self.number.insert(0, self.mot.id)
 
 
     def update(self):
@@ -40,7 +43,7 @@ class GMot:
 
     def showDomaine(self):
         s = ""
-        for i in self.mot.domaine:
+        for i in self.mot.get_Domaine():
             s += str(i)+"\n"
         win = Toplevel()
         win.title("Domaine de " + str(self.mot.lettres))

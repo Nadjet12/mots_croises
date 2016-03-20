@@ -15,21 +15,31 @@ class MainFrame(Frame):
 
         Frame.__init__(self, master)
         self.algo = algo
-        self.grille = algo.grille
+        print self.algo
         self.traceFrame = TraceFrame(self)
-        self.grilleFrame = GrilleFrame(self, self.grille)
         self.motFrame = MotFrame(self)
         algo.traceframe = self.traceFrame
         self.queue = queue
         self.buttonFrame = ButtonFrame(self, self.queue, self.algo, self.traceFrame, self.motFrame)
 
         self.algo.traceframe = self.traceFrame
+        self.grilleFrame = None
+        self.grille = None
+        self.buttonFrame.grid(row=0, column=0, sticky=N+E+S+W)
+        #self.grilleFrame.grid(row=1, column=0, sticky=N+E+S+W)
+
+
+    def open_grille(self, grille):
+        self.grille = self.algo.grille
+        print self.grille
+        self.grilleFrame = GrilleFrame(self, self.grille)
         liste_mots = self.set_Grille()
         self.motFrame.listes = liste_mots
         self.motFrame.set_Mots()
-
-        self.buttonFrame.grid(row=0, column=0, sticky=N+E+S+W)
         self.grilleFrame.grid(row=1, column=0, sticky=N+E+S+W)
+        self.buttonFrame.grille = self.grille
+
+
 
     def set_Grille(self):
 
@@ -89,14 +99,12 @@ class MainFrame(Frame):
     def toggle_Mot(self, bool):
         if bool:
             self.motFrame.ff.grid(row=1, column=1, sticky=N+E+S+W)
-            print "n"
         else:
             self.motFrame.ff.grid_forget()
 
 
     def toggle_Trace(self, bool):
         if bool:
-            print "sdfghj"
             self.traceFrame.grid(row=2, column=0, columnspan=2, sticky=N+E+S+W)
         else:
             self.traceFrame.grid_forget()

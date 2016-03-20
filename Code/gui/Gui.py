@@ -9,13 +9,16 @@ from Tkinter import *
 import time
 from tkFileDialog import askopenfilename, asksaveasfilename
 
+from grille.Algos import Algo
+from grille.Grille import Grille
+from gui.GrilleFrame import GrilleFrame
 from gui.MainFrame import MainFrame
 
 DICO_PATH = './mots/'
 
 class Gui(Frame):
 
-    def __init__(self, master, root, algo):
+    def __init__(self, master, root, algo=None):
 
         Frame.__init__(self, master)
 
@@ -47,10 +50,10 @@ class Gui(Frame):
         self.radio_algo = StringVar()
         algomenu.add_radiobutton(label="AC3", variable=self.radio_algo, value=1,
                                  command=lambda arg0="AC3": self.update_Algo(arg0))
-        algomenu.add_radiobutton(label="RAC", variable=self.radio_algo, value=2,
-                                 command=lambda arg0="RAC": self.update_Algo(arg0))
-        algomenu.add_radiobutton(label="RAC Forward-checking", variable=self.radio_algo, value=3,
-                                 command=lambda arg0="RAC Forward-checking": self.update_Algo(arg0))
+        algomenu.add_radiobutton(label="Forward Checking", variable=self.radio_algo, value=2,
+                                 command=lambda arg0="FC": self.update_Algo(arg0))
+        algomenu.add_radiobutton(label="FC/AC3", variable=self.radio_algo, value=3,
+                                 command=lambda arg0="FC_AC3": self.update_Algo(arg0))
 
         algomenu.add_radiobutton(label="BCJ", variable=self.radio_algo, value=4,
                                  command=lambda arg0="BCJ": self.update_Algo(arg0))
@@ -75,8 +78,11 @@ class Gui(Frame):
         menubar.add_cascade(label="Algorithme", menu=algomenu)
         menubar.add_cascade(label="Dictionnaire", menu=dicomenu)
 
+        self.dico = self.dliste[self.radio_dico.get()-1]
+
         master.config(menu=menubar)
-        self.algo = algo
+        self.algo = Algo(grille=None, algo="AC3")
+        self.grille = None
         self.algo.queue = self.thread_queue
         self.mainFrame = MainFrame(self, self.algo, self.thread_queue)
         self.mainFrame.pack()
@@ -84,26 +90,34 @@ class Gui(Frame):
 
 
     def update_Algo(self, arg0):
-        print "update Algo  :" + arg0
-        print "a faire update_Algo"
-        print arg0
+        self.algo.algo = arg0
 
     def update_Dico(self):
         print "update dico :" + str(self.dliste[self.radio_dico.get()-1])
+        self.dico = self.dliste[self.radio_dico.get()-1]
+        if self.grille:
+            self.grille.updateDico(self.dico)
         print "a faire update_dico"
 
     def file_chooser(self):
         filename = askopenfilename(**self.openfileoptions)
+        self.grille = Grille(filePath=filename, dictionnaire=self.dico)
+        self.algo.grille = self.grille
         print "a faire file_chooser"
+        self.setGrille()
 
 
     def genere_Grille(self):
         print "a faire genere_Grille"
+        self.grille =  Grille(taille=(10,10),alea=True, dictionnaire=self.dico)
+        self.setGrille()
 
     def file_saver(self):
         filename = asksaveasfilename(**self.openfileoptions)
         print "a faire genere_Grille"
 
+    def setGrille(self):
+        self.mainFrame.open_grille(self.grille)
         
     '''
     def __init__(self, master):
