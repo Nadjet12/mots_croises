@@ -51,10 +51,17 @@ class Algo(threading.Thread):
             if self.queue:
                 self.queue.put(None)
 
-        elif self.algo is "FC/AC3":
+        elif self.algo is "FC_AC3":
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
+            taileDom = self.grille.get_Domaines_Sizes()
+            print "Taille des domaines : " + str(taileDom) + " mots"
+            #start_time = time.time()
             self.ac3()
-            random.shuffle(liste)
+            #elapsed_time = time.time() - start_time
+            #print "AC3 Temps :" + str(elapsed_time)
+            taileDom2 = self.grille.get_Domaines_Sizes()
+            print "Taille des domaines : " + str(taileDom2) + " mots\nReduit de :" + str(taileDom-taileDom2) + " mots"
+
             self.forward_checking(liste, [])
             if self.queue:
                 self.queue.put(None)
@@ -338,14 +345,14 @@ class Algo(threading.Thread):
             fait
         fsi
         """
-        print len(V)
+        #print len(V)
         if not V:
             #print i
             self.res = i
             self.wait = True
             if self.queue:
                 self.queue.put(self.res)
-            self.waitContinue()
+            #self.waitContinue()
             #print "fin"
             return
 

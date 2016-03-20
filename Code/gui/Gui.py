@@ -53,7 +53,7 @@ class Gui(Frame):
         algomenu.add_radiobutton(label="Forward Checking", variable=self.radio_algo, value=2,
                                  command=lambda arg0="FC": self.update_Algo(arg0))
         algomenu.add_radiobutton(label="FC/AC3", variable=self.radio_algo, value=3,
-                                 command=lambda arg0="FC/AC3": self.update_Algo(arg0))
+                                 command=lambda arg0="FC_AC3": self.update_Algo(arg0))
 
         algomenu.add_radiobutton(label="BCJ", variable=self.radio_algo, value=4,
                                  command=lambda arg0="BCJ": self.update_Algo(arg0))
