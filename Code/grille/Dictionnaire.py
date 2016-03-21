@@ -96,9 +96,12 @@ class Dico:
         for line in lines:
             #line = line.decode('ISO-8859-1').encode('utf8')
             line = line.rstrip()
+            line = line.split(' ')
             v = random.random()
+            if len(line)> 1:
+                v = eval(line[1])
 
-            self.add_Mot(line, value=v)
+            self.add_Mot(line[0], value=v)
 
     def add_Mot(self, mot, value=0):
         print value
@@ -164,7 +167,7 @@ class Dico:
             return bool
 
 if __name__ == "__main__":
-    file = ["abca", "acbe","abcb", "fbfc"]
+    file = ["abca 1", "acbe","abcb 1", "fbfc"]
     #
     #start_time = time.time()
     #
