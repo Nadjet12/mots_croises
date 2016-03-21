@@ -286,7 +286,7 @@ class Algo(threading.Thread):
                             s.remove(v)
                             if len(s) == 0:
                                 return False
-                            xj.removeMotFromDomaine(s)
+                            xj.removeMotFromDomaine(v)
                         #print xj
                     else :
                         yLettre = v[indiceY]
@@ -550,3 +550,8 @@ class Algo(threading.Thread):
         while self.wait:
             pass
             #print "a"
+
+
+    def branch_bound(self, V, i):
+        if not V:
+            return i
