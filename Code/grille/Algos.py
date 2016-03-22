@@ -16,7 +16,7 @@ class Algo(threading.Thread):
         #super(StoppableThread, self).__init__()
         threading.Thread.__init__(self)
 
-        self.time = 0
+        self.timed = 0
         self.nb = 0
         self.queue = queue
         self.grille = grille
@@ -28,6 +28,8 @@ class Algo(threading.Thread):
         self.pause_cond = threading.Condition(threading.Lock())
         self.paused = False
         self._stop = threading.Event()
+
+
 
     def stop(self):
         self._stop.set()
@@ -103,9 +105,10 @@ class Algo(threading.Thread):
             fsi
         ftq
         """
+
+        nbMot = self.grille.get_Domaines_Sizes()
         start_time = time.time()
         if self.traceframe:
-            print 'Hello'
             self.traceframe.add_To_Trace("Debut de l'AC3\n", 'in')
         contrainte_Liste = self.grille.getContraintes()
         file_L = contrainte_Liste[::]
@@ -120,55 +123,12 @@ class Algo(threading.Thread):
 
         elapsed_time = time.time() - start_time
         if self.traceframe:
-            self.traceframe.add_To_Trace("Fin de l'AC3", "out")
+            self.traceframe.add_To_Trace("Fin de l'AC3 : " + str(nbMot-self.grille.get_Domaines_Sizes()) + " Mots ont été supprimés", "out")
             self.traceframe.add_To_Trace(" Temps :" + str(elapsed_time) + "\n", "time")
         else:
             print "AC3 Temps :" + str(elapsed_time)
 
         return True
-
-    def revise(self, x, y):
-        """
-        modification ← false
-        faire pour chaque v ∈ Di
-            si il n'existe pas de v∈ Dj | {xi → v, xj → v} est consistante alors
-                faire Di ← Di \ {v}
-                    modification ← vrai
-                fait
-        fait
-        retourner modification
-        """
-        if self.traceframe:
-            self.traceframe.add_To_Trace("Debut revise de :" + str(x.lettres) + " et " + str(y.lettres) + "\n", "in")
-        start_time = time.time()
-
-        modif = False
-        tmp = set()
-        for mot in x.domaine:
-            consistant = False
-            for mot2 in y.domaine:
-                if self.consistance((x, mot), (y, mot2)):
-                    consistant = True
-                    break
-            if not consistant:
-                if self.traceframe:
-                    self.traceframe.add_To_Trace(
-                        'mot :' + str(mot) + " supprimer du domaine de " + str(x) + " a cause de " + str(y) + "\n",
-                        "curr")
-                tmp.add(mot)
-                modif = True
-
-        x.remove(tmp)
-        s = [i + " " for i in tmp]
-        s = "".join(s)
-        elapsed_time = time.time() - start_time
-        if self.traceframe:
-            self.traceframe.add_To_Trace("Les mots " + str(s) + " sont supprimés de " + str(x.lettres) + "\n", "curr")
-            self.traceframe.add_To_Trace("Fin revise de :" + str(x.lettres) + " et " + str(y.lettres), "out")
-            self.traceframe.add_To_Trace(" Temps :" + str(elapsed_time) + "\n", "time")
-        #else:
-        #    print " Temps :" + str(elapsed_time)
-        return modif
 
     def revise2(self, x, y):
         """
@@ -196,7 +156,10 @@ class Algo(threading.Thread):
                 modif = False
             else :
                 yLettre = y.getAllLettre(indiceY)
+                nb = len(x.getDomaine())
                 bool = x.updateFromContraintes(x.getContraintsXE(y), yLettre)
+
+                nb -= len(x.getDomaine())
                 modif =  bool
         return modif
 
@@ -294,7 +257,7 @@ class Algo(threading.Thread):
                     return False
         return True
 
-    def forward_checking(self, V, i, timed=0):
+    def forward_checking(self, V, i):
         """
         si V = ∅ alors i est une solution
         sinon
@@ -308,14 +271,16 @@ class Algo(threading.Thread):
             fait
         fsi
         """
-        #print str(self.nb)
-        #sys.stdout.flush()
-        if timed == 0:
-            timed = time.time()
+        if self.timed == 0:
+            self.traceframe.add_To_Trace("Debut du Forward Checking :\n", "in")
+            self.timed = time.time()
 
         if not V:
-            timed = time.time() - timed
-            print timed
+            self.timed = time.time() - self.timed
+            print self.timed
+            if self.traceframe:
+                self.traceframe.add_To_Trace("Fin du Forward Checking ", "out")
+                self.traceframe.add_To_Trace(" Temps :" + str(self.timed) + "\n", "time")
             print i
             self.res = i
             if self.queue:
@@ -324,7 +289,9 @@ class Algo(threading.Thread):
             with self.pause_cond:
                 while self.paused:
                     self.pause_cond.wait()
-            print "fin"
+                self.timed = time.time()
+
+
             return
 
         xk = self.heur(V, i)
@@ -332,17 +299,12 @@ class Algo(threading.Thread):
         savedDom = []
         for v in V:
             savedDom += [(v, v.getDomaine(), len(v.getDomaine()))]
-            #savedDom += [(v, deepcopy(v), len(v.getDomaine()))]
-            #savedDom += [(v, deepcopy(v.domaine2), len(v.getDomaine()))]
-            #if v.id == 3:
-            #    print 'Avant'
-            #    print len(v.getDomaine())
 
         for v in xk.getDomaine():
             self.nb +=1
             I = i[:] + [(xk, v)]
             if self.check_forward2(xk, v, V):
-                self.forward_checking(V[:], I, timed)
+                self.forward_checking(V[:], I)
             for mot, dom, taille in savedDom:
                 mot.initDomaine(dom)
         return

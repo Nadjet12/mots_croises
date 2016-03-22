@@ -3,6 +3,8 @@
 import Queue
 from Tkinter import *
 
+import time
+
 
 class ButtonFrame(Frame):
 
@@ -54,7 +56,7 @@ class ButtonFrame(Frame):
             print "res :"+str(result)
             self.show(result)
         except Queue.Empty:
-            print "empty"
+            #print "empty"
             self.after(1000, self.process_queue)
 
 
@@ -91,13 +93,12 @@ class ButtonFrame(Frame):
             print "hello"
             self.continueButton.configure(state="normal")
             self.grille.setResultat(result)
-            print "Mots Verticaux :"
-            for m in self.grille.mots_verticaux:
-                print m
-            print "Mots Horizontaux :"
-            for m in self.grille.mots_horizontaux:
-                print m
             self.master.updateGrille()
+            for m in self.grille.mots_horizontaux + self.grille.mots_verticaux:
+                if self.algo.traceframe:
+                    self.algo.traceframe.add_To_Trace(str(m)+'\n', "curr")
+                print m
+
 
             pass
         else:

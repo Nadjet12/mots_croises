@@ -15,7 +15,7 @@ Dictionnaire_Var = "./mots/850-mots-us.txt"
 #Dictionnaire_Var = "./mots/test.txt"
 #Dictionnaire_Var = "./mots/58000-mots-us.txt"
 #Dictionnaire_Var = "./mots/135000-mots-fr.txt"
-Dictionnaire_Var = "./mots/td32.txt"
+#Dictionnaire_Var = "./mots/td32.txt"
 #Algo_Var = "AC3"
 Algo_Var = "FC_AC3"
 

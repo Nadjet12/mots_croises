@@ -81,11 +81,11 @@ class Grille:
                         start[1] = j
                     mot += tab[i][j]
                     if j == (len(tab[0]) - 1) and len(mot) > 1:
-                        self.mots_horizontaux += [Mot(''.join([k for k in mot]), start, "Hor")]
+                        self.mots_horizontaux += [Mot(''.join([k for k in mot]), start, "Horizontal")]
                 elif tab[i][j] == "$":
                     self.cases_noires += [(i, j)]
                     if len(mot) > 1:
-                        self.mots_horizontaux += [Mot(''.join([k for k in mot]), start, "Hor")]
+                        self.mots_horizontaux += [Mot(''.join([k for k in mot]), start, "Horizontal")]
                     if len(mot) > 0:
                         mot = ""
 
@@ -98,11 +98,11 @@ class Grille:
                         start[0] = i
                     mot += tab[i][j]
                     if i == (len(tab) - 1) and len(mot) > 1:
-                        self.mots_verticaux += [Mot(''.join([k for k in mot]), start, "Ver")]
+                        self.mots_verticaux += [Mot(''.join([k for k in mot]), start, "Vertical")]
                 elif tab[i][j] == "$" or i == (len(tab) - 1):
                     self.cases_noires += [(i, j)]
                     if len(mot) > 1:
-                        self.mots_verticaux += [Mot(''.join([k for k in mot]), start, "Ver")]
+                        self.mots_verticaux += [Mot(''.join([k for k in mot]), start, "Vertical")]
                     if len(mot) > 0:
                         mot = ""
 

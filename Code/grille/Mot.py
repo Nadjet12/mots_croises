@@ -52,9 +52,9 @@ class Mot:
         
     def __repr__(self):
         dom = self.getDomaine()
-        return self.dir + " id : " + str(self.id) + " " +str(self.xStart) + "," + \
-               str(self.yStart) + ":" + self.lettres + ":" + \
-               str(self.taille) + " size:" + str(len(dom)) # + " -> " + str(dom)
+        return self.dir + " id=" + str(self.id) + " Position=(" +str(self.xStart) + "," + \
+               str(self.yStart) + ") :" + self.lettres + ": \t\t\tTaille du mot " + \
+               str(self.taille) + " tailleDomaine:" + str(len(dom))
 
     def get_Contrainte(self, mot):
         c1 = None
