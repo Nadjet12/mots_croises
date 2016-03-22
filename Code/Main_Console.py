@@ -15,7 +15,7 @@ Dictionnaire_Var = "./mots/850-mots-us.txt"
 #Dictionnaire_Var = "./mots/test.txt"
 #Dictionnaire_Var = "./mots/58000-mots-us.txt"
 #Dictionnaire_Var = "./mots/135000-mots-fr.txt"
-#Dictionnaire_Var = "./mots/td32.txt"
+Dictionnaire_Var = "./mots/td32.txt"
 #Algo_Var = "AC3"
 Algo_Var = "FC_AC3"
 
@@ -52,6 +52,8 @@ if __name__ == "__main__":
     elapsed_time = time.time() - start_time
     print Algo_Var + " " + Grille_Var.split("/")[-1] + " Temps :" + str(elapsed_time)
     if algo.res:
+        algo.grille.setResultat(algo.res)
+        algo.grille.sauvegarder_grille("./grillesVides/td3Solution.mc")
         for i in algo.res:
             print i
     else:

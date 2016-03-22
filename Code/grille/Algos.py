@@ -7,15 +7,6 @@ Created on Sat Mar 05 12:16:39 2016
 import threading
 import time
 import random
-from copy import deepcopy
-from types import NoneType
-
-import sys
-
-from grille import Grille
-import Mot
-
-
 class StoppableThread(object):
     pass
 
@@ -544,3 +535,8 @@ class Algo(threading.Thread):
         while self.wait:
             pass
             #print "a"
+
+
+    def branch_bound(self, V, i):
+        if not V:
+            return i
