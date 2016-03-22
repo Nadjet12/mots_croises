@@ -20,7 +20,7 @@ class Noeud:
     def create_Fils(self):
         if not self.listeMot:
             # si la liste est vide ce noeud est la meilleur solution            
-            return 
+            return self
             
         m = self.listeMot[0]
         for mot in m.getDomaine():
