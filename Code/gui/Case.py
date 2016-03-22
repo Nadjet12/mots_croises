@@ -36,8 +36,8 @@ class Case(Entry):
         s = "".join(c)
 
         for u in self.guis:
-            u[0].update()
-            #u[2].set_lettre(u[1], s)
+            u[0].update(self)
+            #[2].set_lettre(u[1], s)
 
 
     def setLettre(self, lettre):

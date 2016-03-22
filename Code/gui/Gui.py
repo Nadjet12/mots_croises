@@ -55,8 +55,8 @@ class Gui(Frame):
         algomenu.add_radiobutton(label="FC/AC3", variable=self.radio_algo, value=3,
                                  command=lambda arg0="FC_AC3": self.update_Algo(arg0))
 
-        algomenu.add_radiobutton(label="BCJ", variable=self.radio_algo, value=4,
-                                 command=lambda arg0="BCJ": self.update_Algo(arg0))
+        algomenu.add_radiobutton(label="CBJ", variable=self.radio_algo, value=4,
+                                 command=lambda arg0="CJ": self.update_Algo(arg0))
 
         self.radio_algo.set(1)
 
@@ -91,6 +91,8 @@ class Gui(Frame):
 
     def update_Algo(self, arg0):
         self.algo.algo = arg0
+        self.mainFrame.setAlgo(arg0)
+
 
     def update_Dico(self):
         print "update dico :" + str(self.dliste[self.radio_dico.get()-1])
@@ -98,6 +100,7 @@ class Gui(Frame):
         if self.grille:
             self.grille.updateDico(self.dico)
         print "a faire update_dico"
+        self.mainFrame.setDico()
 
     def file_chooser(self):
         filename = askopenfilename(**self.openfileoptions)

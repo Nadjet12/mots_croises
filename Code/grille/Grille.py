@@ -30,29 +30,15 @@ class Grille:
 
         if alea:
             filePath = self.genereGrilleAlea(taille)
+            self.nomGrille = "Random "+str(taille)
+        else:
+            self.nomGrille = filePath.split("/")[-1]
+
+        self.nomDico = dictionnaire.split("/")[-1]
 
         self.detecte_mots(filePath)
         self.defContraintes()
         self.initDomaine()
-
-    #        print self.mots_horizontaux
-    #        print self.mots_verticaux
-
-    #    def readFromFile(self, filePath=None):
-    #        fichier = open(filePath, encoding="ISO-8859-1")
-    #        self.taille = eval(fichier.readline())
-    #        mot = fichier.readline()
-    #        while mot not in '\r\n':
-    #            mot = mot.split(" ")
-    ##            print(mot)
-    #            self.mots_horizontaux += [Mot(str(mot[0]), eval(mot[1]))]
-    #            mot = fichier.readline()
-    #
-    #        while mot not in '\r\n':
-    #            mot = mot.split(" ")
-    #            self.mots_verticaux += [Mot(str(mot[0]), eval(mot[1]))]
-    #            mot = fichier.readline()
-    #        fichier.close
 
 
     def get_Domaines_Sizes(self):
@@ -108,7 +94,7 @@ class Grille:
 
     def genereGrilleAlea(self, taille):
         self.taille = taille
-        nbNoires = (float(random.randrange(20, 30)) / 100) * float(taille[0]) * float(taille[1])
+        nbNoires = (float(random.randrange(40, 50)) / 100) * float(taille[0]) * float(taille[1])
         nbNoires = int(nbNoires)
 
         tab = numpy.ones((taille[0], taille[1]), str)
@@ -188,6 +174,7 @@ class Grille:
     def updateDico(self, dico):
         self.dico = Dico(dico)
         self.initDomaine()
+        self.nomDico = dico.split("/")[-1]
 
     # def initDomaine(self):
     #    for m in self.mots_horizontaux:

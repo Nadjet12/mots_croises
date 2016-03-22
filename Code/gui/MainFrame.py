@@ -38,6 +38,18 @@ class MainFrame(Frame):
         self.motFrame.set_Mots()
         self.grilleFrame.grid(row=1, column=0, sticky=N+E+S+W)
         self.buttonFrame.grille = self.grille
+        self.traceFrame.add_To_Trace("Ouverture Grille " + self.grille.nomGrille + "\n", 'curr')
+        self.setDico()
+
+    def setDico(self):
+        if  self.grille:
+            self.traceFrame.add_To_Trace("Ouverture Dictionnaire " + self.grille.nomDico+ "\n", 'curr')
+
+    def setAlgo(self, algo):
+        self.algo.algo = algo
+        self.buttonFrame.algo.algo = algo
+        self.buttonFrame.continueButton.configure(state="disabled")
+        self.traceFrame.add_To_Trace("Choix de l'algorithm : " + self.algo.algo+ "\n", 'curr')
 
 
 
@@ -80,10 +92,10 @@ class MainFrame(Frame):
                 self.grille2[line][case].grid(row=line, column=case, ipady=10)
 
         for mot in self.motVert:
-            mot.update()
+            mot.update(None)
 
         for mot in self.motHori:
-            mot.update()
+            mot.update(None)
 
         # TODO : afficher les mots sur la droite
         #self.motFrame.set_Mots([self.motVert, self.motHori])
@@ -91,9 +103,9 @@ class MainFrame(Frame):
 
     def updateGrille(self):
         for m in self.motHori:
-            m.update()
+            m.update(None)
         for m in self.motVert:
-            m.update()
+            m.update(None)
 
 
     def toggle_Mot(self, bool):

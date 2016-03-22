@@ -25,13 +25,13 @@ class GMot:
         self.number.insert(0, self.mot.id)
 
 
-    def update(self):
+    def update(self, From):
         # TODO: Update depuis les 3 entrees
 
         for i in range(self.taille):
-            if self.caseGrilleFrame[i].get() != self.mot.lettres[i]:
+            if self.caseGrilleFrame[i].get() != self.mot.lettres[i] and From != self.caseGrilleFrame[i]:
                self.caseGrilleFrame[i].setLettre(self.mot.lettres[i])
-            if self.caseMotFrame[i].get() != self.mot.lettres[i]:
+            if self.caseMotFrame[i].get() != self.mot.lettres[i] and From != self.caseMotFrame[i]:
                 self.caseMotFrame[i].setLettre(self.mot.lettres[i])
 
 

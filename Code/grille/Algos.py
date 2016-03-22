@@ -15,7 +15,8 @@ class Algo(threading.Thread):
     def __init__(self, queue=None, grille=None, traceframe=None, algo=None, heuristique=None):
         #super(StoppableThread, self).__init__()
         threading.Thread.__init__(self)
-
+        self.tempsOvertureGrille = 0
+        self.tempsOvertureGrille = 0
         self.timed = 0
         self.nb = 0
         self.queue = queue
@@ -28,6 +29,7 @@ class Algo(threading.Thread):
         self.pause_cond = threading.Condition(threading.Lock())
         self.paused = False
         self._stop = threading.Event()
+        self.hasRun = False
 
 
 
@@ -54,6 +56,7 @@ class Algo(threading.Thread):
         self.pause_cond.release()
 
     def run(self):
+        self.hasRun = True
         if self.algo is "AC3":
             bool = self.ac3()
             if self.queue:
