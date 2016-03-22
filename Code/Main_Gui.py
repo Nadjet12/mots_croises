@@ -9,8 +9,8 @@ from grille.Grille import Grille
 from gui.Gui import Gui
 
 
-#Grille_Var = "./grillesVides/td3vide.mc"
-Grille_Var = "./grillesVides/A.mc"
+Grille_Var = "./grillesVides/td3vide.mc"
+#Grille_Var = "./grillesVides/A.mc"
 # Grille_Var = "./grillesVides/C.mc"
 #Grille_Var = "./grillesVides/7.mc"
 Dictionnaire_Var = "./mots/850-mots-us.txt"
@@ -31,8 +31,8 @@ if __name__ == "__main__":
     #grille = Grille(filePath=Grille_Var, dictionnaire=Dictionnaire_Var)
     elapsed_time = time.time() - start_time
     print "Creation grille " + Grille_Var.split("/")[-1] + " Temps :" + str(elapsed_time)
-    #algo = Algo(grille=grille, algo=Algo_Var)
-    interface = Gui(master=root, root=root)
+    algo = Algo(grille=None, algo="AC3")
+    interface = Gui(master=root, root=root, algo=algo)
     interface.master.title("RP : Mots Croisés (Bourdache Nadjet, Adequin Renaud)")
     interface.pack(fill="both", expand=True)
 

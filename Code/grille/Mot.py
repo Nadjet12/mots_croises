@@ -22,7 +22,11 @@ class Mot:
         self.domaineListe = []
         self.domaine2 = None
         self.contrainteListe = []
-        
+
+    def setDomaine(self, copie):
+        self.domaine2 = copie.copyDico()
+        self.domaineListe = list(self.domaine2.get_Domaine(self.taille))
+
     def getDomaine(self):
         return self.domaineListe
 
@@ -45,17 +49,12 @@ class Mot:
                 s[c2] = c
                 self.lettres = "".join(s)
 
-
-    def remove(self, mot):
-        for m in mot:
-            self.domaine.remove(m)
-        if len(self.domaine) == 1:
-            for d in self.domaine:
-                self.lettres = d
         
     def __repr__(self):
         dom = self.getDomaine()
-        return self.dir + " id : " + str(self.id) + " " +str(self.xStart) + "," + str(self.yStart) + ":" + self.lettres + ":" + str(self.taille) + " size:" + str(len(dom)) # + " -> " + str(dom)
+        return self.dir + " id : " + str(self.id) + " " +str(self.xStart) + "," + \
+               str(self.yStart) + ":" + self.lettres + ":" + \
+               str(self.taille) + " size:" + str(len(dom)) # + " -> " + str(dom)
 
     def get_Contrainte(self, mot):
         c1 = None
@@ -73,23 +72,10 @@ class Mot:
 
         return c1, c2
 
-    #def initDomaine(self, dico):
-    #    m = self.lettres.replace(' ', '.')
-    #    d = dico.get_New_Domaine(m)
-    #    for i in d:
-    #        self.domaine.add(str(i.encode('utf-8')))
-
     def initDomaine(self, liste):
 
         self.domaine2 = Dico(liste=liste)
         self.domaineListe = list(self.domaine2.get_Domaine(self.taille))
-
-
-    def printDomaine(self):
-        #s = ""
-        #for m in self.domaine2:
-        #    s += str(m)+" "
-        print str(self)
 
     def printDomaineSize(self):
         print str(self) + " -> " + str(len(self.domaine2.get_Domaine(self.taille)))
@@ -120,10 +106,15 @@ class Mot:
     def removeMotFromDomaine(self, mot):
         self.domaine2.removeMot(mot)
         self.domaineListe = list(self.domaine2.get_Domaine(self.taille))
+        do= self.getDomaine()
+        if len(do) == 1:
+            for d in do:
+                self.lettres = d
+        return
 
 
     def updateResultat(self):
-        do= self.get_Domaine()
+        do= self.getDomaine()
         if len(do) == 1:
             print self
             for d in do:

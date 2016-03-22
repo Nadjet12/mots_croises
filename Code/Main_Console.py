@@ -6,9 +6,11 @@ from grille.Grille import Grille
 
 Grille_Var = "./grillesVides/td3vide.mc"
 #Grille_Var = "./grillesVides/A.mc"
+#Grille_Var = "./grillesVides/B.mc"
 #Grille_Var = "./grillesVides/C.mc"
 #Grille_Var = "./grillesVides/7.mc"
 Dictionnaire_Var = "./mots/850-mots-us.txt"
+#Dictionnaire_Var = "./mots/22600-mots-fr.txt"
 #Dictionnaire_Var = "./mots/test2.txt"
 #Dictionnaire_Var = "./mots/test.txt"
 #Dictionnaire_Var = "./mots/58000-mots-us.txt"
@@ -16,6 +18,7 @@ Dictionnaire_Var = "./mots/850-mots-us.txt"
 #Dictionnaire_Var = "./mots/td32.txt"
 #Algo_Var = "AC3"
 Algo_Var = "FC_AC3"
+
 
 if __name__ == "__main__":
     start_time = time.time()
@@ -31,6 +34,15 @@ if __name__ == "__main__":
 
 
     algo = Algo(grille=grille, algo=Algo_Var)
+
+    Heuristique = algo.heuristique_dom_mim
+    #Heuristique = algo.heuristique_contr_max
+    #Heuristique = algo.heuristique_instance_max
+
+
+    algo.heur = Heuristique
+    print Heuristique.__name__
+
     print "nbMot :" + str(grille.motSize())
     start_time = time.time()
     algo.start()
@@ -44,3 +56,8 @@ if __name__ == "__main__":
             print i
     else:
         print "Pas de solution"
+
+    print "nombre de mot testé : " + str(algo.nb)
+    print "heuristique :" + str(Heuristique.__name__)
+    print "Dictionnaire :" + Dictionnaire_Var.split("/")[-1]
+    print 'Grille :' + Grille_Var.split("/")[-1]

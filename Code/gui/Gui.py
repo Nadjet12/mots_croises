@@ -81,7 +81,7 @@ class Gui(Frame):
         self.dico = self.dliste[self.radio_dico.get()-1]
 
         master.config(menu=menubar)
-        self.algo = Algo(grille=None, algo="AC3")
+        self.algo = algo
         self.grille = None
         self.algo.queue = self.thread_queue
         self.mainFrame = MainFrame(self, self.algo, self.thread_queue)
@@ -110,6 +110,7 @@ class Gui(Frame):
     def genere_Grille(self):
         print "a faire genere_Grille"
         self.grille =  Grille(taille=(10,10),alea=True, dictionnaire=self.dico)
+        self.algo.grille = self.grille
         self.setGrille()
 
     def file_saver(self):

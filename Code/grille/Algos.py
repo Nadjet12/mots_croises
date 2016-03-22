@@ -10,6 +10,8 @@ import random
 from copy import deepcopy
 from types import NoneType
 
+import sys
+
 from grille import Grille
 import Mot
 
@@ -19,17 +21,21 @@ class StoppableThread(object):
 
 
 class Algo(threading.Thread):
-    def __init__(self, queue=None, grille=None, traceframe=None, algo=None):
+    def __init__(self, queue=None, grille=None, traceframe=None, algo=None, heuristique=None):
         #super(StoppableThread, self).__init__()
         threading.Thread.__init__(self)
 
-        self.wait = False
+        self.time = 0
+        self.nb = 0
         self.queue = queue
         self.grille = grille
         self.traceframe = traceframe
         self.algo = algo
         self.res = None
-        self.fini = False
+        self.heur = self.heuristique_dom_mim
+
+        self.pause_cond = threading.Condition(threading.Lock())
+        self.paused = False
         self._stop = threading.Event()
 
     def stop(self):
@@ -38,6 +44,22 @@ class Algo(threading.Thread):
     def stopped(self):
         return self._stop.isSet()
 
+
+    def pause(self):
+        self.paused = True
+        # If in sleep, we acquire immediately, otherwise we wait for thread
+        # to release condition. In race, worker will still see self.paused
+        # and begin waiting until it's set back to False
+        self.pause_cond.acquire()
+
+    #should just resume the thread
+    def resume(self):
+        self.paused = False
+        # Notify so thread will wake after lock released
+        self.pause_cond.notify()
+        # Now release the lock
+        self.pause_cond.release()
+
     def run(self):
         if self.algo is "AC3":
             bool = self.ac3()
@@ -45,7 +67,6 @@ class Algo(threading.Thread):
                 self.queue.put(bool)
         elif self.algo is "FC":
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
-            #self.ac3()
             random.shuffle(liste)
             self.forward_checking(liste, [])
             if self.queue:
@@ -57,6 +78,12 @@ class Algo(threading.Thread):
             print "Taille des domaines : " + str(taileDom) + " mots"
             #start_time = time.time()
             self.ac3()
+            print "Mots Verticaux :"
+            for m in self.grille.mots_verticaux:
+                print m
+            print "Mots Horizontaux :"
+            for m in self.grille.mots_horizontaux:
+                print m
             #elapsed_time = time.time() - start_time
             #print "AC3 Temps :" + str(elapsed_time)
             taileDom2 = self.grille.get_Domaines_Sizes()
@@ -87,22 +114,14 @@ class Algo(threading.Thread):
         """
         start_time = time.time()
         if self.traceframe:
+            print 'Hello'
             self.traceframe.add_To_Trace("Debut de l'AC3\n", 'in')
         contrainte_Liste = self.grille.getContraintes()
         file_L = contrainte_Liste[::]
         while file_L:
-            (x, y) = file_L[0]
-            file_L = file_L[1:]
+            (x, y) = file_L.pop(0)
             if self.revise2(x, y):
-                '''
-                print "Mots Verticaux :"
-                for m in self.grille.mots_verticaux:
-                    m.printDomaine()
-                print "Mots Horizontaux :"
-                for m in self.grille.mots_horizontaux:
-                    m.printDomaine()
-                '''
-                if not x.domaine2:
+                if len(x.getDomaine()) == 0:
                     return False
                 for (i, j) in contrainte_Liste:
                     if j == x or i == x:
@@ -175,48 +194,18 @@ class Algo(threading.Thread):
             if indiceY == -1:
                 s = y.getDomaine()
                 if len(s) == 1:
-                    s = s.pop()
+                    s = s[0]
                     d = x.getDomaine()
                     if s in d:
                         d.remove(s)
-                        x.initDomaine(d)
-                        return len(x.getDomaine()) != 0
-                # peut-être regarder la taille des domaines si D(y) == 1
-                # D(x) = D(x)\D(y)
-                # modif =
+                        x.removeMotFromDomaine(s)
+                        if len(x.getDomaine()) == 0:
+                            #si le domaine de x est 0 on arete et on dis que c'est modifié
+                            return True
                 modif = False
             else :
                 yLettre = y.getAllLettre(indiceY)
-                '''
-                print 'avant'
-                print "x :" + str(x)
-                print "y :" + str(y)
-                print "indiceX :" + str(x.getContraintsXE(y))
-                print "indiceY " + str(indiceY)
-                print "ylettre :" + str(yLettre)
-                '''
-                '''
-                print '!= AVANT-----------------'
-                print x
-                print y
-                print x.getContraintsXE(y)
-                print indiceY
-                print yLettre
-                '''
                 bool = x.updateFromContraintes(x.getContraintsXE(y), yLettre)
-                '''
-                print '!= APRES-----------------'
-                print x
-                print y
-                #h = raw_input()
-                '''
-                '''
-                print 'apres'
-                print "x :" + str(x)
-                print bool
-                #print bool
-                #x.printDomaineSize()
-                '''
                 modif =  bool
         return modif
 
@@ -269,31 +258,21 @@ class Algo(threading.Thread):
 
     def check_forward2(self, xk, v, V):
         for xj in V:
-            #print '--------------------------------'
-            #print xk
-            #print v
-            #print xj
             contraintsY = xk.getContraintsX(xj)
-            #print contraintsY
-            if not contraintsY:
-                continue
-            else:
-                for indiceY in contraintsY:
-                    if indiceY == -1:
-                        s = xj.getDomaine()
-                        s = list(s)
-                        if v in s:
-                            s.remove(v)
-                            if len(s) == 0:
-                                return False
-                            xj.removeMotFromDomaine(s)
-                        #print xj
-                    else :
-                        yLettre = v[indiceY]
-                        xj.updateFromContraintes(xj.getContraintsXE(xk), yLettre)
-                        #print xj
-                        if len(xj.getDomaine()) == 0:
+            for indiceY in contraintsY:
+                if indiceY == -1:
+                    s = xj.getDomaine()
+                    s = list(s)
+                    if v in s:
+                        s.remove(v)
+                        if len(s) == 0:
                             return False
+                        xj.removeMotFromDomaine(v)
+                else :
+                    yLettre = v[indiceY]
+                    xj.updateFromContraintes(xj.getContraintsXE(xk), yLettre)
+                    if len(xj.getDomaine()) == 0:
+                        return False
             if len(xj.getDomaine()) == 0:
                 return False
         return True
@@ -324,7 +303,7 @@ class Algo(threading.Thread):
                     return False
         return True
 
-    def forward_checking(self, V, i):
+    def forward_checking(self, V, i, timed=0):
         """
         si V = ∅ alors i est une solution
         sinon
@@ -338,30 +317,43 @@ class Algo(threading.Thread):
             fait
         fsi
         """
-        #print len(V)
+        #print str(self.nb)
+        #sys.stdout.flush()
+        if timed == 0:
+            timed = time.time()
+
         if not V:
-            #print i
+            timed = time.time() - timed
+            print timed
+            print i
             self.res = i
-            self.wait = True
             if self.queue:
                 self.queue.put(self.res)
-            #self.waitContinue()
-            #print "fin"
+            self.pause()
+            with self.pause_cond:
+                while self.paused:
+                    self.pause_cond.wait()
+            print "fin"
             return
 
-        xk = self.heuristique_instance_max(V, i)
+        xk = self.heur(V, i)
         V.remove(xk)
         savedDom = []
         for v in V:
-            savedDom += [(v, v.getDomaine())]
+            savedDom += [(v, v.getDomaine(), len(v.getDomaine()))]
+            #savedDom += [(v, deepcopy(v), len(v.getDomaine()))]
+            #savedDom += [(v, deepcopy(v.domaine2), len(v.getDomaine()))]
+            #if v.id == 3:
+            #    print 'Avant'
+            #    print len(v.getDomaine())
 
         for v in xk.getDomaine():
+            self.nb +=1
             I = i[:] + [(xk, v)]
             if self.check_forward2(xk, v, V):
-                self.forward_checking(V[:], I)
-            for mot, dom in savedDom:
+                self.forward_checking(V[:], I, timed)
+            for mot, dom, taille in savedDom:
                 mot.initDomaine(dom)
-        #print 'BACK'
         return
 
     def RAC(self, i, V):
@@ -411,7 +403,7 @@ class Algo(threading.Thread):
             self.wait = True
             if self.queue:
                 self.queue.put(self.res)
-            self.waitContinue()
+            #self.waitContinue()
             print "fin"
             return []
 
@@ -452,7 +444,7 @@ class Algo(threading.Thread):
             return []
 
 
-        xk = self.heuristique_instance_max(V, i)
+        xk = self.heur(V, i)
         #print xk
         conflit = []
         nonBJ = True
@@ -483,28 +475,30 @@ class Algo(threading.Thread):
                 conflit += [y[0]]
         return conflit
 
-    def heuristique_triviale(self, V):
+    def heuristique_triviale(self, V, i):
         return V[0]
 
-    def heuristique_dom_mim(self, V):
-        elemMin = [(len(V[0].get_Domaine()), 0)]
+    def heuristique_dom_mim(self, V, i):
+        elemMin = [(len(V[0].getDomaine()), 0)]
         for i in range(1, len(V)):
-            if len(V[i].get_Domaine()) < elemMin[0][0]:
-                elemMin = [(len(V[i].get_Domaine()), i)]
-            elif len(V[i].get_Domaine()) == elemMin[0][0]:
-                elemMin += [(len(V[i].get_Domaine()), i)]
+            dom = len(V[i].getDomaine())
+            if dom < elemMin[0][0]:
+                elemMin = [(dom, i)]
+            elif dom == elemMin[0][0]:
+                elemMin += [(dom, i)]
         if len(elemMin) == 1:
             return V[elemMin[0][1]]
         else:
             return V[(random.choice(elemMin))[1]]
 
-    def heuristique_contr_max(self, V):
+    def heuristique_contr_max(self, V, i):
         elemMax = [(len(V[0].contrainteListe), 0)]
         for i in range(1, len(V)):
-            if len(V[i].contrainteListe) > elemMax[0][0]:
-                elemMax = [(len(V[i].contrainteListe), i)]
-            elif len(V[i].contrainteListe) == elemMax[0][0]:
-                elemMax += [(len(V[i].contrainteListe), i)]
+            contr = len(V[i].contrainteListe)
+            if contr > elemMax[0][0]:
+                elemMax = [(contr, i)]
+            elif contr == elemMax[0][0]:
+                elemMax += [(contr, i)]
         if len(elemMax) == 1:
             return V[elemMax[0][1]]
         else:

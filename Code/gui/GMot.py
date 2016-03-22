@@ -43,7 +43,7 @@ class GMot:
 
     def showDomaine(self):
         s = ""
-        for i in self.mot.get_Domaine():
+        for i in self.mot.getDomaine():
             s += str(i)+"\n"
         win = Toplevel()
         win.title("Domaine de " + str(self.mot.lettres))

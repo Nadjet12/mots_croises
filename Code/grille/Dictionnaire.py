@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
 import random
 import time
 import re
 from codecs import *
+from copy import deepcopy
+
 
 class Noeud:
 
@@ -9,6 +12,12 @@ class Noeud:
         self.peut_finir = peut_finir
         self.liste_Noeud = dict()
         self.value = value
+
+    def copyNode(self, node):
+        newN = Noeud(node.peut_finir, node.value)
+        for c, n in self.liste_Noeud.items():
+            newN.liste_Noeud[c] = n.copyNode(n)
+        return newN
 
     def add_Fils(self, c, peut_finir, value=0):
         if c in self.liste_Noeud:
@@ -88,13 +97,17 @@ class Dico:
 
     def __init__(self, file=None, liste=None, value=False):
         self.lettres = dict()
-        lines = None
+        lines = []
         if file:
-            lines = open(file, encoding="ISO-8859-1").readlines()
+            lines = open(file).readlines()
         elif liste:
             lines = liste
         for line in lines:
-            #line = line.decode('ISO-8859-1').encode('utf8')
+            try:
+                line = line
+                #line = unicode(line,'utf-8')
+            except UnicodeDecodeError:
+                print line
             line = line.rstrip()
             line = line.split(' ')
             v = random.random()
@@ -103,8 +116,14 @@ class Dico:
 
             self.add_Mot(line[0], value=v)
 
+    def copyDico(self):
+        newN = Dico()
+        for c, n in self.lettres.items():
+            newN.lettres[c] = n.copyNode(n)
+        return newN
+
+
     def add_Mot(self, mot, value=0):
-        print value
         mot = mot.upper()
         n  = self.get_Lettre(mot[0])
         for l in mot[1:]:
@@ -166,17 +185,24 @@ class Dico:
                 bool |= n.updateFromContraintes(profondeur-1, listes)
             return bool
 
+
+
+
 if __name__ == "__main__":
     file = ["abca 1", "acbe","abcb 1", "fbfc"]
     #
     #start_time = time.time()
     #
+    s = "ééééççççàààèèè"
+    print s.upper()
     d = Dico(liste=file)
+    g = d.copyDico()
     print d.get_Domaine(4, getValue=True)
     print d.getAllLettre(3)
     d.updateFromContraintes(3, ["B", "C"])
     print d.getAllLettre(3)
     print d.get_Domaine(4, getValue=True)
+    print g.get_Domaine(4, getValue=True)
     #elapsed_time = time.time() - start_time
     #print("creation dictionnaire " + file + " : " + str(elapsed_time))
     #print ""

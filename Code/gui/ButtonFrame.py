@@ -43,7 +43,7 @@ class ButtonFrame(Frame):
         else:
             self.algo.start()
 
-            self.master.after(100, self.process_queue)
+            self.after(1000, self.process_queue)
 
 
 
@@ -54,8 +54,8 @@ class ButtonFrame(Frame):
             print "res :"+str(result)
             self.show(result)
         except Queue.Empty:
-            #print "empty"
-            self.master.after(10, self.process_queue)
+            print "empty"
+            self.after(1000, self.process_queue)
 
 
     def toggle_Mot(self):
@@ -76,10 +76,7 @@ class ButtonFrame(Frame):
 
     def show(self, result):
 
-        if result == 'updateMot':
-            self.master.updateGrille()
-
-        elif self.algo.algo is 'AC3':
+        if self.algo.algo is 'AC3':
             mess = 'Non Arc-Consistant'
             if result:
                 mess = 'Arc-Consistant'
@@ -88,18 +85,18 @@ class ButtonFrame(Frame):
 
             msg = Message(top, text=mess)
             msg.pack()
+            self.algo.stop()
 
         elif result:
             print "hello"
             self.continueButton.configure(state="normal")
-            self.algo.wait = True
             self.grille.setResultat(result)
             print "Mots Verticaux :"
             for m in self.grille.mots_verticaux:
-                m.printDomaine()
+                print m
             print "Mots Horizontaux :"
             for m in self.grille.mots_horizontaux:
-                m.printDomaine()
+                print m
             self.master.updateGrille()
 
             pass
@@ -110,9 +107,11 @@ class ButtonFrame(Frame):
 
             msg = Message(top, text=mess)
             msg.pack()
+            self.algo.stop()
+        self.after(1000, self.process_queue)
 
 
     def continueAlgo(self):
-        self.algo.wait = False
+        self.algo.resume()
         self.continueButton.configure(state="disabled")
-        self.master.after(100, self.process_queue)
+        self.after(1000, self.process_queue)
