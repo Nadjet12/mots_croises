@@ -5,6 +5,8 @@ Created on Mon Mar 21 12:22:49 2016
 @author: 3501796
 """
 
+import random
+
 class Noeud:
 
     def __init__(self, pere, motListe, motObj, couple):
@@ -38,19 +40,40 @@ class Arbre:
         for el in mot.getDomaine():
             self.listeNoeud += [Noeud(None, motListe, mot, el)]
         sorted(self.listeNoeud, key=lambda value: (value[1]), reverse=True)
+<<<<<<< HEAD
     
+=======
+        
+>>>>>>> origin/master
 
     def get_Noeud_Max(self):
+        """ sans sort """
         # supprimer le noeud max de la liste
+        liste = [self.listeNoeud[i].value for i in range(len(listeNoeud))]
+        valMax =  max(liste)
+        posMax = [i for i in range(len(liste)) if self.listeNoeud[i].value == valMax]
+
+        # si la liste contient plusieur élément max on en prend un aléatoirement
+        pos = random.choice(posMax)
 
         # Si plusieur Noeud son max peut-être utiliser une heuristique
-        return self.listeNoeud.pop(0)
+        return self.listeNoeud.pop(pos)
+        """
+        avec sort ça donnerait
+
+        elemMax = self.listeNoeud[0]
+        pos = 1
+        while pos < len(self.listeNoeud) and self.listeNoeud[pos] == elemMax
+            pos++
+        liste = self.listeNoeud[:pos]
+        pos = random.choice(liste)
+        return self.listeNoeud.pop(pos)  """
 
 
     def update(self):
         # prend le noeud max et developpe ses fils a la liste des Noeuds
 
-        n = self.get_Noeud_Max()
+        n = self.get_Noeud_Max
         l = n.create_Fils()
         if isinstance(l, Noeud):
             # si l est un Noeud alors c'est la solution optimal
