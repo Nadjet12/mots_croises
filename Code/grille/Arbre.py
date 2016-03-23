@@ -38,8 +38,8 @@ class Arbre:
         for el in mot.getDomaine():
             self.listeNoeud += [Noeud(None, motListe, mot, el)]
         sorted(self.listeNoeud, key=lambda value: (value[1]), reverse=True)
-        
     
+
     def get_Noeud_Max(self):
         # supprimer le noeud max de la liste
 
