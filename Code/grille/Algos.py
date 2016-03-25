@@ -7,7 +7,7 @@ Created on Sat Mar 05 12:16:39 2016
 import threading
 import time
 import random
-import Arbre
+from Arbre import Arbre
 
 class StoppableThread(object):
     pass
@@ -507,7 +507,7 @@ class Algo(threading.Thread):
     def branch_bound(self, V, i):
         if not V:
             return i
-        arbre = Arbre(None, V)
+        arbre = Arbre(V)
         while not arbre.update():
             continue
         return arbre.solution

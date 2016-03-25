@@ -15,7 +15,10 @@ class Noeud:
         self.listeMot = motListe
         self.motObj = motObj
         self.mot = couple[0]
-        self.value = couple[1]
+        if self.pere:
+            self.value = min(couple[1], self.pere.value)
+        else:
+            self.value = couple[1]
         self.prof = prof
 
         
@@ -40,7 +43,7 @@ class Arbre:
         mot = motListe.pop(0)
         for el in mot.getDomaine():
             self.listeNoeud += [Noeud(None, motListe, mot, el)]
-        sorted(self.listeNoeud, key=lambda value: (value[1]), reverse=True)
+        #sorted(self.listeNoeud, key=lambda value: (value[1]), reverse=True)
 
 
     def get_Noeud_Max(self):
@@ -80,4 +83,4 @@ class Arbre:
         else:
             # sinon c'est une liste de Noeud
             self.listeNoeud += l
-            sorted(self.listeNoeud, key=lambda value: (value[1]), reverse=True)
+            #sorted(self.listeNoeud, key=lambda value: (value[1]), reverse=True)
