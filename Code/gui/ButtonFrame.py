@@ -45,13 +45,15 @@ class ButtonFrame(Frame):
         if self.algo.hasRun:
             self.algo.stop()
             self.algo = Algo(queue=self.queue, grille=self.grille, traceframe=self.traceFrame, algo=self.algo.algo, heuristique=self.algo.heur)
-            self.algo.traceframe.add_To_Trace("nombre de mot sur la grille :" + str(self.algo.grille.get_Domaines_Sizes())+"\n", "curr")
+            self.algo.traceframe.add_To_Trace("nombre de mot sur la grille :" + str(len(self.algo.grille.mots_horizontaux + self.algo.grille.mots_verticaux))+"\n", "curr")
+            self.algo.traceframe.add_To_Trace("nombre de mot dans les Domaines :" + str(self.algo.grille.get_Domaines_Sizes())+"\n", "curr")
 
             self.algo.start()
             self.after(1000, self.process_queue)
         else:
 
-            self.algo.traceframe.add_To_Trace("nombre de mot sur la grille :" + str(self.algo.grille.get_Domaines_Sizes())+"\n", "curr")
+            self.algo.traceframe.add_To_Trace("nombre de mot sur la grille :" + str(len(self.algo.grille.mots_horizontaux + self.algo.grille.mots_verticaux))+"\n", "curr")
+            self.algo.traceframe.add_To_Trace("nombre de mot dans les Domaines :" + str(self.algo.grille.get_Domaines_Sizes())+"\n", "curr")
             self.algo.start()
 
             self.after(1000, self.process_queue)

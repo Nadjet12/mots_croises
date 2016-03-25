@@ -16,7 +16,7 @@ import numpy
 
 
 class Grille:
-    def __init__(self, filePath=None, taille=(20, 10), dictionnaire="./mots/td3.txt", alea=False):
+    def __init__(self, filePath=None, taille=(20, 10), dictionnaire="./mots/td3.txt", alea=False, percent=None):
 
         self.mots_verticaux = []
         self.mots_horizontaux = []
@@ -29,7 +29,7 @@ class Grille:
         print "Creation dictionnaire " + dictionnaire.split("/")[-1] + " Temps : " + str(elapsed_time)
 
         if alea:
-            filePath = self.genereGrilleAlea(taille)
+            filePath = self.genereGrilleAlea(taille, percent)
             self.nomGrille = "Random "+str(taille)
         else:
             self.nomGrille = filePath.split("/")[-1]
@@ -92,11 +92,14 @@ class Grille:
                     if len(mot) > 0:
                         mot = ""
 
-    def genereGrilleAlea(self, taille):
+    def genereGrilleAlea(self, taille, percent=None):
         self.taille = taille
-        nbNoires = (float(random.randrange(30, 40)) / 100) * float(taille[0]) * float(taille[1])
+        if not percent:
+            nbNoires = (float(random.randrange(30, 40)) / 100) * float(taille[0]) * float(taille[1])
+        else:
+            nbNoires = (float(percent) / 100) * float(taille[0]) * float(taille[1])
         nbNoires = int(nbNoires)
-
+        print "nbNoires : " + str(nbNoires)
         tab = numpy.ones((taille[0], taille[1]), str)
 
         while nbNoires > 0:

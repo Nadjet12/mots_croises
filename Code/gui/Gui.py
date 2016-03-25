@@ -99,26 +99,50 @@ class Gui(Frame):
         self.dico = self.dliste[self.radio_dico.get()-1]
         if self.grille:
             self.grille.updateDico(self.dico)
-        print "a faire update_dico"
         self.mainFrame.setDico()
 
     def file_chooser(self):
         filename = askopenfilename(**self.openfileoptions)
         self.grille = Grille(filePath=filename, dictionnaire=self.dico)
         self.algo.grille = self.grille
-        print "a faire file_chooser"
         self.setGrille()
 
 
     def genere_Grille(self):
+        Up = Toplevel()
+        Up.title("Générer Grille")
+
+        li = IntVar()
+        li.set(10)
+        Label(Up, text ="Nombre de ligne :").grid(row=1, column=0, sticky="w")
+        w = Scale(Up, from_=5, to=20, orient=HORIZONTAL, var=li)
+        w.grid(row=1, column=1, sticky="w")
+
+        col = IntVar()
+        col.set(10)
+        Label(Up, text ="Nombre de colonne :").grid(row=2, column=0, sticky="w")
+        w = Scale(Up, from_=5, to=20, orient=HORIZONTAL, var=col)
+        w.grid(row=2, column=1, sticky="w")
+
+        nbN = IntVar()
+        nbN.set(30)
+        Label(Up, text ="% de case noir :").grid(row=3, column=0, sticky="w")
+        w = Scale(Up, from_=10, to=50, orient=HORIZONTAL, var=nbN)
+        w.grid(row=3, column=1, sticky="w")
+
+
+        button = Button(Up, text ="Créer la Grille", command = Up.destroy).grid(row =5,columnspan=2, sticky=N+S+E+W)
+
+        Up.wait_window()
+        print "done waiting..."
         print "a faire genere_Grille"
-        self.grille =  Grille(taille=(10,10),alea=True, dictionnaire=self.dico)
+        self.grille =  Grille(taille=(li.get(),col.get()),alea=True, dictionnaire=self.dico, percent=nbN.get())
         self.algo.grille = self.grille
         self.setGrille()
 
     def file_saver(self):
         filename = asksaveasfilename(**self.openfileoptions)
-        print "a faire genere_Grille"
+        self.algo.grille.sauvegarder_grille(filename)
 
     def setGrille(self):
         self.mainFrame.open_grille(self.grille)
