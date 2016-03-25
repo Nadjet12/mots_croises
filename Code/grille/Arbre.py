@@ -9,13 +9,14 @@ import random
 
 class Noeud:
 
-    def __init__(self, pere, motListe, motObj, couple):
+    def __init__(self, pere, motListe, motObj, couple, prof=1):
         self.pere = pere
         self.fils = []
         self.listeMot = motListe
         self.motObj = motObj
         self.mot = couple[0]
         self.value = couple[1]
+        self.prof = prof
 
         
         
@@ -26,7 +27,7 @@ class Noeud:
             
         m = self.listeMot[0]
         for mot in m.getDomaine():
-            self.fils += [Noeud(self, self.listeMot[1:], m, mot)]
+            self.fils += [Noeud(self, self.listeMot[1:], m, mot, self.prof+1)]
 
         return self.fils
         
@@ -45,11 +46,12 @@ class Arbre:
     def get_Noeud_Max(self):
         """ sans sort """
         # supprimer le noeud max de la liste
-        liste = [self.listeNoeud[i].value for i in range(len(listeNoeud))]
+        liste = [self.listeNoeud[i].value for i in range(len(self.listeNoeud))]
         valMax =  max(liste)
         posMax = [i for i in range(len(liste)) if self.listeNoeud[i].value == valMax]
 
         # si la liste contient plusieur élément max on en prend un aléatoirement
+        # Choisir le noeud le plus profond
         pos = random.choice(posMax)
 
         # Si plusieur Noeud son max peut-être utiliser une heuristique
@@ -69,7 +71,7 @@ class Arbre:
     def update(self):
         # prend le noeud max et developpe ses fils a la liste des Noeuds
 
-        n = self.get_Noeud_Max
+        n = self.get_Noeud_Max()
         l = n.create_Fils()
         if isinstance(l, Noeud):
             # si l est un Noeud alors c'est la solution optimal

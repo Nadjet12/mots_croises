@@ -94,7 +94,7 @@ class Grille:
 
     def genereGrilleAlea(self, taille):
         self.taille = taille
-        nbNoires = (float(random.randrange(40, 50)) / 100) * float(taille[0]) * float(taille[1])
+        nbNoires = (float(random.randrange(30, 40)) / 100) * float(taille[0]) * float(taille[1])
         nbNoires = int(nbNoires)
 
         tab = numpy.ones((taille[0], taille[1]), str)
