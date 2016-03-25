@@ -18,6 +18,7 @@ class MainFrame(Frame):
         print self.algo
         self.traceFrame = TraceFrame(self)
         self.motFrame = MotFrame(self)
+
         algo.traceframe = self.traceFrame
         self.queue = queue
         self.buttonFrame = ButtonFrame(self, self.queue, self.algo, self.traceFrame, self.motFrame)
@@ -34,6 +35,8 @@ class MainFrame(Frame):
         print self.grille
         self.grilleFrame = GrilleFrame(self, self.grille)
         liste_mots = self.set_Grille()
+        self.motFrame = MotFrame(self)
+        self.buttonFrame.motFrame = self.motFrame
         self.motFrame.listes = liste_mots
         self.motFrame.set_Mots()
         self.grilleFrame.grid(row=1, column=0, sticky=N+E+S+W)
