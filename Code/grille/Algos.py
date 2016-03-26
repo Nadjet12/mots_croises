@@ -18,9 +18,8 @@ class Algo(threading.Thread):
         #super(StoppableThread, self).__init__()
         threading.Thread.__init__(self)
         self.tempsOvertureGrille = 0
-        self.tempsOvertureGrille = 0
         self.timed = 0
-        self.nb = 0
+        self.nbMotsTeste = 0
         self.queue = queue
         self.grille = grille
         self.traceframe = traceframe
@@ -32,6 +31,7 @@ class Algo(threading.Thread):
         self.paused = False
         self._stop = threading.Event()
         self.hasRun = False
+        self.fin = False
 
 
 
@@ -131,7 +131,8 @@ class Algo(threading.Thread):
             self.traceframe.add_To_Trace("Fin de l'AC3 : " + str(nbMot-self.grille.get_Domaines_Sizes()) + " Mots ont été supprimés", "out")
             self.traceframe.add_To_Trace(" Temps :" + str(elapsed_time) + "\n", "time")
         else:
-            print "AC3 Temps :" + str(elapsed_time)
+            #print "AC3 Temps :" + str(elapsed_time)
+            pass
 
         return True
 
@@ -277,7 +278,8 @@ class Algo(threading.Thread):
         fsi
         """
         if self.timed == 0:
-            self.traceframe.add_To_Trace("Debut du Forward Checking :\n", "in")
+            if self.traceframe:
+                self.traceframe.add_To_Trace("Debut du Forward Checking :\n", "in")
             self.timed = time.time()
 
         if not V:
@@ -290,11 +292,12 @@ class Algo(threading.Thread):
             self.res = i
             if self.queue:
                 self.queue.put(self.res)
-            self.pause()
-            with self.pause_cond:
-                while self.paused:
-                    self.pause_cond.wait()
-                self.timed = time.time()
+            self.fin = True
+            #self.pause()
+            #with self.pause_cond:
+            #    while self.paused:
+            #        self.pause_cond.wait()
+            #    self.timed = time.time()
 
 
             return
@@ -306,10 +309,13 @@ class Algo(threading.Thread):
             savedDom += [(v, v.getDomaine(), len(v.getDomaine()))]
 
         for v in xk.getDomaine():
-            self.nb +=1
+            self.nbMotsTeste +=1
+            #print self.nbMotsTeste
             I = i[:] + [(xk, v)]
             if self.check_forward2(xk, v, V):
                 self.forward_checking(V[:], I)
+            if self.fin:
+                    return
             for mot, dom, taille in savedDom:
                 mot.initDomaine(dom)
         return
