@@ -117,6 +117,5 @@ class Mot:
     def updateResultat(self):
         do= self.getDomaine()
         if len(do) == 1:
-            print self
             for d in do:
                 self.lettres = d

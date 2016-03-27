@@ -32,11 +32,12 @@ class ButtonFrame(Frame):
 
         self.resetButton = Button(self, text="RAZ",
                                          command=self.raz)
+        self.resetButton.grid(row=0, column=2)
 
-        self.advanceButton.grid(row=0, column=2, sticky=E)
+        self.advanceButton.grid(row=0, column=3, sticky=E)
         self.traceButton = Checkbutton(self, text="Trace Algo",
                                       variable=self.showTrace, command=self.toggle_Trace)
-        self.traceButton.grid(row=0, column=3, sticky=E)
+        self.traceButton.grid(row=0, column=4, sticky=E)
         self.queue = queue
         self.algo = algo
         self.traceFrame = traceFrame
@@ -48,27 +49,27 @@ class ButtonFrame(Frame):
         if self.algo.hasRun:
             self.algo.stop()
             self.algo = Algo(queue=self.queue, grille=self.algo.grille, traceframe=self.traceFrame, algoName=self.algo.algoName, heuristique=self.algo.heur)
-            self.algo.traceframe.add_To_Trace("nombre de mot sur la grille :" + str(len(self.algo.grille.mots_horizontaux + self.algo.grille.mots_verticaux))+"\n", "curr")
-            self.algo.traceframe.add_To_Trace("nombre de mot dans les Domaines :" + str(self.algo.grille.get_Domaines_Sizes())+"\n", "curr")
+
+            self.master.send_To_Trace("nombre de mot sur la grille :" + str(len(self.algo.grille.mots_horizontaux + self.algo.grille.mots_verticaux))+"\n", "curr")
+            self.master.send_To_Trace("nombre de mot dans les Domaines :" + str(self.algo.grille.get_Domaines_Sizes())+"\n", "curr")
 
             self.algo.start()
             self.after(1000, self.process_queue)
         else:
 
-            self.algo.traceframe.add_To_Trace("nombre de mot sur la grille :" + str(len(self.algo.grille.mots_horizontaux + self.algo.grille.mots_verticaux))+"\n", "curr")
-            self.algo.traceframe.add_To_Trace("nombre de mot dans les Domaines :" + str(self.algo.grille.get_Domaines_Sizes())+"\n", "curr")
+            self.master.send_To_Trace("nombre de mot sur la grille :" + str(len(self.algo.grille.mots_horizontaux + self.algo.grille.mots_verticaux))+"\n", "curr")
+            self.master.send_To_Trace("nombre de mot dans les Domaines :" + str(self.algo.grille.get_Domaines_Sizes())+"\n", "curr")
             self.algo.start()
 
             self.after(1000, self.process_queue)
 
     def raz(self):
-        self.algo.grille = Grille()
+        self.master.Ggrille(self.algo.grille.filePath)
 
     def process_queue(self):
         try:
             #print "try " + str(self.queue.get(0))
             result = self.queue.get(0)
-            print "res :"+str(result)
             self.show(result)
         except Queue.Empty:
             #print "empty"
@@ -109,9 +110,7 @@ class ButtonFrame(Frame):
             self.algo.grille.setResultat(result)
             self.master.updateGrille()
             for m in self.algo.grille.mots_horizontaux + self.algo.grille.mots_verticaux:
-                if self.algo.traceframe:
-                    self.algo.traceframe.add_To_Trace(str(m)+'\n', "curr")
-                print m
+                self.master.send_To_Trace(str(m)+'\n', "curr")
 
 
             pass

@@ -15,7 +15,6 @@ class MainFrame(Frame):
 
         Frame.__init__(self, master)
         self.algo = algo
-        print self.algo
         self.traceFrame = TraceFrame(self)
         self.motFrame = MotFrame(self)
 
@@ -29,7 +28,8 @@ class MainFrame(Frame):
         #self.grilleFrame.grid(row=1, column=0, sticky=N+E+S+W)
         self.toggle = False
 
-
+    def Ggrille(self, file):
+        self.master.Ggrille(file)
     def open_grille(self):
         self.grilleFrame = GrilleFrame(self, self.algo.grille)
         self.motFrame = MotFrame(self)

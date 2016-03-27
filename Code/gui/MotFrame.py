@@ -28,7 +28,6 @@ class MotFrame(Frame):
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
     def set_Mots(self):
-        print "HELLO"
         line = 0
         col = 0
         max = 0

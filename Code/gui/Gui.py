@@ -16,7 +16,8 @@ from gui.MainFrame import MainFrame
 
 from grille.Dictionnaire import Dico
 
-DICO_PATH = './mots/'
+DICO_PATH = '../Data/mots/'
+GRILLE_PATH = '../Data/'
 
 class Gui(Frame):
 
@@ -28,6 +29,7 @@ class Gui(Frame):
         self.openfileoptions = dict()
         self.openfileoptions['filetypes'] = [('Fichier Mots croisés', '.mc'), ('Tout les fichiers', '.*')]
         self.openfileoptions['initialfile'] = 'ma_grille.mc'
+        self.openfileoptions['initialdir'] = GRILLE_PATH
         self.openfileoptions['parent'] = master
 
         # Queue pour les Threads
@@ -39,6 +41,7 @@ class Gui(Frame):
         self.algo.setQueue(self.thread_queue)
         self.mainFrame = MainFrame(self, self.algo, self.thread_queue)
         self.mainFrame.pack()
+        self.filename = None
 
 
 
@@ -56,12 +59,15 @@ class Gui(Frame):
             self.algo.grille.updateDico(self.dico)
 
     def file_chooser(self):
-        filename = askopenfilename(**self.openfileoptions)
-        if filename:
-            self.algo.setGrille(Grille(filePath=filename))
-            self.algo.grille.updateDico(self.dico)
-            self.setGrille()
+        self.filename = None
+        self.filename = askopenfilename(**self.openfileoptions)
+        if self.filename:
+            self.Ggrille(self.filename)
 
+    def Ggrille(self, file):
+        self.algo.setGrille(Grille(filePath=file))
+        self.algo.grille.updateDico(self.dico)
+        self.setGrille()
 
     def genere_Grille(self):
         Up = Toplevel()
@@ -143,7 +149,7 @@ class Gui(Frame):
             dicomenu.add_radiobutton(label=l, variable=self.radio_dico, value=i, command=self.update_Dico)
             i += 1
 
-        self.radio_dico.set(2)
+        self.radio_dico.set(5)
         menubar.add_cascade(label="Fichier", menu=filemenu)
         menubar.add_cascade(label="Algorithme", menu=algomenu)
         menubar.add_cascade(label="Dictionnaire", menu=dicomenu)

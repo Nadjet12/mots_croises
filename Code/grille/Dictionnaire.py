@@ -45,7 +45,6 @@ class Noeud:
                             liste.add(mot + c)
             else:
                 if pattern[profondeur] in self.liste_Noeud and self.liste_Noeud[pattern[profondeur]].peut_finir:
-                    print self.value
                     if getValue:
                         liste.add((mot + pattern[profondeur], self.liste_Noeud[pattern[profondeur]].value))
                     else:
@@ -194,7 +193,6 @@ if __name__ == "__main__":
     #start_time = time.time()
     #
     s = "ééééççççàààèèè"
-    print s.upper()
     d = Dico(liste=file)
     g = d.copyDico()
     print d.get_Domaine(4, getValue=True)

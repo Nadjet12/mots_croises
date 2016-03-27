@@ -17,22 +17,22 @@ import numpy
 
 class Grille:
     def __init__(self, filePath=None, taille=(20, 10), alea=False, percent=None):
-
+        Mot.ID = 1
         self.mots_verticaux = []
         self.mots_horizontaux = []
         self.cases_noires = []
         self.taille = taille
         self.dico = None
-
+        self.filePath = filePath
         if alea:
-            filePath = self.genereGrilleAlea(taille, percent)
+            self.filePath = self.genereGrilleAlea(taille, percent)
             self.nomGrille = "Random "+str(taille)
         else:
-            self.nomGrille = filePath.split("/")[-1]
+            self.nomGrille = self.filePath.split("/")[-1]
 
 
 
-        self.detecte_mots(filePath)
+        self.detecte_mots(self.filePath)
         self.defContraintes()
 
 
@@ -95,7 +95,6 @@ class Grille:
         else:
             nbNoires = (float(percent) / 100) * float(taille[0]) * float(taille[1])
         nbNoires = int(nbNoires)
-        print "nbNoires : " + str(nbNoires)
         tab = numpy.ones((taille[0], taille[1]), str)
 
         while nbNoires > 0:
@@ -115,19 +114,18 @@ class Grille:
                         tab[i][j] = "$"
                     else:
                         tab[i][j] = " "
-            print(sstr)
 
         return self.fichierSortie(tab)
 
     def fichierSortie(self, tab):
-        path = "./grillesVides/sortie.mc"
+        path = "./sortie.mc"
         fichier = open(path, "w")
         fichier.write(str(self.taille) + "\n")
         for i in range(self.taille[0]):
             for j in range(self.taille[1]):
                 fichier.write(tab[i][j])
             fichier.write("\n")
-        fichier.close
+        fichier.close()
         return path
 
     def defContraintes(self):
