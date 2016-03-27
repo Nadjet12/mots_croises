@@ -17,7 +17,8 @@ from gui.MainFrame import MainFrame
 from grille.Dictionnaire import Dico
 
 DICO_PATH = '../Data/mots/'
-GRILLE_PATH = '../Data/'
+GRILLEVIDE_PATH = '../Data/grillesVides/'
+GRILLEPLEIN_PATH = '../Data/grillePleines/'
 
 class Gui(Frame):
 
@@ -29,7 +30,7 @@ class Gui(Frame):
         self.openfileoptions = dict()
         self.openfileoptions['filetypes'] = [('Fichier Mots croisés', '.mc'), ('Tout les fichiers', '.*')]
         self.openfileoptions['initialfile'] = 'ma_grille.mc'
-        self.openfileoptions['initialdir'] = GRILLE_PATH
+        #self.openfileoptions['initialdir'] = GRILLE_PATH
         self.openfileoptions['parent'] = master
 
         # Queue pour les Threads
@@ -40,7 +41,7 @@ class Gui(Frame):
         self.algo = Algo(algoName="AC3")
         self.algo.setQueue(self.thread_queue)
         self.mainFrame = MainFrame(self, self.algo, self.thread_queue)
-        self.mainFrame.pack()
+        self.mainFrame.pack(fill=BOTH, expand=True)
         self.filename = None
 
 
@@ -60,6 +61,7 @@ class Gui(Frame):
 
     def file_chooser(self):
         self.filename = None
+        self.openfileoptions['initialdir'] = GRILLEVIDE_PATH
         self.filename = askopenfilename(**self.openfileoptions)
         if self.filename:
             self.Ggrille(self.filename)
@@ -100,8 +102,11 @@ class Gui(Frame):
         self.setGrille()
 
     def file_saver(self):
+        self.openfileoptions['initialdir'] = GRILLEPLEIN_PATH
+        if self.algo.grille:
+            self.openfileoptions['initialfile'] = str(self.algo.grille.nomGrille)+"_"+str(self.algo.algoName)
         filename = asksaveasfilename(**self.openfileoptions)
-        if filename:
+        if filename and self.algo.grille:
             self.algo.grille.sauvegarder_grille(filename)
 
     def setGrille(self):
@@ -116,10 +121,11 @@ class Gui(Frame):
 
         newGrilleMenu = Menu(menubar, tearoff=0)
         newGrilleMenu.add_command(label="Ouvrir Grille", command=self.file_chooser)
-        newGrilleMenu.add_command(label="Sauver Grille", command=self.file_saver)
+
         newGrilleMenu.add_command(label="Générer Grille", command=self.genere_Grille)
 
         filemenu.add_cascade(label="Nouvelle grille", menu=newGrilleMenu)
+        filemenu.add_cascade(label="Sauver Grille", command=self.file_saver)
         filemenu.add_separator()
         filemenu.add_command(label="Quitter", command=self.master.quit)
 

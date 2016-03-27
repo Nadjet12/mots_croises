@@ -13,7 +13,7 @@ from Dictionnaire import Dico
 from Mot import Mot
 import random
 import numpy
-
+GRILLE_PATH = '../Data/grillesVides/'
 
 class Grille:
     def __init__(self, filePath=None, taille=(20, 10), alea=False, percent=None):
@@ -118,7 +118,7 @@ class Grille:
         return self.fichierSortie(tab)
 
     def fichierSortie(self, tab):
-        path = "./sortie.mc"
+        path = GRILLE_PATH+ "tmp.mc"
         fichier = open(path, "w")
         fichier.write(str(self.taille) + "\n")
         for i in range(self.taille[0]):

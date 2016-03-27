@@ -1,9 +1,0 @@
-(8, 6)
-TANTAL
-$$I$I$
-OBSADA
-$$Z$A$
-$EAR$G
-$$$AIR
-$FOR$A
-$$$END

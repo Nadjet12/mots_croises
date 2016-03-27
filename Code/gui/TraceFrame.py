@@ -19,7 +19,5 @@ class TraceFrame(Frame):
 
 
     def add_To_Trace(self, st, tag):
-        #self.t.configure(state=NORMAL)
         self.t.insert(INSERT, st, tag)
-        #self.t.configure(state="disabled")
-        #self.update_idletasks()
+        self.t.see(END)
