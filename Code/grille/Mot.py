@@ -15,6 +15,7 @@ class Mot:
         self.id = Mot.ID
         Mot.ID = Mot.ID + 1
         self.dir = dir
+        self.value = 0
         self.lettres = lettres
         self.taille = len(lettres)
         self.xStart = coord[0]

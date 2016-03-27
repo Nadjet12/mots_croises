@@ -34,8 +34,9 @@ class MainFrame(Frame):
         self.grille = self.algo.grille
         print self.grille
         self.grilleFrame = GrilleFrame(self, self.grille)
-        liste_mots = self.set_Grille()
         self.motFrame = MotFrame(self)
+        liste_mots = self.set_Grille()
+
         self.buttonFrame.motFrame = self.motFrame
         self.motFrame.listes = liste_mots
         self.motFrame.set_Mots()

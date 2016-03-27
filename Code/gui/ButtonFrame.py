@@ -101,7 +101,6 @@ class ButtonFrame(Frame):
             self.algo.stop()
 
         elif result:
-            print "hello"
             self.continueButton.configure(state="normal")
             self.grille.setResultat(result)
             self.master.updateGrille()
@@ -113,6 +112,7 @@ class ButtonFrame(Frame):
 
             pass
         else:
+            self.continueButton.configure(state="disabled")
             mess = 'Pas/plus de résultat'
             top = Toplevel()
             top.title("Resultat")

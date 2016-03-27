@@ -194,6 +194,8 @@ class Grille:
     def setResultat(self, list):
         for m in list:
             m[0].lettres = m[1]
+            if len(m) > 2:
+                m[0].value = m[2]
 
     def motSize(self):
         return len(self.mots_horizontaux) + len(self.mots_verticaux)

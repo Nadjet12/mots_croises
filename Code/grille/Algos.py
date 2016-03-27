@@ -292,12 +292,12 @@ class Algo(threading.Thread):
             self.res = i
             if self.queue:
                 self.queue.put(self.res)
-            self.fin = True
-            #self.pause()
-            #with self.pause_cond:
-            #    while self.paused:
-            #        self.pause_cond.wait()
-            #    self.timed = time.time()
+            #self.fin = True
+            self.pause()
+            with self.pause_cond:
+                while self.paused:
+                    self.pause_cond.wait()
+                self.timed = time.time()
 
 
             return
@@ -314,8 +314,8 @@ class Algo(threading.Thread):
             I = i[:] + [(xk, v)]
             if self.check_forward2(xk, v, V):
                 self.forward_checking(V[:], I)
-            if self.fin:
-                    return
+            #if self.fin:
+            #        return
             for mot, dom, taille in savedDom:
                 mot.initDomaine(dom)
         return

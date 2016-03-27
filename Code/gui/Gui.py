@@ -102,10 +102,12 @@ class Gui(Frame):
         self.mainFrame.setDico()
 
     def file_chooser(self):
+
         filename = askopenfilename(**self.openfileoptions)
-        self.grille = Grille(filePath=filename, dictionnaire=self.dico)
-        self.algo.grille = self.grille
-        self.setGrille()
+        if filename:
+            self.grille = Grille(filePath=filename, dictionnaire=self.dico)
+            self.algo.grille = self.grille
+            self.setGrille()
 
 
     def genere_Grille(self):
@@ -142,7 +144,8 @@ class Gui(Frame):
 
     def file_saver(self):
         filename = asksaveasfilename(**self.openfileoptions)
-        self.algo.grille.sauvegarder_grille(filename)
+        if filename:
+            self.algo.grille.sauvegarder_grille(filename)
 
     def setGrille(self):
         self.mainFrame.open_grille(self.grille)

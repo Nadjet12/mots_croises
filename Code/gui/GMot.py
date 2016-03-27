@@ -23,6 +23,9 @@ class GMot:
         self.number = Entry(master2, validate="key", state=NORMAL, bg='grey',
                                      font=font, width=5, justify=CENTER)
         self.number.insert(0, self.mot.id)
+        self.value = Entry(master2, validate="key", state=NORMAL, bg='grey',
+                                     font=font, width=5, justify=CENTER)
+        self.value.insert(0, self.mot.value)
 
 
     def update(self, From):
@@ -33,6 +36,8 @@ class GMot:
                self.caseGrilleFrame[i].setLettre(self.mot.lettres[i])
             if self.caseMotFrame[i].get() != self.mot.lettres[i] and From != self.caseMotFrame[i]:
                 self.caseMotFrame[i].setLettre(self.mot.lettres[i])
+        self.value.delete(0, 'end')
+        self.value.insert('end', self.mot.value)
 
 
     def printD(self):

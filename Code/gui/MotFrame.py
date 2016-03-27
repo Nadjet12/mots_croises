@@ -28,6 +28,7 @@ class MotFrame(Frame):
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
     def set_Mots(self):
+        print "HELLO"
         line = 0
         col = 0
         max = 0
@@ -45,8 +46,10 @@ class MotFrame(Frame):
                 line += 1
         line = 0
         for l in self.listes:
+            col = max+2
             for l2 in l:
-                l2.button.grid(row=line, column=max+2, ipady=10)
+                l2.value.grid(row=line, column=col, ipady=10)
+                l2.button.grid(row=line, column=col+1, ipady=10)
                 line += 1
 
 
