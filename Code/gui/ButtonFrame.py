@@ -29,6 +29,10 @@ class ButtonFrame(Frame):
 
         self.advanceButton = Checkbutton(self, text="Voir les mots",
                                          variable=self.showMot, command=self.toggle_Mot)
+
+        self.resetButton = Button(self, text="RAZ",
+                                         command=self.raz)
+
         self.advanceButton.grid(row=0, column=2, sticky=E)
         self.traceButton = Checkbutton(self, text="Trace Algo",
                                       variable=self.showTrace, command=self.toggle_Trace)
@@ -57,7 +61,8 @@ class ButtonFrame(Frame):
 
             self.after(1000, self.process_queue)
 
-
+    def raz(self):
+        self.algo.grille = Grille()
 
     def process_queue(self):
         try:

@@ -27,6 +27,7 @@ class MainFrame(Frame):
         self.grilleFrame = None
         self.buttonFrame.grid(row=0, column=0, sticky=N+E+S+W)
         #self.grilleFrame.grid(row=1, column=0, sticky=N+E+S+W)
+        self.toggle = False
 
 
     def open_grille(self):
@@ -37,17 +38,17 @@ class MainFrame(Frame):
         self.buttonFrame.motFrame = self.motFrame
         self.motFrame.listes = liste_mots
         self.motFrame.set_Mots()
+        if self.toggle:
+            self.toggle_Mot(False)
+            self.toggle_Mot(True)
         self.grilleFrame.grid(row=1, column=0, sticky=N+E+S+W)
-        self.traceFrame.add_To_Trace("Ouverture Grille " + self.algo.grille.nomGrille + "\n", 'curr')
-        self.setDico()
+        self.send_To_Trace("Ouverture Grille " + self.algo.grille.nomGrille + "\n", 'curr')
 
-    def setDico(self):
-        if  self.algo.grille:
-            self.traceFrame.add_To_Trace("Ouverture Dictionnaire " + self.algo.grille.nomDico+ "\n", 'curr')
+
 
     def setAlgo(self):
         self.buttonFrame.continueButton.configure(state="disabled")
-        self.traceFrame.add_To_Trace("Choix de l'algorithm : " + self.algo.algoName+ "\n", 'curr')
+        self.send_To_Trace("Choix de l'algorithm : " + self.algo.algoName+ "\n", 'curr')
 
 
 
@@ -111,6 +112,7 @@ class MainFrame(Frame):
             self.motFrame.ff.grid(row=1, column=1, sticky=N+E+S+W)
         else:
             self.motFrame.ff.grid_forget()
+        self.toggle = bool
 
 
     def toggle_Trace(self, bool):
@@ -118,3 +120,7 @@ class MainFrame(Frame):
             self.traceFrame.grid(row=2, column=0, columnspan=2, sticky=N+E+S+W)
         else:
             self.traceFrame.grid_forget()
+
+
+    def send_To_Trace(self, mess, state):
+        self.traceFrame.add_To_Trace(mess, state)

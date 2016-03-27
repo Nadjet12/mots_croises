@@ -16,17 +16,13 @@ import numpy
 
 
 class Grille:
-    def __init__(self, filePath=None, taille=(20, 10), dictionnaire="./mots/td3.txt", alea=False, percent=None):
+    def __init__(self, filePath=None, taille=(20, 10), alea=False, percent=None):
 
         self.mots_verticaux = []
         self.mots_horizontaux = []
         self.cases_noires = []
         self.taille = taille
-        start_time = time.time()
-        self.dico = Dico(dictionnaire)
-        # print len(self.dico.get_Domaine(4))
-        elapsed_time = time.time() - start_time
-        print "Creation dictionnaire " + dictionnaire.split("/")[-1] + " Temps : " + str(elapsed_time)
+        self.dico = None
 
         if alea:
             filePath = self.genereGrilleAlea(taille, percent)
@@ -34,11 +30,11 @@ class Grille:
         else:
             self.nomGrille = filePath.split("/")[-1]
 
-        self.nomDico = dictionnaire.split("/")[-1]
+
 
         self.detecte_mots(filePath)
         self.defContraintes()
-        self.initDomaine()
+
 
 
     def get_Domaines_Sizes(self):
@@ -175,9 +171,8 @@ class Grille:
         return liste
 
     def updateDico(self, dico):
-        self.dico = Dico(dico)
+        self.dico = dico
         self.initDomaine()
-        self.nomDico = dico.split("/")[-1]
 
     # def initDomaine(self):
     #    for m in self.mots_horizontaux:

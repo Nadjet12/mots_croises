@@ -14,6 +14,8 @@ from grille.Grille import Grille
 from gui.GrilleFrame import GrilleFrame
 from gui.MainFrame import MainFrame
 
+from grille.Dictionnaire import Dico
+
 DICO_PATH = './mots/'
 
 class Gui(Frame):
@@ -46,15 +48,18 @@ class Gui(Frame):
 
 
     def update_Dico(self):
-        self.dico = self.dliste[self.radio_dico.get()-1]
+        start = time.time()
+        self.dico = Dico(self.dliste[self.radio_dico.get()-1])
+        end = time.time() - start
+        self.mainFrame.send_To_Trace("Création du dictionnaire "+self.dliste[self.radio_dico.get()-1].split("/")[-1]+" :"+str(end) + "\n", "temps")
         if self.algo.grille:
             self.algo.grille.updateDico(self.dico)
-        self.mainFrame.setDico()
 
     def file_chooser(self):
         filename = askopenfilename(**self.openfileoptions)
         if filename:
-            self.algo.setGrille(Grille(filePath=filename, dictionnaire=self.dico))
+            self.algo.setGrille(Grille(filePath=filename))
+            self.algo.grille.updateDico(self.dico)
             self.setGrille()
 
 
@@ -84,7 +89,8 @@ class Gui(Frame):
         button = Button(Up, text ="Créer la Grille", command = Up.destroy).grid(row =5,columnspan=2, sticky=N+S+E+W)
 
         Up.wait_window()
-        self.algo.setGrille(Grille(taille=(li.get(),col.get()),alea=True, dictionnaire=self.dico, percent=nbN.get()))
+        self.algo.setGrille(Grille(taille=(li.get(),col.get()),alea=True, percent=nbN.get()))
+        self.algo.grille.updateDico(self.dico)
         self.setGrille()
 
     def file_saver(self):
@@ -142,7 +148,7 @@ class Gui(Frame):
         menubar.add_cascade(label="Algorithme", menu=algomenu)
         menubar.add_cascade(label="Dictionnaire", menu=dicomenu)
 
-        self.dico = self.dliste[self.radio_dico.get()-1]
+        self.dico = Dico(self.dliste[self.radio_dico.get()-1])
 
         self.master.config(menu=menubar)
 
