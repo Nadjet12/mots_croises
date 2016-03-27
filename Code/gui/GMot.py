@@ -5,7 +5,6 @@ from gui.Case import Case
 
 
 class GMot:
-
     def __init__(self, mot, master, master2):
 
         self.xStart = mot.xStart
@@ -29,7 +28,6 @@ class GMot:
 
 
     def update(self, From):
-        # TODO: Update depuis les 3 entrees
 
         for i in range(self.taille):
             if self.caseGrilleFrame[i].get() != self.mot.lettres[i] and From != self.caseGrilleFrame[i]:
@@ -39,12 +37,6 @@ class GMot:
         self.value.delete(0, 'end')
         self.value.insert('end', self.mot.value)
 
-
-    def printD(self):
-        s = ""
-        for m in self.mot.domaine:
-            s += str(m)+" "
-        print str(self.mot) + " ->" + s
 
     def showDomaine(self):
         s = ""
@@ -62,3 +54,11 @@ class GMot:
         text.pack(side='left', fill='both', expand=1)
         scroll.pack(side='right', fill='y')
         frame.pack(fill='both', expand=1)
+
+    def focusMot(self, case):
+        for c in self.caseGrilleFrame +  self.caseMotFrame:
+            c.setFocus(case)
+
+    def unfocusMot(self):
+        for c in self.caseGrilleFrame +  self.caseMotFrame:
+            c.setUnfocus()

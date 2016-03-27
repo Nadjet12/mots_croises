@@ -13,35 +13,47 @@ class Case(Entry):
         sv = StringVar()
         sv.trace("w", lambda name, index, mode, sv=sv: self.char_callback(sv))
         self['textvariable'] = sv
+        self.bind("<FocusIn>", self.focusCase)
+        self.bind("<FocusOut>", self.unfocusCase)
 
 
 
     def add_ui(self, ui):
         self.guis += ui
+        self.guis = list(set(self.guis))
 
     def char_callback(self, sv):
-        '''
-        c = sv.get()
-        if c is '':
-            c = ' '
-        c = c.upper()
-        c = c[-1]
-        #sv.set(c)
-
-        s = "".join(c)
-        '''
-        c = sv.get()[0:1]
+        if sv.get() is "":
+            return
+        c = sv.get()[-1]
         c = c.upper()
         sv.set(c)
-        s = "".join(c)
-
         for u in self.guis:
+            u[2].set_lettre(u[1], c, u[2])
             u[0].update(self)
-            #u[2].set_lettre(u[1], s)
 
 
     def setLettre(self, lettre):
         if lettre is ' ':
             return
         self.delete(0, 'end')
-        self.insert('end', lettre)
+        self.insert(0, lettre)
+
+    def focusCase(self, event):
+        for u in self.guis:
+            u[0].focusMot(self)
+
+    def unfocusCase(self, event):
+        for u in self.guis:
+            u[0].unfocusMot()
+
+
+
+    def setFocus(self, case):
+        if case is self:
+            self['bg'] = 'orange'
+        else :
+            self['bg'] = 'yellow'
+
+    def setUnfocus(self):
+        self['bg'] = 'white'

@@ -34,22 +34,13 @@ class Mot:
     def ajoute_contrainte(self, obj, i):
         self.contrainteListe += [(obj, i)]
 
-    def set_lettre(self, i, c):
+    def set_lettre(self, i, c, master):
         s = list(self.lettres)
-        # print str(i) + " " + c
         s[i] = c
         self.lettres = "".join(s)
         for c1, c2 in self.contrainteListe:
-            if c2 is i:
-                c1.update(self, c)
-
-    def update(self, mot, c):
-        for c1,c2 in self.contrainteListe:
-            if c1 is mot:
-                s = list(self.lettres)
-                s[c2] = c
-                self.lettres = "".join(s)
-
+            if c2 is i and not self is master:
+                c1.set_lettre(c2, c, master)
         
     def __repr__(self):
         dom = self.getDomaine()

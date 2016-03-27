@@ -25,7 +25,6 @@ class MainFrame(Frame):
         self.algo.traceframe = self.traceFrame
         self.grilleFrame = None
         self.buttonFrame.grid(row=0, column=0, sticky=N+E+S+W)
-        #self.grilleFrame.grid(row=1, column=0, sticky=N+E+S+W)
         self.toggle = False
 
     def Ggrille(self, file):
