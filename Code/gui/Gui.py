@@ -18,7 +18,7 @@ DICO_PATH = './mots/'
 
 class Gui(Frame):
 
-    def __init__(self, master, root, algo=None):
+    def __init__(self, master, algo=None):
 
         Frame.__init__(self, master)
 
@@ -26,13 +26,77 @@ class Gui(Frame):
         self.openfileoptions = dict()
         self.openfileoptions['filetypes'] = [('Fichier Mots croisés', '.mc'), ('Tout les fichiers', '.*')]
         self.openfileoptions['initialfile'] = 'ma_grille.mc'
-        self.openfileoptions['parent'] = root
+        self.openfileoptions['parent'] = master
 
         # Queue pour les Threads
         self.thread_queue = Queue()
 
+        self.createMenu()
 
-        menubar = Menu(master)
+        self.algo = Algo(algoName="AC3")
+        self.algo.setQueue(self.thread_queue)
+        self.mainFrame = MainFrame(self, self.algo, self.thread_queue)
+        self.mainFrame.pack()
+
+
+
+    def update_Algo(self, arg0):
+        self.algo.setAlgoName(arg0)
+        self.mainFrame.setAlgo()
+
+
+    def update_Dico(self):
+        self.dico = self.dliste[self.radio_dico.get()-1]
+        if self.algo.grille:
+            self.algo.grille.updateDico(self.dico)
+        self.mainFrame.setDico()
+
+    def file_chooser(self):
+        filename = askopenfilename(**self.openfileoptions)
+        if filename:
+            self.algo.setGrille(Grille(filePath=filename, dictionnaire=self.dico))
+            self.setGrille()
+
+
+    def genere_Grille(self):
+        Up = Toplevel()
+        Up.title("Générer Grille")
+
+        li = IntVar()
+        li.set(10)
+        Label(Up, text ="Nombre de ligne :").grid(row=1, column=0, sticky="w")
+        w = Scale(Up, from_=5, to=20, orient=HORIZONTAL, var=li)
+        w.grid(row=1, column=1, sticky="w")
+
+        col = IntVar()
+        col.set(10)
+        Label(Up, text ="Nombre de colonne :").grid(row=2, column=0, sticky="w")
+        w = Scale(Up, from_=5, to=20, orient=HORIZONTAL, var=col)
+        w.grid(row=2, column=1, sticky="w")
+
+        nbN = IntVar()
+        nbN.set(30)
+        Label(Up, text ="% de case noir :").grid(row=3, column=0, sticky="w")
+        w = Scale(Up, from_=10, to=50, orient=HORIZONTAL, var=nbN)
+        w.grid(row=3, column=1, sticky="w")
+
+
+        button = Button(Up, text ="Créer la Grille", command = Up.destroy).grid(row =5,columnspan=2, sticky=N+S+E+W)
+
+        Up.wait_window()
+        self.algo.setGrille(Grille(taille=(li.get(),col.get()),alea=True, dictionnaire=self.dico, percent=nbN.get()))
+        self.setGrille()
+
+    def file_saver(self):
+        filename = asksaveasfilename(**self.openfileoptions)
+        if filename:
+            self.algo.grille.sauvegarder_grille(filename)
+
+    def setGrille(self):
+        self.mainFrame.open_grille()
+
+    def createMenu(self):
+        menubar = Menu(self.master)
 
         filemenu = Menu(menubar, tearoff=0)
         algomenu = Menu(menubar, tearoff=0)
@@ -45,7 +109,7 @@ class Gui(Frame):
 
         filemenu.add_cascade(label="Nouvelle grille", menu=newGrilleMenu)
         filemenu.add_separator()
-        filemenu.add_command(label="Quitter", command=master.quit)
+        filemenu.add_command(label="Quitter", command=self.master.quit)
 
         self.radio_algo = StringVar()
         algomenu.add_radiobutton(label="AC3", variable=self.radio_algo, value=1,
@@ -80,117 +144,5 @@ class Gui(Frame):
 
         self.dico = self.dliste[self.radio_dico.get()-1]
 
-        master.config(menu=menubar)
-        self.algo = algo
-        self.grille = None
-        self.algo.queue = self.thread_queue
-        self.mainFrame = MainFrame(self, self.algo, self.thread_queue)
-        self.mainFrame.pack()
-
-
-
-    def update_Algo(self, arg0):
-        self.algo.algoName = arg0
-        self.mainFrame.setAlgo(arg0)
-
-
-    def update_Dico(self):
-        print "update dico :" + str(self.dliste[self.radio_dico.get()-1])
-        self.dico = self.dliste[self.radio_dico.get()-1]
-        if self.grille:
-            self.grille.updateDico(self.dico)
-        self.mainFrame.setDico()
-
-    def file_chooser(self):
-
-        filename = askopenfilename(**self.openfileoptions)
-        if filename:
-            self.grille = Grille(filePath=filename, dictionnaire=self.dico)
-            self.algo.grille = self.grille
-            self.setGrille()
-
-
-    def genere_Grille(self):
-        Up = Toplevel()
-        Up.title("Générer Grille")
-
-        li = IntVar()
-        li.set(10)
-        Label(Up, text ="Nombre de ligne :").grid(row=1, column=0, sticky="w")
-        w = Scale(Up, from_=5, to=20, orient=HORIZONTAL, var=li)
-        w.grid(row=1, column=1, sticky="w")
-
-        col = IntVar()
-        col.set(10)
-        Label(Up, text ="Nombre de colonne :").grid(row=2, column=0, sticky="w")
-        w = Scale(Up, from_=5, to=20, orient=HORIZONTAL, var=col)
-        w.grid(row=2, column=1, sticky="w")
-
-        nbN = IntVar()
-        nbN.set(30)
-        Label(Up, text ="% de case noir :").grid(row=3, column=0, sticky="w")
-        w = Scale(Up, from_=10, to=50, orient=HORIZONTAL, var=nbN)
-        w.grid(row=3, column=1, sticky="w")
-
-
-        button = Button(Up, text ="Créer la Grille", command = Up.destroy).grid(row =5,columnspan=2, sticky=N+S+E+W)
-
-        Up.wait_window()
-        print "done waiting..."
-        print "a faire genere_Grille"
-        self.grille =  Grille(taille=(li.get(),col.get()),alea=True, dictionnaire=self.dico, percent=nbN.get())
-        self.algo.grille = self.grille
-        self.setGrille()
-
-    def file_saver(self):
-        filename = asksaveasfilename(**self.openfileoptions)
-        if filename:
-            self.algo.grille.sauvegarder_grille(filename)
-
-    def setGrille(self):
-        self.mainFrame.open_grille(self.grille)
-        
-    '''
-    def __init__(self, master):
-        self.master = master
-        self.test_button = Button(self.master, command=self.tb_click)
-        self.test_button.configure(
-            text="Start", background="Grey",
-            padx=50
-            )
-        self.test_button.pack(side=TOP)
-
-    def progress(self):
-        self.prog_bar = ttk.Progressbar(
-            self.master, orient="horizontal",
-            length=200, mode="indeterminate"
-            )
-        self.prog_bar.pack(side=TOP)
-
-    def tb_click(self):
-        self.progress()
-        self.prog_bar.start()
-        self.queue = Queue.Queue()
-        ThreadedTask(self.queue).start()
-        self.master.after(100, self.process_queue)
-
-    def process_queue(self):
-        try:
-            msg = self.queue.get(0)
-            print msg
-            # Show result of the task if needed
-            self.prog_bar.stop()
-        except Queue.Empty:
-            self.master.after(100, self.process_queue)
-
-
-class ThreadedTask(threading.Thread):
-    def __init__(self, queue):
-        threading.Thread.__init__(self)
-        self.queue = queue
-    def run(self):
-        time.sleep(5)  # Simulate long running process
-        s
-        print "guiFrame"elf.queue.put("Task finished")
-    '''
+        self.master.config(menu=menubar)
 

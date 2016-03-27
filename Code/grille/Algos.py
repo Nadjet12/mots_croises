@@ -42,6 +42,16 @@ class Algo(threading.Thread):
         self.hasRun = False
         self.fin = False
 
+
+    def setQueue(self, queue):
+        self.queue = queue
+
+    def setAlgoName(self, name):
+        self.algoName = name
+
+    def setGrille(self, grille):
+        self.grille =grille
+
     def send_to_Trace(self, mess, mode):
         if self.traceframe:
             self.traceframe.add_To_Trace(mess, mode)
@@ -64,7 +74,6 @@ class Algo(threading.Thread):
         self.pause_cond.release()
 
     def sendResult(self, resultat):
-        print resultat
         if self.queue:
             self.queue.put(resultat)
 
@@ -82,7 +91,6 @@ class Algo(threading.Thread):
             self.sendResult(None)
 
         elif self.algoName is "FC_AC3":
-            print "aaaaaa"
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
             self.ac3()
             self.forward_checking(liste, [])
@@ -242,11 +250,9 @@ class Algo(threading.Thread):
 
         if not V:
             self.timed = time.time() - self.timed
-            print self.timed
             self.send_to_Trace("Fin du Forward Checking ", "out")
             self.send_to_Trace(" Temps :" + str(self.timed) + "\n", "time")
             self.res = i
-            print "azertyuio"
             self.sendResult(self.res)
             #self.fin = True
             self.pause()
@@ -266,7 +272,6 @@ class Algo(threading.Thread):
 
         for v in xk.getDomaine():
             self.nbMotsTeste +=1
-            #print self.nbMotsTeste
             I = i[:] + [(xk, v)]
             if self.check_forward2(xk, v, V):
                 self.forward_checking(V[:], I)
@@ -284,19 +289,15 @@ class Algo(threading.Thread):
         return True
 
     def CBJ(self, V, i):
-        print len(V)
         if not V:
             self.res = i
             self.wait = True
             self.sendResult(self.res)
             #self.waitContinue()
-            print "fin"
             return []
 
 
         xk = self.heuristique_instance_max(V, i)
-
-        #print xk
         conflit = []
         nonBJ = True
         V.remove(xk)
@@ -309,7 +310,6 @@ class Algo(threading.Thread):
             conflit_local = self.consistante(i, (xk, v))
             if not conflit_local:
                 conflit_fils = self.CBJ(V[:], I)
-                #print conflit_fils
                 if xk in conflit_fils:
                     conflit += conflit_fils
                 else:
@@ -319,18 +319,15 @@ class Algo(threading.Thread):
         return conflit
 
     def CBJ2(self, V, i):
-        print len(V)
         if not V:
             self.res = i
             self.wait = True
             self.sendResult(self.res)
             self.waitContinue()
-            print "fin"
             return []
 
 
         xk = self.heur(V, i)
-        #print xk
         conflit = []
         nonBJ = True
         V.remove(xk)
@@ -350,8 +347,6 @@ class Algo(threading.Thread):
             else:
                 conflit += conflit_local
         return conflit
-
-
 
     def consistante(self, inst, (xk, v)):
         conflit = []
@@ -401,7 +396,6 @@ class Algo(threading.Thread):
                 nb += 1
         return nb
 
-
     def heuristique_instance_max(self, V, inst):
         """
         variable qui a le plus de contrainte avec les variables déjà instanciées
@@ -428,8 +422,6 @@ class Algo(threading.Thread):
     def waitContinue(self):
         while self.wait:
             pass
-            #print "a"
-
 
     def branch_bound(self, V, i):
         if not V:

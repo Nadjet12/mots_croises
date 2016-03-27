@@ -35,7 +35,6 @@ class ButtonFrame(Frame):
         self.traceButton.grid(row=0, column=3, sticky=E)
         self.queue = queue
         self.algo = algo
-        self.grille = algo.grille
         self.traceFrame = traceFrame
         self.motFrame = motFrame
 
@@ -44,7 +43,7 @@ class ButtonFrame(Frame):
     def play(self):
         if self.algo.hasRun:
             self.algo.stop()
-            self.algo = Algo(queue=self.queue, grille=self.grille, traceframe=self.traceFrame, algo=self.algo.algo, heuristique=self.algo.heur)
+            self.algo = Algo(queue=self.queue, grille=self.algo.grille, traceframe=self.traceFrame, algoName=self.algo.algoName, heuristique=self.algo.heur)
             self.algo.traceframe.add_To_Trace("nombre de mot sur la grille :" + str(len(self.algo.grille.mots_horizontaux + self.algo.grille.mots_verticaux))+"\n", "curr")
             self.algo.traceframe.add_To_Trace("nombre de mot dans les Domaines :" + str(self.algo.grille.get_Domaines_Sizes())+"\n", "curr")
 
@@ -102,9 +101,9 @@ class ButtonFrame(Frame):
 
         elif result:
             self.continueButton.configure(state="normal")
-            self.grille.setResultat(result)
+            self.algo.grille.setResultat(result)
             self.master.updateGrille()
-            for m in self.grille.mots_horizontaux + self.grille.mots_verticaux:
+            for m in self.algo.grille.mots_horizontaux + self.algo.grille.mots_verticaux:
                 if self.algo.traceframe:
                     self.algo.traceframe.add_To_Trace(str(m)+'\n', "curr")
                 print m

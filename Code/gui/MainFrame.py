@@ -25,15 +25,12 @@ class MainFrame(Frame):
 
         self.algo.traceframe = self.traceFrame
         self.grilleFrame = None
-        self.grille = None
         self.buttonFrame.grid(row=0, column=0, sticky=N+E+S+W)
         #self.grilleFrame.grid(row=1, column=0, sticky=N+E+S+W)
 
 
-    def open_grille(self, grille):
-        self.grille = self.algo.grille
-        print self.grille
-        self.grilleFrame = GrilleFrame(self, self.grille)
+    def open_grille(self):
+        self.grilleFrame = GrilleFrame(self, self.algo.grille)
         self.motFrame = MotFrame(self)
         liste_mots = self.set_Grille()
 
@@ -41,17 +38,14 @@ class MainFrame(Frame):
         self.motFrame.listes = liste_mots
         self.motFrame.set_Mots()
         self.grilleFrame.grid(row=1, column=0, sticky=N+E+S+W)
-        self.buttonFrame.grille = self.grille
-        self.traceFrame.add_To_Trace("Ouverture Grille " + self.grille.nomGrille + "\n", 'curr')
+        self.traceFrame.add_To_Trace("Ouverture Grille " + self.algo.grille.nomGrille + "\n", 'curr')
         self.setDico()
 
     def setDico(self):
-        if  self.grille:
-            self.traceFrame.add_To_Trace("Ouverture Dictionnaire " + self.grille.nomDico+ "\n", 'curr')
+        if  self.algo.grille:
+            self.traceFrame.add_To_Trace("Ouverture Dictionnaire " + self.algo.grille.nomDico+ "\n", 'curr')
 
-    def setAlgo(self, algo):
-        self.algo.algoName = algo
-        self.buttonFrame.algo.algoName = algo
+    def setAlgo(self):
         self.buttonFrame.continueButton.configure(state="disabled")
         self.traceFrame.add_To_Trace("Choix de l'algorithm : " + self.algo.algoName+ "\n", 'curr')
 
@@ -60,14 +54,14 @@ class MainFrame(Frame):
     def set_Grille(self):
 
         self.grille2 = [
-            [None for i in range(self.grille.taille[1])]
-                for j in range(self.grille.taille[0])]
+            [None for i in range(self.algo.grille.taille[1])]
+                for j in range(self.algo.grille.taille[0])]
 
 
-        self.motVert = [GMot(self.grille.mots_verticaux[mot], self.grilleFrame, self.motFrame.frame)
-                        for mot in range(len(self.grille.mots_verticaux))]
-        self.motHori = [GMot(self.grille.mots_horizontaux[mot], self.grilleFrame, self.motFrame.frame)
-                        for mot in range(len(self.grille.mots_horizontaux))]
+        self.motVert = [GMot(self.algo.grille.mots_verticaux[mot], self.grilleFrame, self.motFrame.frame)
+                        for mot in range(len(self.algo.grille.mots_verticaux))]
+        self.motHori = [GMot(self.algo.grille.mots_horizontaux[mot], self.grilleFrame, self.motFrame.frame)
+                        for mot in range(len(self.algo.grille.mots_horizontaux))]
 
         for mot in self.motVert:
             for i in range(mot.taille):
