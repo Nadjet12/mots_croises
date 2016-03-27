@@ -49,8 +49,8 @@ class Case(Entry):
 
 
 
-    def setFocus(self, case):
-        if case is self:
+    def setFocus(self, case=False):
+        if case:
             self['bg'] = 'orange'
         else :
             self['bg'] = 'yellow'

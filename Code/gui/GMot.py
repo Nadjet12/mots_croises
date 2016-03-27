@@ -56,8 +56,13 @@ class GMot:
         frame.pack(fill='both', expand=1)
 
     def focusMot(self, case):
-        for c in self.caseGrilleFrame +  self.caseMotFrame:
-            c.setFocus(case)
+        for i in range(self.mot.taille):
+            if self.caseGrilleFrame[i] is case or self.caseMotFrame[i] is case:
+                self.caseGrilleFrame[i].setFocus(True)
+                self.caseMotFrame[i].setFocus(True)
+            else :
+                self.caseGrilleFrame[i].setFocus()
+                self.caseMotFrame[i].setFocus()
 
     def unfocusMot(self):
         for c in self.caseGrilleFrame +  self.caseMotFrame:
