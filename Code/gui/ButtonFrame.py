@@ -89,7 +89,7 @@ class ButtonFrame(Frame):
 
     def show(self, result):
 
-        if self.algo.algo is 'AC3':
+        if self.algo.algoName is 'AC3':
             mess = 'Non Arc-Consistant'
             if result:
                 mess = 'Arc-Consistant'

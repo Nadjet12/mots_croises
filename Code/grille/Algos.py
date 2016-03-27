@@ -14,26 +14,39 @@ class StoppableThread(object):
 
 
 class Algo(threading.Thread):
-    def __init__(self, queue=None, grille=None, traceframe=None, algo=None, heuristique=None):
-        #super(StoppableThread, self).__init__()
+    def __init__(self, queue=None, grille=None, traceframe=None, algoName=None, heuristique=None):
         threading.Thread.__init__(self)
+
+        #Variables de test
         self.tempsOvertureGrille = 0
         self.timed = 0
         self.nbMotsTeste = 0
+
+
+
         self.queue = queue
         self.grille = grille
         self.traceframe = traceframe
-        self.algo = algo
+        self.algoName = algoName
         self.res = None
-        self.heur = self.heuristique_dom_mim
 
+        if heuristique:
+            self.heur = heuristique
+        else:
+            self.heur = self.heuristique_dom_mim
+
+        # Variable de Thread
         self.pause_cond = threading.Condition(threading.Lock())
         self.paused = False
         self._stop = threading.Event()
         self.hasRun = False
         self.fin = False
 
-
+    def send_to_Trace(self, mess, mode):
+        if self.traceframe:
+            self.traceframe.add_To_Trace(mess, mode)
+        else :
+            print mess
 
     def stop(self):
         self._stop.set()
@@ -41,62 +54,57 @@ class Algo(threading.Thread):
     def stopped(self):
         return self._stop.isSet()
 
-
     def pause(self):
         self.paused = True
-        # If in sleep, we acquire immediately, otherwise we wait for thread
-        # to release condition. In race, worker will still see self.paused
-        # and begin waiting until it's set back to False
         self.pause_cond.acquire()
 
-    #should just resume the thread
     def resume(self):
         self.paused = False
-        # Notify so thread will wake after lock released
         self.pause_cond.notify()
-        # Now release the lock
         self.pause_cond.release()
+
+    def sendResult(self, resultat):
+        print resultat
+        if self.queue:
+            self.queue.put(resultat)
 
     def run(self):
         self.hasRun = True
-        if self.algo is "AC3":
+        if self.algoName is "AC3":
             bool = self.ac3()
-            if self.queue:
-                self.queue.put(bool)
-        elif self.algo is "FC":
-            liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
-            random.shuffle(liste)
-            self.forward_checking(liste, [])
-            if self.queue:
-                self.queue.put(None)
+            self.sendResult(bool)
 
-        elif self.algo is "FC_AC3":
+        elif self.algoName is "FC":
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
-            taileDom = self.grille.get_Domaines_Sizes()
-            print "Taille des domaines : " + str(taileDom) + " mots"
-            #start_time = time.time()
+            self.forward_checking(liste, [])
+
+            # Pas ou plus de resultats
+            self.sendResult(None)
+
+        elif self.algoName is "FC_AC3":
+            print "aaaaaa"
+            liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
             self.ac3()
-            print "Mots Verticaux :"
-            for m in self.grille.mots_verticaux:
-                print m
-            print "Mots Horizontaux :"
-            for m in self.grille.mots_horizontaux:
-                print m
-            #elapsed_time = time.time() - start_time
-            #print "AC3 Temps :" + str(elapsed_time)
-            taileDom2 = self.grille.get_Domaines_Sizes()
-            print "Taille des domaines : " + str(taileDom2) + " mots\nReduit de :" + str(taileDom-taileDom2) + " mots"
-
             self.forward_checking(liste, [])
-            if self.queue:
-                self.queue.put(None)
 
-        elif self.algo is "CBJ":
+            # Pas ou plus de resultats
+            self.sendResult(None)
+
+        elif self.algoName is "CBJ":
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
-            random.shuffle(liste)
             self.CBJ(liste, [])
-            #if self.queue:
-            #    self.queue.put(None)
+
+            # Pas ou plus de resultats
+            self.sendResult(None)
+
+        elif self.algoName is "VAL":
+            pass
+            #liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
+            #random.shuffle(liste)
+            #self.branch_bound(liste, [])
+
+            # Pas ou plus de resultats
+            #self.sendResult(None)
         else:
             print "Error"
 
@@ -113,13 +121,12 @@ class Algo(threading.Thread):
 
         nbMot = self.grille.get_Domaines_Sizes()
         start_time = time.time()
-        if self.traceframe:
-            self.traceframe.add_To_Trace("Debut de l'AC3\n", 'in')
+        self.send_to_Trace("Debut de l'AC3\n", 'in')
         contrainte_Liste = self.grille.getContraintes()
         file_L = contrainte_Liste[::]
         while file_L:
             (x, y) = file_L.pop(0)
-            if self.revise2(x, y):
+            if self.revise(x, y):
                 if len(x.getDomaine()) == 0:
                     return False
                 for (i, j) in contrainte_Liste:
@@ -127,16 +134,13 @@ class Algo(threading.Thread):
                         file_L += [(i, j)]
 
         elapsed_time = time.time() - start_time
-        if self.traceframe:
-            self.traceframe.add_To_Trace("Fin de l'AC3 : " + str(nbMot-self.grille.get_Domaines_Sizes()) + " Mots ont été supprimés", "out")
-            self.traceframe.add_To_Trace(" Temps :" + str(elapsed_time) + "\n", "time")
-        else:
-            #print "AC3 Temps :" + str(elapsed_time)
-            pass
+        self.send_to_Trace("Fin de l'AC3 : " + str(nbMot-self.grille.get_Domaines_Sizes()) + " Mots ont été supprimés", "out")
+        self.send_to_Trace(" Temps :" + str(elapsed_time) + "\n", "time")
+
 
         return True
 
-    def revise2(self, x, y):
+    def revise(self, x, y):
         """
 
         :param x:
@@ -172,8 +176,6 @@ class Algo(threading.Thread):
     def consistance(self, (x, mot), (y, mot2)):
 
         if mot == mot2:
-            #if self.traceframe:
-            #    self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant ==\n", "err")
             return False
 
         crossPosX = [cont[1] for cont in x.contrainteListe if cont[0] is y]
@@ -181,13 +183,9 @@ class Algo(threading.Thread):
         if (len(crossPosX) > 0):
             crossPosX = [item for item in crossPosX if item != -1]
         if not crossPosX:
-            #if self.traceframe:
-            #    self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Consistant \n", "curr")
             return True
 
         elif len(crossPosX) > 1:
-            #if self.traceframe:
-            #    self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant ???\n", "err")
             return False
 
         crossPosY = [cont[1] for cont in y.contrainteListe if cont[0] is x]
@@ -195,25 +193,12 @@ class Algo(threading.Thread):
         if (len(crossPosY) > 0):
             crossPosY = [item for item in crossPosY if item != -1]
         if not crossPosY:
-            #if self.traceframe:
-            #    self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Consistant \n", "curr")
             return True
 
         if len(crossPosY) > 1:
-            #if self.traceframe:
-            #    self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant ???\n", "err")
             return False
 
-        # print str(x)+" "+str(mot) + " end " + str(mot2) + " " + str(y) + " " + str(mot[crossPosX[0]] is mot2[crossPosY[0]])
         b = mot[crossPosX[0]] is mot2[crossPosY[0]]
-        '''
-        if b:
-            if self.traceframe:
-                self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Consistant \n", "curr")
-        else:
-            if self.traceframe:
-                self.traceframe.add_To_Trace(str(mot) + " et " + str(mot2) + " Non Consistant Lettre\n", "err")
-        '''
         return b
 
     def check_forward2(self, xk, v, V):
@@ -237,32 +222,6 @@ class Algo(threading.Thread):
                 return False
         return True
 
-
-    def check_forward(self, xk, v, V):
-        """
-        consistant ← true
-        pour chaque xj ∈ V \ {xk } et tant que consistant
-            faire pour chaque v' ∈ Dj
-                si {xk → v, xj → v'} non-consistant
-                    alors Dj ← Dj \ {v'}
-                fsi
-            fait
-        si Dj = ∅ alors consistant ← false
-        retourner consistant
-        """
-
-
-        for xj in V:
-            if not xj == xk:
-                sup = set()
-                for vv in xj.getDomaine():
-                    if not self.consistance((xk, v), (xj, vv)):
-                        sup.add(vv)
-                xj.remove(sup)
-                if not xj.domaine:
-                    return False
-        return True
-
     def forward_checking(self, V, i):
         """
         si V = ∅ alors i est une solution
@@ -278,20 +237,17 @@ class Algo(threading.Thread):
         fsi
         """
         if self.timed == 0:
-            if self.traceframe:
-                self.traceframe.add_To_Trace("Debut du Forward Checking :\n", "in")
+            self.send_to_Trace("Debut du Forward Checking :\n", "in")
             self.timed = time.time()
 
         if not V:
             self.timed = time.time() - self.timed
             print self.timed
-            if self.traceframe:
-                self.traceframe.add_To_Trace("Fin du Forward Checking ", "out")
-                self.traceframe.add_To_Trace(" Temps :" + str(self.timed) + "\n", "time")
-            print i
+            self.send_to_Trace("Fin du Forward Checking ", "out")
+            self.send_to_Trace(" Temps :" + str(self.timed) + "\n", "time")
             self.res = i
-            if self.queue:
-                self.queue.put(self.res)
+            print "azertyuio"
+            self.sendResult(self.res)
             #self.fin = True
             self.pause()
             with self.pause_cond:
@@ -320,39 +276,6 @@ class Algo(threading.Thread):
                 mot.initDomaine(dom)
         return
 
-    def RAC(self, i, V):
-        """
-        si V = vide alors retourner la solution
-        sinon
-            choisir xk dans V
-            faire pour tout v dans Dxk
-                si i U (xk -> v) est localement consistant
-                    alors RAC(i U (xk -> v), V \ {xk},D,C)
-            fait
-        fsi
-        :param V:
-        :param i:
-        """
-        if not V:
-            print i
-            self.res = i
-            self.wait = True
-            if self.queue:
-                self.queue.put(self.res)
-            self.waitContinue()
-            print "fin"
-            return
-
-
-        xk = self.heuristique_contr_max(V)
-        print len(V)
-        V.remove(xk)
-
-        for v in xk.get_Domaine():
-
-            if self.consistance_locale(i, (xk, v)):
-                self.RAC(i + [(xk, v)], V[:])
-
 
     def consistance_locale(self, i, y):
         for x in i:
@@ -365,8 +288,7 @@ class Algo(threading.Thread):
         if not V:
             self.res = i
             self.wait = True
-            if self.queue:
-                self.queue.put(self.res)
+            self.sendResult(self.res)
             #self.waitContinue()
             print "fin"
             return []
@@ -401,8 +323,7 @@ class Algo(threading.Thread):
         if not V:
             self.res = i
             self.wait = True
-            if self.queue:
-                self.queue.put(self.res)
+            self.sendResult(self.res)
             self.waitContinue()
             print "fin"
             return []

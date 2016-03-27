@@ -50,10 +50,10 @@ class MainFrame(Frame):
             self.traceFrame.add_To_Trace("Ouverture Dictionnaire " + self.grille.nomDico+ "\n", 'curr')
 
     def setAlgo(self, algo):
-        self.algo.algo = algo
-        self.buttonFrame.algo.algo = algo
+        self.algo.algoName = algo
+        self.buttonFrame.algo.algoName = algo
         self.buttonFrame.continueButton.configure(state="disabled")
-        self.traceFrame.add_To_Trace("Choix de l'algorithm : " + self.algo.algo+ "\n", 'curr')
+        self.traceFrame.add_To_Trace("Choix de l'algorithm : " + self.algo.algoName+ "\n", 'curr')
 
 
 

@@ -90,7 +90,7 @@ class Gui(Frame):
 
 
     def update_Algo(self, arg0):
-        self.algo.algo = arg0
+        self.algo.algoName = arg0
         self.mainFrame.setAlgo(arg0)
 
 

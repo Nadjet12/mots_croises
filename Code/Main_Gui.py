@@ -31,7 +31,7 @@ if __name__ == "__main__":
     #grille = Grille(filePath=Grille_Var, dictionnaire=Dictionnaire_Var)
     elapsed_time = time.time() - start_time
     print "Creation grille " + Grille_Var.split("/")[-1] + " Temps :" + str(elapsed_time)
-    algo = Algo(grille=None, algo="AC3")
+    algo = Algo(grille=None, algoName="AC3")
     interface = Gui(master=root, root=root, algo=algo)
     interface.master.title("RP : Mots Croisés (Bourdache Nadjet, Adequin Renaud)")
     interface.pack(fill="both", expand=True)
