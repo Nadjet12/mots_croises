@@ -56,8 +56,9 @@
   \end{sffamily}
 \end{titlepage}
 
-\section*{1. Modélisation par un CSP}
-Pour résoudre ce problème, on propose une modélisation qui consiste à associer une variable à chaque mot de la grille. Les mots de la grille étants numérotés dans l'odre de leurs apparition dans la grille (d'abord les mots horizontaux puis les verticaux). On définit ensuite un ensemble de contraintes pour vérifier la cohérence de la grille générée.
+\section*{1. Modélisation par un CSP et résolution}
+\begin{enumerate}
+\item Pour résoudre ce problème, on propose une modélisation qui consiste à associer une variable à chaque mot de la grille. Les mots de la grille étants numérotés dans l'odre de leurs apparition dans la grille (d'abord les mots horizontaux puis les verticaux). On définit ensuite un ensemble de contraintes pour vérifier la cohérence de la grille générée.
 
 ~~\\
 \textbf{Variables:}
@@ -80,9 +81,17 @@ D(\textit{$Mot_i$}) $=$ $\{ X \in$ $Dict$  : $|X|$ = $|Mot_i|$ $\}$, $\forall$  
 \item Pour toute paire de mots \textit{Mot$_i$} et \textit{Mot$_j$} qui se croisent aux positions \textit{p} pour \textit{Mot$_i$} et \textit{q} pour \textit{Mot$_j$}, on définit la contrainte:
 $$\textit{Mot}_i [p]\ =\  \textit{Mot}_j [q] .$$ 
 
-\item Pour modéliser le fait qu'un même mot ne peut apparaître plus d'une fois dans la grille, il suffit d'jouter la contrainte:
-$$ \textit{AllDiff}\ (\textit{Mot}_1, \textit{Mot}_2, \cdots , \textit{Mot}_m)  $$
+\item Pour modéliser le fait qu'un même mot ne peut apparaître plus d'une fois dans la grille, il suffit d'ajouter la contrainte:
+$$ \textit{AllDiff}\ (\textit{Mot}_1, \textit{Mot}_2, \cdots , \textit{Mot}_m)  $$\\
 \end{itemize}
+
+\item D'un point de vue algorithmique, nous avons mis en œuvre une classe "Grille". Chaque objet de cette classe représente une instance de mots croisés, et contient une taille, un dictionnaire, une liste de tous les mots de la grille ayant une taille supérieure à 1 ainsi qu'une liste de cases noires.\\
+On pourra à partir d'un objet de cette classe, initialiser une grille à partir d'un fichier texte contenant une grille ou en générer une aléatoirement et la sauvegarder dans un fichier après résolution.\\
+
+\item 
+
+
+\end{enumerate}
 
 
 \end{document}
