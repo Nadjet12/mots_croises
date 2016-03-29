@@ -138,7 +138,9 @@ class Gui(Frame):
                                  command=lambda arg0="FC_AC3": self.update_Algo(arg0))
 
         algomenu.add_radiobutton(label="CBJ", variable=self.radio_algo, value=4,
-                                 command=lambda arg0="CJ": self.update_Algo(arg0))
+                                 command=lambda arg0="CBJ": self.update_Algo(arg0))
+        algomenu.add_radiobutton(label="Valué", variable=self.radio_algo, value=5,
+                                 command=lambda arg0="VAL": self.update_Algo(arg0))
 
         self.radio_algo.set(1)
 

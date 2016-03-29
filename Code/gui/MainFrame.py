@@ -95,8 +95,6 @@ class MainFrame(Frame):
         for mot in self.motHori:
             mot.update(None)
 
-        # TODO : afficher les mots sur la droite
-        #self.motFrame.set_Mots([self.motVert, self.motHori])
         return [self.motHori, self.motVert]
 
     def updateGrille(self):

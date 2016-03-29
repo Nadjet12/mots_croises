@@ -9,6 +9,7 @@ import time
 import random
 from Arbre import Arbre
 
+
 class StoppableThread(object):
     pass
 
@@ -17,13 +18,10 @@ class Algo(threading.Thread):
     def __init__(self, queue=None, grille=None, traceframe=None, algoName=None, heuristique=None):
         threading.Thread.__init__(self)
 
-        #Variables de test
+        # Variables de test
         self.tempsOvertureGrille = 0
         self.timed = 0
         self.nbMotsTeste = 0
-
-
-
         self.queue = queue
         self.grille = grille
         self.traceframe = traceframe
@@ -42,7 +40,6 @@ class Algo(threading.Thread):
         self.hasRun = False
         self.fin = False
 
-
     def setQueue(self, queue):
         self.queue = queue
 
@@ -50,12 +47,12 @@ class Algo(threading.Thread):
         self.algoName = name
 
     def setGrille(self, grille):
-        self.grille =grille
+        self.grille = grille
 
     def send_to_Trace(self, mess, mode):
         if self.traceframe:
             self.traceframe.add_To_Trace(mess, mode)
-        else :
+        else:
             print mess
 
     def stop(self):
@@ -100,7 +97,7 @@ class Algo(threading.Thread):
 
         elif self.algoName is "CBJ":
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
-            self.CBJ(liste, [])
+            self.CBJ2(liste, [])
 
             # Pas ou plus de resultats
             self.sendResult(None)
@@ -280,7 +277,6 @@ class Algo(threading.Thread):
             for mot, dom, taille in savedDom:
                 mot.initDomaine(dom)
         return
-
 
     def consistance_locale(self, i, y):
         for x in i:

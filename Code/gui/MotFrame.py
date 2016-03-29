@@ -15,12 +15,11 @@ class MotFrame(Frame):
 
         self.vsb.pack(side="right", fill="y")
         self.canvas.pack(side="left", fill="both", expand=True)
-        self.canvas.create_window((20, 20), window=self.frame, anchor="nw",
+        self.canvas.create_window((0, 0), window=self.frame, anchor="nw",
                                   tags="self.frame")
 
         self.frame.bind("<Configure>", self.onFrameConfigure)
         self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
-
         self.listes = []
 
     def _on_mousewheel(self, event):
