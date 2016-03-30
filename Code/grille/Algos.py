@@ -347,19 +347,25 @@ class Algo(threading.Thread):
         Dxk = xk.getDomaine()[:]
 
         while Dxk and nonBJ:
+
             self.nbMotsTeste +=1
             print self.nbMotsTeste
             v = Dxk.pop()
+
             I = i[:] + [(xk, v)]
             conflit_local = self.consistante(i, (xk, v))
+            V1 = V[:]
             if not conflit_local:
                 conflit_fils = self.CBJ2(V[:], I)
+
+
                 if xk in conflit_fils:
                     conflit += conflit_fils
                 else:
                     conflit = conflit_fils
                     nonBJ = False
             else:
+
                 conflit += conflit_local
         return conflit
 
