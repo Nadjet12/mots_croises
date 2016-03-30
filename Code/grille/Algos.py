@@ -9,7 +9,6 @@ import time
 import random
 from Arbre import Arbre
 
-
 class StoppableThread(object):
     pass
 
@@ -97,8 +96,9 @@ class Algo(threading.Thread):
 
         elif self.algoName is "CBJ":
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
-            self.ac3()
-            self.CBJ2(liste, [])
+            #self.ac3()
+            self.CBJ(liste, [])
+            print self.nbMotsTeste
 
             # Pas ou plus de resultats
             self.sendResult(None)
@@ -286,38 +286,8 @@ class Algo(threading.Thread):
                 return False
         return True
 
-    def CBJ(self, V, i):
-        if not V:
-            self.res = i
-            self.wait = True
-            self.sendResult(self.res)
-            #self.waitContinue()
-            return []
-
-
-        xk = self.heuristique_instance_max(V, i)
-        conflit = []
-        nonBJ = True
-        V.remove(xk)
-
-
-        for v in xk.get_Domaine():
-            if not nonBJ:
-                return conflit
-            I = i[:] + [(xk, v)]
-            conflit_local = self.consistante(i, (xk, v))
-            if not conflit_local and self.check_forward2(xk, v, V[:]):
-                conflit_fils = self.CBJ(V[:], I)
-                if xk in conflit_fils:
-                    conflit += conflit_fils
-                else:
-                    conflit = conflit_fils
-                    nonBJ = False
-            conflit += conflit_local
-        return conflit
-
-    def CBJ2(self, V, i):
-        print 'HELLO'
+    def CBJ(self, V, i, it=1):
+        print 'itération =' + str(it)
         if self.timed == 0:
             self.send_to_Trace("Debut du Conflict Back Jumping :\n", "in")
             self.timed = time.time()
@@ -342,42 +312,123 @@ class Algo(threading.Thread):
         nonBJ = True
         V.remove(xk)
         savedDom = []
+        #print 'xk choisi :' +str(xk) + " : " +str(len(xk.getDomaine()))
+        Dxk = xk.getDomaine()[:]
+        nbMotsTeste = 0
+        while Dxk and nonBJ:
+            self.nbMotsTeste +=1
+            nbMotsTeste +=1
+            #print nbMotsTeste
+            v = Dxk.pop()
+            I = i[:] + [(xk, v)]
+            conflit_local = self.consistante(i, (xk, v))
+            if not conflit_local:
+                #print 'Consistant ' + v
+                conflit_fils = self.CBJ(V[:], I, it=it+1)
+                #print "retour du cbj id :" + str(xk.id) + "  conflitfils" + str(conflit_fils)
+                if xk.id in conflit_fils: #and len(conflit_fils) > 1:
+                    #print 'xk in conflit fils > 1 ' +str(xk.id)
+                    conflit_fils.remove(xk.id)
+                    conflit += conflit_fils
+                    conflit = list(set(conflit))
+                    #nonBJ = False
+                else:
+                    conflit = conflit_fils
+                    nonBJ = False
+                    #print "xk not in conflit fils " + str(xk.id)
+                '''
+                elif xk.id in conflit_fils:
+                    print 'xk in conflit fils == 1 ' +str(xk.id)
+                    conflit_fils.remove(xk.id)
+                    conflit = conflit_fils
+                    conflit = list(set(conflit))
+                '''
+
+            else:
+                conflit += conflit_local
+                conflit = list(set(conflit))
+                #print 'conflit local :' + str(conflit) + "   mot :" + v
+        #if it == 1:
+        #    print 'fin Whhile it :' +str(it) + " mot testé "+ str(nbMotsTeste) + "  xk :" + str(xk)
+        return conflit
+
+    def CBJ2(self, V, i, it=1):
+        print 'itération =' + str(it)
+        if self.timed == 0:
+            self.send_to_Trace("Debut du Conflict Back Jumping :\n", "in")
+            self.timed = time.time()
+
+        if not V:
+            self.timed = time.time() - self.timed
+            self.send_to_Trace("Fin du Conflict Back Jumping ", "out")
+            self.send_to_Trace(" Temps :" + str(self.timed) + "\n", "time")
+            self.res = i
+            self.sendResult(self.res)
+            #self.fin = True
+            self.pause()
+            with self.pause_cond:
+                while self.paused:
+                    self.pause_cond.wait()
+                self.timed = time.time()
+            return []
+
+
+        xk = self.heuristique_instance_max(V, i)
+        conflit = []
+        nonBJ = True
+        V.remove(xk)
+        print 'xk choisi :' +str(xk) + " : " +str(len(xk.getDomaine()))
+        savedDom = []
         for v in V:
             savedDom += [(v, v.getDomaine(), len(v.getDomaine()))]
 
-        Dxk = xk.getDomaine()
-
+        Dxk = xk.getDomaine()[:]
+        h = 0
         while Dxk and nonBJ:
             self.nbMotsTeste +=1
-            print self.nbMotsTeste
+            h+=1
             v = Dxk.pop()
             I = i[:] + [(xk, v)]
+            print 'AVANT CF---------------'
+            self.printV(V)
 
             if self.check_forward2(xk, v, V):
+                print 'APRES CF--------------'
+                self.printV(V)
                 conflit_local = self.consistante(i, (xk, v))
                 if not conflit_local:
-                    conflit_fils = self.CBJ2(V[:], I)
+                    print 'Consistant'
+                    conflit_fils = self.CBJ2(V[:], I, it=it+1)
                     if xk.id in conflit_fils:
-                        print xk
+                        print 'xk in conflit fils ' +str(xk.id)
                         conflit += conflit_fils
                     else:
                         conflit = conflit_fils
                         nonBJ = False
-                        print "jj"
+                        print "xk not in conflit fils " + str(xk.id)
                 else:
                     conflit += conflit_local
 
             for mot, dom, taille in savedDom:
                 mot.initDomaine(dom)
-        print 'finW'
+            self.printV(V)
+            print "mot restant a tester " + str(len(Dxk)-h)
+        print 'fin Whhile it :' +str(it)
+        print conflit
         return conflit
 
-
+    def printV(self, V):
+        for mot in V:
+            print mot
 
     def consistante(self, inst, (xk, v)):
         conflit = set()
         for y in inst:
             if not self.consistance(y, (xk, v)):
+                #print 'non consistant --------'
+                #print str(y)
+                #print str((xk, v))
+                #print '-------------'
                 conflit.add(y[0].id)
         return list(conflit)
 
