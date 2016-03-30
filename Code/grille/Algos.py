@@ -97,6 +97,7 @@ class Algo(threading.Thread):
 
         elif self.algoName is "CBJ2":
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
+            self.ac3()
             self.CBJ2(liste, [])
 
             # Pas ou plus de resultats
@@ -306,7 +307,7 @@ class Algo(threading.Thread):
                 return conflit
             I = i[:] + [(xk, v)]
             conflit_local = self.consistante(i, (xk, v))
-            if not conflit_local:
+            if not conflit_local and self.check_forward2(xk, v, V[:]):
                 conflit_fils = self.CBJ(V[:], I)
                 if xk in conflit_fils:
                     conflit += conflit_fils
@@ -341,6 +342,8 @@ class Algo(threading.Thread):
         conflit = []
         nonBJ = True
         V.remove(xk)
+        savedDom = []
+
         Dxk = xk.getDomaine()[:]
 
         while Dxk and nonBJ:
@@ -367,6 +370,8 @@ class Algo(threading.Thread):
         for y in inst:
             if not self.consistance(y, (xk, v)):
                 conflit.add(y[0])
+        if conflit:
+            conflit.add(xk)
         return list(conflit)
 
     def heuristique_triviale(self, V, i):
@@ -447,10 +452,15 @@ class Algo(threading.Thread):
         while not sol:
             sol = arbre.update()
 
+        solution = []
+        while not sol is None:
+            solution += [(sol.motObj, sol.mot)]
+            sol = sol.pere
+
         self.timed = time.time() - self.timed
         self.send_to_Trace("Fin du Branch & Bound ", "out")
         self.send_to_Trace(" Temps :" + str(self.timed) + "\n", "time")
-        self.res = sol
+        self.res = solution
         self.sendResult(self.res)
         #self.fin = True
         self.pause()

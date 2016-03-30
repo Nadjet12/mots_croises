@@ -76,4 +76,5 @@ class Arbre:
         else:
             # sinon c'est une liste de Noeud
             self.listeNoeud += l
+
             #sorted(self.listeNoeud, key=lambda value: (value[1]), reverse=True)
