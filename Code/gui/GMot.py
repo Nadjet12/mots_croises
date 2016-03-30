@@ -23,7 +23,7 @@ class GMot:
                                      font=font, width=5, justify=CENTER)
         self.number.insert(0, self.mot.id)
         self.value = Entry(master2, validate="key", state=NORMAL, bg='grey',
-                                     font=font, width=5, justify=CENTER)
+                                     font=font, width=8, justify=CENTER)
         self.value.insert(0, self.mot.value)
 
 

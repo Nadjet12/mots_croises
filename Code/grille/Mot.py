@@ -21,15 +21,19 @@ class Mot:
         self.xStart = coord[0]
         self.yStart = coord[1]
         self.domaineListe = []
+        self.domaineValueListe = []
         self.domaine2 = None
         self.contrainteListe = []
 
     def setDomaine(self, copie):
         self.domaine2 = copie.copyDico()
         self.domaineListe = list(self.domaine2.get_Domaine(self.taille))
+        self.domaineValueListe = list(self.domaine2.get_Domaine(self.taille, getValue=True))
 
     def getDomaine(self):
         return self.domaineListe
+    def getValueDomaine(self):
+        return self.domaineValueListe
 
     def ajoute_contrainte(self, obj, i):
         self.contrainteListe += [(obj, i)]
@@ -46,7 +50,7 @@ class Mot:
         dom = self.getDomaine()
         return self.dir + " id=" + str(self.id) + " Position=(" +str(self.xStart) + "," + \
                str(self.yStart) + ") :" + self.lettres + ": \t\t\tTaille du mot " + \
-               str(self.taille) + " tailleDomaine:" + str(len(dom))
+               str(self.taille) + " tailleDomaine:" + str(len(dom)) + " val:" + str(self.value)
 
     def get_Contrainte(self, mot):
         c1 = None
@@ -68,6 +72,7 @@ class Mot:
 
         self.domaine2 = Dico(liste=liste)
         self.domaineListe = list(self.domaine2.get_Domaine(self.taille))
+        self.domaineValueListe = list(self.domaine2.get_Domaine(self.taille, getValue=True))
 
     def printDomaineSize(self):
         print str(self) + " -> " + str(len(self.domaine2.get_Domaine(self.taille)))

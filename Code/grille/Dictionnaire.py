@@ -110,6 +110,7 @@ class Dico:
             line = line.rstrip()
             line = line.split(' ')
             v = random.random()
+            v = round(v, 5)
             if len(line)> 1:
                 v = eval(line[1])
 
