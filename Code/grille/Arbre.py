@@ -30,7 +30,7 @@ class Noeud:
             
         m = self.listeMot[0]
 
-        for mot in m.getDomaine():
+        for mot in m.getValueDomaine():
             self.fils += [Noeud(self, self.listeMot[1:], m, mot, self.prof+1)]
 
         return self.fils
@@ -42,7 +42,7 @@ class Arbre:
         self.listeNoeud = []
         self.solution = None
         mot = motListe.pop(0)
-        for el in mot.getDomaine():
+        for el in mot.getValueDomaine():
             self.listeNoeud += [Noeud(None, motListe, mot, el)]
         #sorted(self.listeNoeud, key=lambda value: (value[1]), reverse=True)
 

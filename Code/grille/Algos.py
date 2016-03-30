@@ -95,7 +95,7 @@ class Algo(threading.Thread):
             # Pas ou plus de resultats
             self.sendResult(None)
 
-        elif self.algoName is "CBJ2":
+        elif self.algoName is "CBJ":
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
             self.ac3()
             self.CBJ2(liste, [])
@@ -106,7 +106,6 @@ class Algo(threading.Thread):
         elif self.algoName is "VAL":
             pass
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
-            random.shuffle(liste)
             self.branch_bound(liste)
 
             # Pas ou plus de resultats
@@ -318,7 +317,7 @@ class Algo(threading.Thread):
         return conflit
 
     def CBJ2(self, V, i):
-
+        print 'HELLO'
         if self.timed == 0:
             self.send_to_Trace("Debut du Conflict Back Jumping :\n", "in")
             self.timed = time.time()
@@ -343,8 +342,10 @@ class Algo(threading.Thread):
         nonBJ = True
         V.remove(xk)
         savedDom = []
+        for v in V:
+            savedDom += [(v, v.getDomaine(), len(v.getDomaine()))]
 
-        Dxk = xk.getDomaine()[:]
+        Dxk = xk.getDomaine()
 
         while Dxk and nonBJ:
 
@@ -353,20 +354,24 @@ class Algo(threading.Thread):
             v = Dxk.pop()
 
             I = i[:] + [(xk, v)]
-            conflit_local = self.consistante(i, (xk, v))
-            V1 = V[:]
-            if not conflit_local:
-                conflit_fils = self.CBJ2(V[:], I)
 
-
-                if xk in conflit_fils:
-                    conflit += conflit_fils
+            if self.check_forward2(xk, v, V):
+                conflit_local = self.consistante(i, (xk, v))
+                if not conflit_local:
+                    conflit_fils = self.CBJ2(V[:], I)
+                    if xk.id in conflit_fils:
+                        print xk
+                        conflit += conflit_fils
+                    else:
+                        conflit = conflit_fils
+                        nonBJ = False
+                        print "jj"
                 else:
-                    conflit = conflit_fils
-                    nonBJ = False
-            else:
+                    conflit += conflit_local
 
-                conflit += conflit_local
+            for mot, dom, taille in savedDom:
+                mot.initDomaine(dom)
+        print 'finW'
         return conflit
 
 
@@ -375,9 +380,7 @@ class Algo(threading.Thread):
         conflit = set()
         for y in inst:
             if not self.consistance(y, (xk, v)):
-                conflit.add(y[0])
-        if conflit:
-            conflit.add(xk)
+                conflit.add(y[0].id)
         return list(conflit)
 
     def heuristique_triviale(self, V, i):
@@ -460,9 +463,8 @@ class Algo(threading.Thread):
 
         solution = []
         while not sol is None:
-            solution += [(sol.motObj, sol.mot)]
+            solution += [(sol.motObj, sol.mot, sol.value)]
             sol = sol.pere
-
         self.timed = time.time() - self.timed
         self.send_to_Trace("Fin du Branch & Bound ", "out")
         self.send_to_Trace(" Temps :" + str(self.timed) + "\n", "time")

@@ -88,7 +88,10 @@ $$ \textit{AllDiff}\ (\textit{Mot}_1, \textit{Mot}_2, \cdots , \textit{Mot}_m)  
 \item D'un point de vue algorithmique, nous avons mis en œuvre une classe "Grille". Chaque objet de cette classe représente une instance de mots croisés, et contient une taille, un dictionnaire, une liste de tous les mots de la grille ayant une taille supérieure à 1 ainsi qu'une liste de cases noires.\\
 On pourra à partir d'un objet de cette classe, initialiser une grille à partir d'un fichier texte contenant une grille ou en générer une aléatoirement et la sauvegarder dans un fichier après résolution.\\
 
-\item 
+\item Les algorithmes AC3 et FC ont été développés tel qu'ils ont été définis en cours. Afin de les améliorer, nous avons utilisé une structure d'arbre pour sauvegarder et manipuler les dictionnaires et les domaines des différentes variables.\\
+ Cette structure permet un parcours rapide du dictionnaire pour l'initialisation des domaines, et surtout, elle permet d'accélérer les algorithmes de filtrage, puisqu'elle peut permettre d'éliminer plusieurs mots d'un domaine en une fois.\\
+
+\item CBJ
 
 
 \end{enumerate}
