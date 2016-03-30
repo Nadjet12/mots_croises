@@ -95,7 +95,7 @@ class Algo(threading.Thread):
             # Pas ou plus de resultats
             self.sendResult(None)
 
-        elif self.algoName is "CBJ":
+        elif self.algoName is "CBJ2":
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
             self.CBJ2(liste, [])
 
@@ -104,12 +104,12 @@ class Algo(threading.Thread):
 
         elif self.algoName is "VAL":
             pass
-            #liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
-            #random.shuffle(liste)
-            #self.branch_bound(liste, [])
+            liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
+            random.shuffle(liste)
+            self.branch_bound(liste)
 
             # Pas ou plus de resultats
-            #self.sendResult(None)
+            self.sendResult(None)
         else:
             print "Error"
 
@@ -315,11 +315,23 @@ class Algo(threading.Thread):
         return conflit
 
     def CBJ2(self, V, i):
+
+        if self.timed == 0:
+            self.send_to_Trace("Debut du Conflict Back Jumping :\n", "in")
+            self.timed = time.time()
+
         if not V:
+            self.timed = time.time() - self.timed
+            self.send_to_Trace("Fin du Conflict Back Jumping ", "out")
+            self.send_to_Trace(" Temps :" + str(self.timed) + "\n", "time")
             self.res = i
-            self.wait = True
             self.sendResult(self.res)
-            self.waitContinue()
+            #self.fin = True
+            self.pause()
+            with self.pause_cond:
+                while self.paused:
+                    self.pause_cond.wait()
+                self.timed = time.time()
             return []
 
 
@@ -327,7 +339,7 @@ class Algo(threading.Thread):
         conflit = []
         nonBJ = True
         V.remove(xk)
-        Dxk = list(xk.get_Domaine())[:]
+        Dxk = list(xk.getDomaine())[:]
 
         while Dxk and nonBJ:
             v = Dxk.pop()
@@ -343,6 +355,8 @@ class Algo(threading.Thread):
             else:
                 conflit += conflit_local
         return conflit
+
+
 
     def consistante(self, inst, (xk, v)):
         conflit = []
@@ -419,10 +433,26 @@ class Algo(threading.Thread):
         while self.wait:
             pass
 
-    def branch_bound(self, V, i):
-        if not V:
-            return i
+    def branch_bound(self, V):
+        if self.timed == 0:
+            self.send_to_Trace("Debut du Branch & Bound :\n", "in")
+            self.timed = time.time()
+
         arbre = Arbre(V)
-        while not arbre.update():
-            continue
-        return arbre.solution
+        sol = arbre.update()
+        while not sol:
+            sol = arbre.update()
+
+        self.timed = time.time() - self.timed
+        self.send_to_Trace("Fin du Branch & Bound ", "out")
+        self.send_to_Trace(" Temps :" + str(self.timed) + "\n", "time")
+        self.res = sol
+        self.sendResult(self.res)
+        #self.fin = True
+        self.pause()
+        with self.pause_cond:
+            while self.paused:
+                self.pause_cond.wait()
+            self.timed = time.time()
+
+

@@ -29,6 +29,7 @@ class Noeud:
             return self
             
         m = self.listeMot[0]
+
         for mot in m.getDomaine():
             self.fils += [Noeud(self, self.listeMot[1:], m, mot, self.prof+1)]
 
@@ -59,22 +60,14 @@ class Arbre:
 
         # Si plusieur Noeud son max peut-être utiliser une heuristique
         return self.listeNoeud.pop(pos)
-        """
-        avec sort ça donnerait
 
-        elemMax = self.listeNoeud[0]
-        pos = 1
-        while pos < len(self.listeNoeud) and self.listeNoeud[pos] == elemMax
-            pos++
-        liste = self.listeNoeud[:pos]
-        pos = random.choice(liste)
-        return self.listeNoeud.pop(pos)  """
 
 
     def update(self):
         # prend le noeud max et developpe ses fils a la liste des Noeuds
 
         n = self.get_Noeud_Max()
+
         l = n.create_Fils()
         if isinstance(l, Noeud):
             # si l est un Noeud alors c'est la solution optimal
