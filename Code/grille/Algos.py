@@ -269,6 +269,8 @@ class Algo(threading.Thread):
 
         for v in xk.getDomaine():
             self.nbMotsTeste +=1
+
+            print self.nbMotsTeste
             I = i[:] + [(xk, v)]
             if self.check_forward2(xk, v, V):
                 self.forward_checking(V[:], I)
@@ -335,22 +337,24 @@ class Algo(threading.Thread):
             return []
 
 
-        xk = self.heur(V, i)
+        xk = self.heuristique_instance_max(V, i)
         conflit = []
         nonBJ = True
         V.remove(xk)
-        Dxk = list(xk.getDomaine())[:]
+        Dxk = xk.getDomaine()[:]
 
         while Dxk and nonBJ:
+            self.nbMotsTeste +=1
+            print self.nbMotsTeste
             v = Dxk.pop()
             I = i[:] + [(xk, v)]
             conflit_local = self.consistante(i, (xk, v))
             if not conflit_local:
                 conflit_fils = self.CBJ2(V[:], I)
                 if xk in conflit_fils:
-                    conflit = conflit_fils
-                else:
                     conflit += conflit_fils
+                else:
+                    conflit = conflit_fils
                     nonBJ = False
             else:
                 conflit += conflit_local
@@ -359,11 +363,11 @@ class Algo(threading.Thread):
 
 
     def consistante(self, inst, (xk, v)):
-        conflit = []
+        conflit = set()
         for y in inst:
             if not self.consistance(y, (xk, v)):
-                conflit += [y[0]]
-        return conflit
+                conflit.add(y[0])
+        return list(conflit)
 
     def heuristique_triviale(self, V, i):
         return V[0]
