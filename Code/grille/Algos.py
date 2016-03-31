@@ -404,12 +404,15 @@ class Algo(threading.Thread):
                     if xk.id in conflit_fils:
                         print 'xk in conflit fils ' +str(xk.id)
                         conflit += conflit_fils
+                        conflit = list(set(conflit))
+
                     else:
                         conflit = conflit_fils
                         nonBJ = False
                         print "xk not in conflit fils " + str(xk.id)
                 else:
                     conflit += conflit_local
+                    conflit = list(set(conflit))
 
             for mot, dom, taille in savedDom:
                 mot.initDomaine(dom)
