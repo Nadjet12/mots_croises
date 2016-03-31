@@ -501,7 +501,7 @@ class Algo(threading.Thread):
             self.send_to_Trace("Debut du Branch & Bound :\n", "in")
             self.timed = time.time()
 
-        arbre = Arbre(V)
+        arbre = Arbre(V, self)
         sol = arbre.update()
         while not sol:
             sol = arbre.update()
