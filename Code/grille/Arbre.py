@@ -26,7 +26,8 @@ class Noeud:
 
     def getValue(self):
         return self.value
-        
+
+
     def create_Fils(self, algo):
         print len(self.listeMot)
         if not self.listeMot:
@@ -80,9 +81,28 @@ class Arbre:
         #pos = random.choice(posMax)
 
         # Si plusieur Noeud son max peut-être utiliser une heuristique
+
         self.listeNoeud = sorted(self.listeNoeud, key=lambda x: x.value, reverse=True)
         return self.listeNoeud.pop(0)
 
+    def getPosInsertion(self, list , val, deb, fin):
+        if fin > len(list)-1:
+            print "*******************************************"
+        if deb<0:
+            print "yyaaaaaaaaaaaaaaaawwww"
+        if deb < fin:
+            if list[deb].value >= val:
+                return deb
+            if list[fin].value <= val:
+                return fin+1
+
+            milieu = int((fin+deb)/2)
+            if list[milieu] == val:
+                return milieu
+            if list[milieu].value < val:
+                return self.getPosInsertion(list, val, milieu, fin)
+            return self.getPosInsertion(list, val, deb, milieu-1)
+        return fin
 
 
     def update(self):
@@ -97,6 +117,8 @@ class Arbre:
             return l
         else:
             # sinon c'est une liste de Noeud
-            self.listeNoeud += l
+            for node in l:
+                pos = self.getPosInsertion(self.listeNoeud, node.value, 0, len(self.listeNoeud)-1)
+                self.listeNoeud.insert(pos, node)
             #print (len(self.listeNoeud))
 
