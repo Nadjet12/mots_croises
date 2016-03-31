@@ -21,7 +21,7 @@ class ButtonFrame(Frame):
 
         self.playButton = Button(self, text="Lancer l'algo", command=self.play)
         self.playButton.grid(row=0, column=0)
-
+        self.playButton.configure(state="disabled")
         self.continueButton = Button(self, text="Continuer l'algo", command=self.continueAlgo)
         self.continueButton.configure(state="disabled")
         self.continueButton.grid(row=0, column=1)
@@ -29,19 +29,22 @@ class ButtonFrame(Frame):
 
         self.advanceButton = Checkbutton(self, text="Voir les mots",
                                          variable=self.showMot, command=self.toggle_Mot)
+        self.advanceButton.configure(state="disabled")
 
         self.resetButton = Button(self, text="Remise à zero",
                                          command=self.raz)
         self.resetButton.grid(row=0, column=2)
+        self.resetButton.configure(state="disabled")
 
-        self.advanceButton.grid(row=0, column=3, sticky=E)
+        self.advanceButton.grid(row=0, column=5, sticky=E)
         self.traceButton = Checkbutton(self, text="Trace algo",
                                       variable=self.showTrace, command=self.toggle_Trace)
-        self.traceButton.grid(row=0, column=4, sticky=E)
+        self.traceButton.grid(row=0, column=3, sticky=E)
 
         self.cleartraceButton = Button(self, text="Clear Trace",
                                       command=self.clearTrace)
-        self.cleartraceButton .grid(row=0, column=5, sticky=E)
+        self.cleartraceButton.configure(state="disabled")
+        self.cleartraceButton .grid(row=0, column=4, sticky=E)
         self.queue = queue
         self.algo = algo
         self.traceFrame = traceFrame
@@ -50,6 +53,7 @@ class ButtonFrame(Frame):
 
 
     def play(self):
+        self.resetButton.configure(state="normal")
         if self.algo.hasRun:
             self.algo.stop()
             self.algo = Algo(queue=self.queue, grille=self.algo.grille, traceframe=self.traceFrame, algoName=self.algo.algoName, heuristique=self.algo.heur)
@@ -69,6 +73,7 @@ class ButtonFrame(Frame):
 
     def raz(self):
         self.master.Ggrille(self.algo.grille.filePath)
+        self.resetButton.configure(state="disabled")
 
     def process_queue(self):
         try:
@@ -91,9 +96,11 @@ class ButtonFrame(Frame):
     def toggle_Trace(self):
         if self.showTrace.get() and self.traceFrame:
             self.master.toggle_Trace(True)
+            self.cleartraceButton.configure(state="normal")
             #self.traceFrame.grid(row=2, column=0, sticky=N+E+S+W)
         else:
             self.master.toggle_Trace(False)
+            self.cleartraceButton.configure(state="disabled")
             #self.traceFrame.grid_forget()
     def clearTrace(self):
         if self.traceFrame:
@@ -136,3 +143,11 @@ class ButtonFrame(Frame):
         self.algo.resume()
         self.continueButton.configure(state="disabled")
         self.after(1000, self.process_queue)
+
+    def enableMot(self, bool):
+        if bool:
+            self.playButton.configure(state="normal")
+            self.advanceButton.configure(state="normal")
+        else:
+            self.advanceButton.configure(state="disabled")
+            self.playButton.configure(state="disabled")
