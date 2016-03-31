@@ -14,6 +14,11 @@ class MainFrame(Frame):
     def __init__(self, master, algo, queue):
 
         Frame.__init__(self, master)
+
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+
+
         self.algo = algo
         self.traceFrame = TraceFrame(self)
         self.motFrame = MotFrame(self)
@@ -24,7 +29,7 @@ class MainFrame(Frame):
 
         self.algo.traceframe = self.traceFrame
         self.grilleFrame = None
-        self.buttonFrame.grid(row=0, column=0, sticky=N+E+S+W)
+        self.buttonFrame.grid(row=0, column=0, columnspan=2, sticky=N+E+S+W)
         self.toggle = False
 
     def Ggrille(self, file):
@@ -42,6 +47,7 @@ class MainFrame(Frame):
             self.toggle_Mot(True)
         self.grilleFrame.grid(row=1, column=0, sticky=N+E+S+W)
         self.send_To_Trace("Ouverture Grille " + self.algo.grille.nomGrille + "\n", 'curr')
+        self.buttonFrame.enableMot(True)
 
 
 

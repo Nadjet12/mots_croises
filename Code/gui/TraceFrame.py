@@ -6,6 +6,7 @@ class TraceFrame(Frame):
 
     def __init__(self, *args, **kwargs):
         Frame.__init__(self, *args, **kwargs)
+
         self.t = ScrolledText(self, wrap="word")
         #self.t.configure(state="disabled")
         self.t.configure(background="light cyan")
