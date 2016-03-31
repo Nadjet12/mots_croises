@@ -6,10 +6,11 @@ Created on Mon Mar 21 12:22:49 2016
 """
 
 import random
+import Algos
 
 class Noeud:
 
-    def __init__(self, pere, motListe, motObj, couple, prof=1):
+    def __init__(self, pere, motListe, motObj, couple, algo, prof=1):
         self.pere = pere
         self.fils = []
         self.listeMot = motListe
@@ -17,13 +18,16 @@ class Noeud:
         self.mot = couple[0]
         if self.pere:
             self.value = min(couple[1], self.pere.value)
+            self.listeMotsAttribue = self.pere.listeMotsAttribue + [(motObj, couple[0])]
         else:
             self.value = couple[1]
+            self.listeMotsAttribue = [(motObj, couple[0])]
         self.prof = prof
+        self.algo = algo
 
         
         
-    def create_Fils(self):
+    def create_Fils(self, algo):
         if not self.listeMot:
             # si la liste est vide ce noeud est la meilleur solution            
             return self
@@ -31,19 +35,22 @@ class Noeud:
         m = self.listeMot[0]
 
         for mot in m.getValueDomaine():
-            self.fils += [Noeud(self, self.listeMot[1:], m, mot, self.prof+1)]
-
+            if not mot in self.listeMotsAttribue:
+                consist = True
+                for motAtt in self.listeMotsAttribue:
+                    consist = algo.consistance((motAtt[0], motAtt[1]), (m, mot) )
+                self.fils += [Noeud(self, self.listeMot[1:], m, mot, algo, self.prof+1)]
         return self.fils
         
 
 class Arbre:
     
-    def __init__(self, motListe):
+    def __init__(self, motListe, algo):
         self.listeNoeud = []
         self.solution = None
         mot = motListe.pop(0)
         for el in mot.getValueDomaine():
-            self.listeNoeud += [Noeud(None, motListe, mot, el)]
+            self.listeNoeud += [Noeud(None, motListe, mot, algo, el)]
         #sorted(self.listeNoeud, key=lambda value: (value[1]), reverse=True)
 
 
