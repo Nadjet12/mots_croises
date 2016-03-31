@@ -7,6 +7,8 @@ Created on Sat Mar 05 12:16:39 2016
 import threading
 import time
 import random
+from Tkinter import TclError
+
 from Arbre import Arbre
 
 class StoppableThread(object):
@@ -49,10 +51,13 @@ class Algo(threading.Thread):
         self.grille = grille
 
     def send_to_Trace(self, mess, mode):
-        if self.traceframe:
-            self.traceframe.add_To_Trace(mess, mode)
-        else:
-            print mess
+        try:
+            if self.traceframe:
+                self.traceframe.add_To_Trace(mess, mode)
+            else:
+                print mess
+        except TclError:
+            print 'TclError'
 
     def stop(self):
         self._stop.set()
@@ -96,8 +101,8 @@ class Algo(threading.Thread):
 
         elif self.algoName is "CBJ":
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
-            #self.ac3()
-            self.CBJ(liste, [])
+            self.ac3()
+            self.CBJ2(liste, [])
             print self.nbMotsTeste
 
             # Pas ou plus de resultats
@@ -353,13 +358,16 @@ class Algo(threading.Thread):
         return conflit
 
     def CBJ2(self, V, i, it=1):
-        print 'itération =' + str(it)
+        prev = []
+        if i:
+            prev = [i[-1][0].id]
         if self.timed == 0:
             self.send_to_Trace("Debut du Conflict Back Jumping :\n", "in")
             self.timed = time.time()
 
         if not V:
             self.timed = time.time() - self.timed
+
             self.send_to_Trace("Fin du Conflict Back Jumping ", "out")
             self.send_to_Trace(" Temps :" + str(self.timed) + "\n", "time")
             self.res = i
@@ -372,54 +380,37 @@ class Algo(threading.Thread):
                 self.timed = time.time()
             return []
 
-
-        xk = self.heuristique_instance_max(V, i)
+        xk = self.heur(V, i)
         conflit = []
         nonBJ = True
         V.remove(xk)
-        print 'xk choisi :' +str(xk) + " : " +str(len(xk.getDomaine()))
         savedDom = []
         for v in V:
             savedDom += [(v, v.getDomaine(), len(v.getDomaine()))]
-
         Dxk = xk.getDomaine()[:]
-        h = 0
         while Dxk and nonBJ:
-
-            self.nbMotsTeste +=1
-            h+=1
             v = Dxk.pop()
-
             I = i[:] + [(xk, v)]
-            print 'AVANT CF---------------'
-            self.printV(V)
-
             if self.check_forward2(xk, v, V):
-                print 'APRES CF--------------'
-                self.printV(V)
                 conflit_local = self.consistante(i, (xk, v))
                 if not conflit_local:
-                    print 'Consistant'
                     conflit_fils = self.CBJ2(V[:], I, it=it+1)
                     if xk.id in conflit_fils:
-                        print 'xk in conflit fils ' +str(xk.id)
                         conflit += conflit_fils
                         conflit = list(set(conflit))
-
                     else:
                         conflit = conflit_fils
                         nonBJ = False
-                        print "xk not in conflit fils " + str(xk.id)
                 else:
-                    conflit += conflit_local
+                    conflit = conflit_local
                     conflit = list(set(conflit))
-
             for mot, dom, taille in savedDom:
                 mot.initDomaine(dom)
-            self.printV(V)
-            print "mot restant a tester " + str(len(Dxk)-h)
-        print 'fin Whhile it :' +str(it)
-        print conflit
+        if xk.id in conflit:
+            conflit.remove(xk.id)
+        if not conflit:
+            conflit += prev
+            conflit = list(set(conflit))
         return conflit
 
     def printV(self, V):

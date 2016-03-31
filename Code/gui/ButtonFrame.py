@@ -19,10 +19,10 @@ class ButtonFrame(Frame):
         self.showTrace.set(0)
 
 
-        self.playButton = Button(self, text="Play", command=self.play)
+        self.playButton = Button(self, text="Lancer l'algo", command=self.play)
         self.playButton.grid(row=0, column=0)
 
-        self.continueButton = Button(self, text="Continue", command=self.continueAlgo)
+        self.continueButton = Button(self, text="Continuer l'algo", command=self.continueAlgo)
         self.continueButton.configure(state="disabled")
         self.continueButton.grid(row=0, column=1)
 
@@ -30,14 +30,18 @@ class ButtonFrame(Frame):
         self.advanceButton = Checkbutton(self, text="Voir les mots",
                                          variable=self.showMot, command=self.toggle_Mot)
 
-        self.resetButton = Button(self, text="RAZ",
+        self.resetButton = Button(self, text="Remise à zero",
                                          command=self.raz)
         self.resetButton.grid(row=0, column=2)
 
         self.advanceButton.grid(row=0, column=3, sticky=E)
-        self.traceButton = Checkbutton(self, text="Trace Algo",
+        self.traceButton = Checkbutton(self, text="Trace algo",
                                       variable=self.showTrace, command=self.toggle_Trace)
         self.traceButton.grid(row=0, column=4, sticky=E)
+
+        self.cleartraceButton = Button(self, text="Clear Trace",
+                                      command=self.clearTrace)
+        self.cleartraceButton .grid(row=0, column=5, sticky=E)
         self.queue = queue
         self.algo = algo
         self.traceFrame = traceFrame
@@ -91,7 +95,9 @@ class ButtonFrame(Frame):
         else:
             self.master.toggle_Trace(False)
             #self.traceFrame.grid_forget()
-
+    def clearTrace(self):
+        if self.traceFrame:
+            self.master.clearTrace()
     def show(self, result):
 
         if self.algo.algoName is 'AC3':

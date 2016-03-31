@@ -18,6 +18,10 @@ class TraceFrame(Frame):
         self.t.pack(side="top", fill="both", expand=True)
 
 
+
     def add_To_Trace(self, st, tag):
         self.t.insert(INSERT, st, tag)
         self.t.see(END)
+
+    def clear_Trace(self):
+        self.t.delete('1.0', 'end')

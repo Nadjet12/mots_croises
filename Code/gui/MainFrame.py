@@ -118,6 +118,10 @@ class MainFrame(Frame):
         else:
             self.traceFrame.grid_forget()
 
+    def clearTrace(self):
+        self.traceFrame.clear_Trace()
+
+
 
     def send_To_Trace(self, mess, state):
         self.traceFrame.add_To_Trace(mess, state)
