@@ -7,6 +7,21 @@ Created on Mon Mar 21 12:22:49 2016
 
 import random
 import Algos
+from collections import deque
+import bisect
+
+class FunkyDeque(deque):
+    def _insert(self, index, value):
+        self.rotate(-index)
+        self.appendleft(value)
+        self.rotate(index)
+
+    def insert(self, value):
+        self._insert(bisect.bisect_left(self,value), value)
+
+    def __init__(self, iterable):
+        super(FunkyDeque, self).__init__(sorted(iterable, key=lambda x: x.prof, reverse=True))
+
 
 class Noeud:
 
@@ -64,6 +79,7 @@ class Arbre:
         for el in mot.getValueDomaine():
             self.listeNoeud += [Noeud(None, motListe, mot, el)]
         self.listeNoeud = sorted(self.listeNoeud, key=lambda x: x.value, reverse=True)
+        #self.listeNoeud = FunkyDeque(self.listeNoeud)
         self.algo = algo
         #sorted(self.listeNoeud, key=lambda value: (value[1]), reverse=True)
 
@@ -81,26 +97,27 @@ class Arbre:
         #pos = random.choice(posMax)
 
         # Si plusieur Noeud son max peut-être utiliser une heuristique
-
-        self.listeNoeud = sorted(self.listeNoeud, key=lambda x: x.value, reverse=True)
+        #i = 0
+        #while self.listeNoeud[i].value == self.listeNoeud[0].value:
+         #   i += 1
+        #liste = self.listeNoeud[:i]
+        #elmax = max(liste,key=lambda x:x.prof)
+        #self.listeNoeud.remove(elmax)
+        #print "prof = " + str(elmax.prof)
         return self.listeNoeud.pop(0)
 
     def getPosInsertion(self, list , val, deb, fin):
-        if fin > len(list)-1:
-            print "*******************************************"
-        if deb<0:
-            print "yyaaaaaaaaaaaaaaaawwww"
         if deb < fin:
-            if list[deb].value >= val:
+            if list[deb].value <= val:
                 return deb
-            if list[fin].value <= val:
+            if list[fin].value >= val:
                 return fin+1
 
             milieu = int((fin+deb)/2)
             if list[milieu] == val:
                 return milieu
-            if list[milieu].value < val:
-                return self.getPosInsertion(list, val, milieu, fin)
+            if list[milieu].value > val:
+                return self.getPosInsertion(list, val, milieu+1, fin)
             return self.getPosInsertion(list, val, deb, milieu-1)
         return fin
 
@@ -120,5 +137,6 @@ class Arbre:
             for node in l:
                 pos = self.getPosInsertion(self.listeNoeud, node.value, 0, len(self.listeNoeud)-1)
                 self.listeNoeud.insert(pos, node)
+                #self.listeNoeud.insert(node)
             #print (len(self.listeNoeud))
 
