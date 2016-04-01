@@ -96,24 +96,23 @@ class Dico:
 
     def __init__(self, file=None, liste=None, value=False):
         self.lettres = dict()
+        if liste:
+            print 'LISTE'
         lines = []
         if file:
             lines = open(file).readlines()
         elif liste:
             lines = liste
         for line in lines:
-            try:
-                line = line
-                #line = unicode(line,'utf-8')
-            except UnicodeDecodeError:
-                print line
-            line = line.rstrip()
-            line = line.split(' ')
-            v = random.random()
-            v = round(v, 5)
-            if len(line)> 1:
-                v = eval(line[1])
-
+            if isinstance(line, tuple):
+                v = line[1]
+            else:
+                line = line.rstrip()
+                line = line.split(' ')
+                v = random.random()
+                v = round(v, 5)
+                if len(line)> 1:
+                    v = eval(line[1])
             self.add_Mot(line[0], value=v)
 
     def copyDico(self):

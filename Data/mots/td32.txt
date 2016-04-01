@@ -1,8 +1,8 @@
-aida
-aza
-ciern
-ili
-kolo
+aida 1
+aza 1
+ciern 1
+ili 1
+kolo 1
 lad
 lina
 man
@@ -10,7 +10,7 @@ molo
 nida
 nil
 nisza
-obsada
+obsada 1
 piza
 polo
 sroka

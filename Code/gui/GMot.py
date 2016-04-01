@@ -40,8 +40,11 @@ class GMot:
 
     def showDomaine(self):
         s = ""
-        for i in self.mot.getDomaine():
-            s += str(i)+"\n"
+        for i in self.mot.getValueDomaine():
+            if i[1]:
+                s += str(i[0])+"\t"+str(i[1])+ "\n"
+            else:
+                s += str(i[0])+"\t"+str(i[1])+ "\n"
         win = Toplevel()
         win.title("Domaine de " + str(self.mot.lettres))
         frame = Frame(win)

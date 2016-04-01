@@ -180,9 +180,9 @@ class Grille:
 
     def initDomaine(self):
         for m in self.mots_horizontaux:
-            m.initDomaine(self.dico.get_Domaine(m.taille))
+            m.initDomaine(self.dico.get_Domaine(m.taille, getValue=True))
         for m in self.mots_verticaux:
-            m.initDomaine(self.dico.get_Domaine(m.taille))
+            m.initDomaine(self.dico.get_Domaine(m.taille, getValue=True))
 
     def setResultat(self, list):
         for m in list:
