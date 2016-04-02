@@ -503,12 +503,15 @@ class Algo(threading.Thread):
 
         arbre = Arbre(V, self)
         sol = arbre.update()
-        while not sol is None:
+        #print sol
+        while not sol:
+            #print sol
             sol = arbre.update()
+            #print sol
 
         solution = []
         while not sol is None:
-            solution += [(sol[1].motObj, sol[1].mot, sol[0])]
+            solution += [(sol.motObj, sol.mot, sol.value)]
             sol = sol.pere
         self.timed = time.time() - self.timed
         self.send_to_Trace("Fin du Branch & Bound ", "out")

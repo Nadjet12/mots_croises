@@ -98,6 +98,8 @@ class Mot:
         if len(do) == 1:
             for d in do:
                 self.lettres = d
+        do = self.getValueDomaine()
+        self.value =  do[0][1]
         return bool
 
     def removeMotFromDomaine(self, mot):
@@ -107,6 +109,8 @@ class Mot:
         if len(do) == 1:
             for d in do:
                 self.lettres = d
+        do = self.getValueDomaine()
+        self.value =  do[0][1]
         return
 
 
@@ -115,3 +119,5 @@ class Mot:
         if len(do) == 1:
             for d in do:
                 self.lettres = d
+        do = self.getValueDomaine()
+        self.value =  do[0][1]

@@ -1,21 +1,21 @@
 aida 1
 aza 1
-ciern 1
+ciern
 ili 1
-kolo 1
+kolo
 lad
-lina
-man
-molo
-nida
-nil
-nisza
+lina 1
+man 1
+molo 1
+nida 1
+nil 1
+nisza 1
 obsada 1
-piza
-polo
-sroka
-tantal
-tron
+piza 1
+polo 1
+sroka 1
+tantal 1
+tron 1
 tyczkaj
 zab
-zamach
+zamach 1

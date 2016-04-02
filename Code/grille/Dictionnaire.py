@@ -98,8 +98,6 @@ class Dico:
 
     def __init__(self, file=None, liste=None, value=False):
         self.lettres = dict()
-        if liste:
-            print 'LISTE'
         lines = []
         if file:
             lines = open(file).readlines()

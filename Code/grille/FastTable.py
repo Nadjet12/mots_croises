@@ -26,7 +26,7 @@ class FastTable:
         self.__deque.appendleft(obj)
         self.__deque.rotate(index)
 
-
+'''
 table = FastTable()
 
 # (valeur, Noeud)
@@ -72,3 +72,5 @@ for i in tableMax:
         print str(i) + "l'element est remis dans la liste :-)"
     else :
         print i
+
+'''

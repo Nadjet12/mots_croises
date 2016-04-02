@@ -34,101 +34,65 @@ class Noeud:
         self.mot = couple[0]
         if self.pere:
             self.value = min(couple[1], self.pere.value)
-            self.listeMotsAttribue = self.pere.listeMotsAttribue + [(self.pere.motObj, self.pere.mot)]
+            self.listeMotsAttribue = self.pere.listeMotsAttribue + [(self.motObj, self.mot)]
         else:
             self.value = couple[1]
-            self.listeMotsAttribue = []
+            self.listeMotsAttribue = [(self.motObj, self.mot)]
         self.prof = prof
 
     def getValue(self):
         return self.value
 
 
-    def create_Fils(self, algo):
-        print len(self.listeMot)
+    def create_Fils(self, algo, liste ):
+        #print len(self.listeMot)
         if not self.listeMot:
             # si la liste est vide ce noeud est la meilleur solution            
             return self
 
         xk = algo.heur(self.listeMot, None)
         self.listeMot.remove(xk)
-        #m = self.listeMot[0]
-        '''
-        for mot in m.getValueDomaine():
-            if not mot in [self.listeMotsAttribue[i][0] for i in range(len(self.listeMotsAttribue))]:
-                consist = True
-                for motAtt in self.listeMotsAttribue:
-                    if not algo.consistance((motAtt[0], motAtt[1]), (m, mot) ):
-                        consist = False
-                        break
-                if consist:
-                    self.fils += [Noeud(self, self.listeMot[1:], m, mot, self.prof+1)]
-        '''
         for mot in xk.getValueDomaine():
-            if len(algo.consistante(self.listeMotsAttribue, (self.motObj, self.mot))) == 0:
+            if len(algo.consistante(self.listeMotsAttribue, (xk, mot[0]))) == 0:
                 n = Noeud(self, self.listeMot[:], xk, mot, self.prof+1)
                 t = (n.value, n)
-                self.fils.insert(t)
-
-        return self.fils
+                liste.insert(t)
         
 
 class Arbre:
-    
+    NBUPDATE = 0
     def __init__(self, motListe, algo):
-        #self.listeNoeud = []
         self.listeNoeud = FastTable()
         self.solution = None
-        mot = motListe.pop(0)
+        mot = algo.heur(motListe, None)
+        motListe.remove(mot)
         for el in mot.getValueDomaine():
             t = (el[1], Noeud(None, motListe, mot, el))
             self.listeNoeud.insert(t)
-        #self.listeNoeud = sorted(self.listeNoeud, key=lambda x: x.value, reverse=True)
-        #self.listeNoeud = FunkyDeque(self.listeNoeud)
 
 
         self.algo = algo
-        #sorted(self.listeNoeud, key=lambda value: (value[1]), reverse=True)
 
 
     def get_Noeud_Max(self):
-        """ sans sort """
-        # supprimer le noeud max de la liste
-        #liste = [self.listeNoeud[i].value for i in range(len(self.listeNoeud))]
-        #valMax =  max(liste)
-        #min(LL, key=lambda item:item[1])
-        #posMax = [i for i in range(len(liste)) if self.listeNoeud[i].value == valMax]
-
-        # si la liste contient plusieur élément max on en prend un aléatoirement
-        # Choisir le noeud le plus profond
-        #pos = random.choice(posMax)
-
-        # Si plusieur Noeud son max peut-être utiliser une heuristique
-        #i = 0
-        #while self.listeNoeud[i].value == self.listeNoeud[0].value:
-         #   i += 1
-        #liste = self.listeNoeud[:i]
-        #elmax = max(liste,key=lambda x:x.prof)
-        #self.listeNoeud.remove(elmax)
-        #print "prof = " + str(elmax.prof)
-
-
-
         maxtuple = self.listeNoeud.tail()
         maxval = maxtuple[0]
+        if len(self.listeNoeud) == 0:
+            return maxtuple[1]
         tmp = self.listeNoeud.tail()
 
         tableMax = [maxtuple]
 
-        while tmp[0] == maxval:
+        while tmp[0] == maxval and len(self.listeNoeud)>0:
             tableMax += [tmp]
             tmp = self.listeNoeud.tail()
+        self.listeNoeud.insert(tmp)
 
         elmax = max(tableMax,key=lambda x:x[1].prof)
         tableMax.remove(elmax)
         for el in tableMax:
             self.listeNoeud.insert(el)
-
+        print str(elmax[0]) + " " + str(elmax[1].mot) + "  " + str(elmax[1].prof) + "   "+ str(elmax[1].motObj)
         return elmax
 
     def getPosInsertion(self, list , val, deb, fin):
@@ -148,23 +112,28 @@ class Arbre:
 
 
     def update(self):
-        # prend le noeud max et developpe ses fils a la liste des Noeuds
+        Arbre.NBUPDATE += 1
+        #print 'appel a update = ' + str(Arbre.NBUPDATE)
 
+        # prend le noeud max et developpe ses fils a la liste des Noeuds
         n = self.get_Noeud_Max()
 
-        l = n[1].create_Fils(self.algo)
-        #if isinstance(l, Noeud):
-        if l.__len__() == 1:
+        l = n[1].create_Fils(self.algo, self.listeNoeud)
+        if isinstance(l, Noeud):
             # si l est un Noeud alors c'est la solution optimal
             self.solution = l
+            #print 'hello'
             return l
+        '''
         else:
             # sinon c'est une liste de Noeud
             #for node in l:
                 #pos = self.getPosInsertion(self.listeNoeud, node.value, 0, len(self.listeNoeud)-1)
                 #self.listeNoeud.insert(pos, node)
-            while l.__len__() != 0:
+            while len(l) != 0:
                 el = l.tail()
-                self.listeNoeud.insert(l)
+                self.listeNoeud.insert(el)
             #print (len(self.listeNoeud))
+        '''
+
 
