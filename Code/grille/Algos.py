@@ -55,7 +55,8 @@ class Algo(threading.Thread):
             if self.traceframe:
                 self.traceframe.add_To_Trace(mess, mode)
             else:
-                print mess
+                pass
+                #print mess
         except TclError:
             print 'TclError'
 
@@ -103,7 +104,6 @@ class Algo(threading.Thread):
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
             self.ac3()
             self.CBJ2(liste, [])
-            print self.nbMotsTeste
 
             # Pas ou plus de resultats
             self.sendResult(None)
@@ -257,7 +257,8 @@ class Algo(threading.Thread):
             self.send_to_Trace(" Temps :" + str(self.timed) + "\n", "time")
             self.res = i
             self.sendResult(self.res)
-            #self.fin = True
+            self.fin = True
+            return
             self.pause()
             with self.pause_cond:
                 while self.paused:
@@ -274,14 +275,11 @@ class Algo(threading.Thread):
             savedDom += [(v, v.getDomaine(), len(v.getDomaine()))]
 
         for v in xk.getDomaine():
-            self.nbMotsTeste +=1
-
-            print self.nbMotsTeste
             I = i[:] + [(xk, v)]
             if self.check_forward2(xk, v, V):
                 self.forward_checking(V[:], I)
-            #if self.fin:
-            #        return
+                if self.fin:
+                    return
             for mot, dom, taille in savedDom:
                 mot.initDomaine(dom)
         return
@@ -373,7 +371,8 @@ class Algo(threading.Thread):
             self.send_to_Trace(" Temps :" + str(self.timed) + "\n", "time")
             self.res = i
             self.sendResult(self.res)
-            #self.fin = True
+            self.fin = True
+            return
             self.pause()
             with self.pause_cond:
                 while self.paused:
@@ -396,6 +395,8 @@ class Algo(threading.Thread):
                 conflit_local = self.consistante(i, (xk, v))
                 if not conflit_local:
                     conflit_fils = self.CBJ2(V[:], I, it=it+1)
+                    if self.fin:
+                        return
                     if xk.id in conflit_fils:
                         conflit += conflit_fils
                         conflit = list(set(conflit))
