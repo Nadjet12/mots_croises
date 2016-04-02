@@ -73,7 +73,7 @@ class Arbre:
         maxtuple = self.listeNoeud.tail()
         maxval = maxtuple[0]
         if len(self.listeNoeud) == 0:
-            return maxtuple[1]
+            return maxtuple
         tmp = self.listeNoeud.tail()
 
         tableMax = [maxtuple]
@@ -123,7 +123,10 @@ class Arbre:
         #print 'appel a update = ' + str(Arbre.NBUPDATE)
 
         # prend le noeud max et developpe ses fils a la liste des Noeuds
-        n = self.get_Noeud_Max()
+        if len(self.listeNoeud) > 0:
+            n = self.get_Noeud_Max()
+        else:
+            return "pas de solution"
 
         l = n[1].create_Fils(self.algo, self.listeNoeud)
         if isinstance(l, Noeud):

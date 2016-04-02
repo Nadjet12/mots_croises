@@ -512,6 +512,9 @@ class Algo(threading.Thread):
         while not sol:
             #print sol
             sol = arbre.update()
+            if sol == "pas de solution":
+                print sol
+                return
             #print sol
 
         solution = []
