@@ -34,6 +34,7 @@ class MainFrame(Frame):
 
     def Ggrille(self, file):
         self.master.Ggrille(file)
+
     def open_grille(self):
         self.grilleFrame = GrilleFrame(self, self.algo.grille)
         self.motFrame = MotFrame(self)
@@ -49,20 +50,15 @@ class MainFrame(Frame):
         self.send_To_Trace("Ouverture Grille " + self.algo.grille.nomGrille + "\n", 'curr')
         self.buttonFrame.enableMot(True)
 
-
-
     def setAlgo(self):
         self.buttonFrame.continueButton.configure(state="disabled")
         self.send_To_Trace("Choix de l'algorithm : " + self.algo.algoName+ "\n", 'curr')
-
-
 
     def set_Grille(self):
 
         self.grille2 = [
             [None for i in range(self.algo.grille.taille[1])]
                 for j in range(self.algo.grille.taille[0])]
-
 
         self.motVert = [GMot(self.algo.grille.mots_verticaux[mot], self.grilleFrame, self.motFrame.frame)
                         for mot in range(len(self.algo.grille.mots_verticaux))]
@@ -95,10 +91,7 @@ class MainFrame(Frame):
             for case in range(len(self.grille2[line])):
                 self.grille2[line][case].grid(row=line, column=case, ipady=10)
 
-        for mot in self.motVert:
-            mot.update(None)
-
-        for mot in self.motHori:
+        for mot in self.motHori + self.motVert:
             mot.update(None)
 
         return [self.motHori, self.motVert]

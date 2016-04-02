@@ -11,30 +11,31 @@ class MotFrame(Frame):
         self.ff = Frame(root)
         self.canvas = Canvas(self.ff, borderwidth=0, background="#ffffff")
         self.frame = Frame(self.canvas, background="#ffffff")
+
         self.vsb = Scrollbar(self.ff, orient="vertical", command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=self.vsb.set)
-
         self.hsb = Scrollbar(self.ff, orient="horizontal", command=self.canvas.xview)
-        self.canvas.configure(yscrollcommand=self.hsb.set)
-
+        self.canvas.configure(xscrollcommand=self.hsb.set)
         self.vsb.pack(side="right", fill="y")
         self.hsb.pack(side="bottom", fill="x")
+
         self.canvas.pack(side="left", fill="both", expand=True)
-        self.canvas.create_window((100, 100), window=self.frame, anchor="nw",
-                                  tags="self.frame")
+        self.canvas.create_window((100, 100), window=self.frame, anchor="nw", tags="self.frame")
 
         self.frame.bind("<Configure>", self.onFrameConfigure)
-        #self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
+
         self.listes = []
 
-    def _on_mousewheel(self, event):
-        self.canvas.yview_scroll(-1*(event.delta/120), "units")
     def onFrameConfigure(self, event):
         '''Reset the scroll region to encompass the inner frame'''
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
         pass
 
     def set_Mots(self):
+        '''
+        Affichage des mot dans la frame
+        :return:
+        '''
         line = 0
         col = 0
         max = 0
@@ -45,7 +46,6 @@ class MotFrame(Frame):
                 for case in l2.caseMotFrame:
                     case.grid(row=line, column=col, ipady=10)
                     col += 1
-                #l2.button.grid(row=line, column=col+1, ipady=10)
                 if col > max:
                     max = col
                 col = 0

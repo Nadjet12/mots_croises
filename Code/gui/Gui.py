@@ -1,19 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
-import threading
-import ttk
 from Queue import Queue
 from Tkinter import *
-
 import time
 from tkFileDialog import askopenfilename, asksaveasfilename
-
 from grille.Algos import Algo
 from grille.Grille import Grille
-from gui.GrilleFrame import GrilleFrame
 from gui.MainFrame import MainFrame
-
 from grille.Dictionnaire import Dico
 
 DICO_PATH = '../Data/mots/'

@@ -1,6 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import tkFont
 from Tkinter import *
-
 from gui.Case import Case
 
 
@@ -43,19 +44,17 @@ class GMot:
         L = self.mot.getValueDomaine()
         L = sorted(L, key=lambda x: x[1], reverse=True)
         for i in L:
-            if i[1]:
+            if Value:
                 s += str(i[0])+"\t"+str(i[1])+ "\n"
             else:
-                s += str(i[0])+"\t"+str(i[1])+ "\n"
+                s += str(i[0])+ "\n"
         win = Toplevel()
-        win.title("Domaine de " + str(self.mot.lettres))
+        win.title("Domaine de " + str(self.mot.id) + " taille " + str(len(L)))
         frame = Frame(win)
         scroll = Scrollbar(frame)
-        text = Text(frame, yscrollcommand=scroll.set, height=5, width=self.mot.taille+10)
-        # Config
+        text = Text(frame, yscrollcommand=scroll.set, height=50, width=self.mot.taille+20)
         text.insert(END, ''.join(s))
         scroll.config(command=text.yview)
-        # Packing
         text.pack(side='left', fill='both', expand=1)
         scroll.pack(side='right', fill='y')
         frame.pack(fill='both', expand=1)

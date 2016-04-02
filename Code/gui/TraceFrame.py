@@ -8,7 +8,6 @@ class TraceFrame(Frame):
         Frame.__init__(self, *args, **kwargs)
 
         self.t = ScrolledText(self, wrap="word")
-        #self.t.configure(state="disabled")
         self.t.configure(background="light cyan")
         self.t.configure(height = 10)
         self.t.tag_config("in", foreground="forest green")
@@ -21,8 +20,17 @@ class TraceFrame(Frame):
 
 
     def add_To_Trace(self, st, tag):
+        '''
+        :param st: txte a afficher
+        :param tag:  type de texte a afficher
+        :return:
+        '''
         self.t.insert(INSERT, st, tag)
         self.t.see(END)
 
     def clear_Trace(self):
+        '''
+        Efface la zone de texte
+        :return:
+        '''
         self.t.delete('1.0', 'end')
