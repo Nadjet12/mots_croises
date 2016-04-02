@@ -2,19 +2,13 @@
 """
 Created on Mon Mar 21 12:22:49 2016
 
-@author: 3501796
+@author: Renaud ADEQUIN & Nadjet BOURDACHE
 """
 
-import random
 import Algos
 from FastTable import FastTable
-from collections import deque
-import bisect
-
-
 
 NBMANMAX = 0
-
 
 class Noeud:
 
@@ -40,11 +34,13 @@ class Noeud:
 
 
     def create_Fils(self, algo, liste ):
-        #print len(self.listeMot)
+
         if not self.listeMot:
-            # si la liste est vide ce noeud est la meilleur solution            
+            # Si la liste des mots a instancier est vide, le noeud fils est la meilleure solution
             return self
 
+        # Sinon on crée une liste de fils
+        # Mais uniquement les valeurs de mots coérrantes avec le reste de variables déja instanciées
         xk = algo.heuristique_instance_max(self.listeMot, self.listeMotsAttribue)
         self.listeMot.remove(xk)
         for mot in xk.getValueDomaine():
@@ -64,18 +60,21 @@ class Arbre:
             t = (el[1], Noeud(None, motListe[:], mot, el))
             self.listeNoeud.insert(t)
 
-
         self.algo = algo
 
-
+    # Fonction qui retourne la feuille possédant la valeur maximum
+    # En cas d'égalité, on prend le noeuds le plus profond
     def get_Noeud_Max(self):
         global NBMANMAX
         maxtuple = self.listeNoeud.tail()
         maxval = maxtuple[0]
+
+        # S'il ne reste plus qu'une varible à instanncier on la retourne
         if len(self.listeNoeud) == 0:
             return maxtuple
-        tmp = self.listeNoeud.tail()
 
+        # Sinon on récupère tout les noeuds de la liste qui ont la valeur max
+        tmp = self.listeNoeud.tail()
         tableMax = [maxtuple]
 
         while tmp[0] == maxval and len(self.listeNoeud)>0:
@@ -83,54 +82,26 @@ class Arbre:
             tmp = self.listeNoeud.tail()
         self.listeNoeud.insert(tmp)
 
-
+        # Parmi les noeuds récupérés, on récupère le plus profond
         elmax = max(tableMax,key=lambda x:x[1].prof)
         tableMax.remove(elmax)
+        # On remet les autres noeuds dans la liste
         for el in tableMax:
             self.listeNoeud.insert(el)
-
-
-        #p =  elmax[1]
-        #print '----------DEB------------'
-        #print 'Noeud Max '+ str(p)
-        #p = p.pere
-        #while p:
-        #    print p
-        #    p = p.pere
-        #print '-----------FIN-------------'
-        #print elmax[1].value
-        #print elmax[1].motObj.id
-        #print elmax[1].mot
+        # On renvoi le noeud choisi
         return elmax
 
-    def getPosInsertion(self, list , val, deb, fin):
-        if deb < fin:
-            if list[deb].value <= val:
-                return deb
-            if list[fin].value >= val:
-                return fin+1
-
-            milieu = int((fin+deb)/2)
-            if list[milieu] == val:
-                return milieu
-            if list[milieu].value > val:
-                return self.getPosInsertion(list, val, milieu+1, fin)
-            return self.getPosInsertion(list, val, deb, milieu-1)
-        return fin
-
-
+    # Fonction de mise à jour de l'arbre
     def update(self):
-        #print 'appel a update = ' + str(Arbre.NBUPDATE)
-
-        # prend le noeud max et developpe ses fils a la liste des Noeuds
+        # Récupère le noeud max parmis les feuilles et crée ses fils puis les ajoutes à la liste de feuilles
         if len(self.listeNoeud) > 0:
             n = self.get_Noeud_Max()
         else:
-            return "pas de solution"
+            return "Pas de solution"
 
         l = n[1].create_Fils(self.algo, self.listeNoeud)
         if isinstance(l, Noeud):
-            # si l est un Noeud alors c'est la solution optimal
+            # Si l est un Noeud et non une liste alors c'est la solution optimale
             self.solution = l
             return l
 

@@ -2,9 +2,9 @@
 """
 Created on Mon Feb 15 16:54:07 2016
 
-@author: Nadjet BOURDACHE
+@author: Renaud ADEQUIN & Nadjet BOURDACHE
 """
-from grille.Dictionnaire import Dico
+from Dictionnaire import Dico
 
 
 class Mot:

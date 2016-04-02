@@ -2,18 +2,16 @@
 """
 Created on Sat Feb 20 13:06:47 2016
 
-@author: Nadjet BOURDACHE
+@author: Renaud ADEQUIN & Nadjet BOURDACHE
 """
 
 from codecs import *
-
-import time
-
-from Dictionnaire import Dico
 from Mot import Mot
 import random
 import numpy
+
 GRILLE_PATH = '../Data/grillesVides/'
+
 
 class Grille:
     def __init__(self, filePath=None, taille=(20, 10), alea=False, percent=None):
@@ -30,11 +28,8 @@ class Grille:
         else:
             self.nomGrille = self.filePath.split("/")[-1]
 
-
-
         self.detecte_mots(self.filePath)
         self.defContraintes()
-
 
 
     def get_Domaines_Sizes(self):
@@ -43,6 +38,7 @@ class Grille:
             s += len(m.getDomaine())
         return s
 
+    # Détecte les mots et leurs emplacements à partir d'un fichier
     def detecte_mots(self, filePath):
 
         fichier = open(filePath, "r")
@@ -88,6 +84,7 @@ class Grille:
                     if len(mot) > 0:
                         mot = ""
 
+    # Génération d'une grille aléatoire
     def genereGrilleAlea(self, taille, percent=None):
         self.taille = taille
         if not percent:
@@ -117,6 +114,7 @@ class Grille:
 
         return self.fichierSortie(tab)
 
+    # Création d'un fichier texte pour sauvegarder une grille à partir d'un tableau
     def fichierSortie(self, tab):
         path = GRILLE_PATH+ "tmp.mc"
         fichier = open(path, "w")
@@ -128,6 +126,7 @@ class Grille:
         fichier.close()
         return path
 
+    # Définie la liste des contraintes qu'a chaque mot avec les autres
     def defContraintes(self):
         for mot in self.mots_horizontaux:
             " mots horizontaux de même taille "
@@ -145,18 +144,14 @@ class Grille:
                     mot.ajoute_contrainte(mot2, mot2.yStart - mot.yStart)
                     mot2.ajoute_contrainte(mot, mot.xStart - mot2.xStart)
 
-                    # print mot
-                    # print mot.contrainteListe
-                    # print mot.egalContrainteListe
-                    # print mot.difContraintesListe
-                    # print
-
         for mot in self.mots_verticaux:
             for mot2 in self.mots_verticaux:
                 if mot != mot2 and mot.taille == mot2.taille:
                     mot.contrainteListe += [(mot2, -1)]
                     mot2.contrainteListe += [(mot, -1)]
 
+
+    # Retourne la liste des contraintes entre toutes les paires de noeuds de la grille
     def getContraintes(self):
         liste = []
         for m in self.mots_verticaux:
@@ -168,40 +163,40 @@ class Grille:
                 liste += [(m, mot2[0])]
         return liste
 
+
+    # Mise à jour d'un dictionnaire et initialisation des domaines deds mots de la grille
     def updateDico(self, dico):
         self.dico = dico
         self.initDomaine()
 
-    # def initDomaine(self):
-    #    for m in self.mots_horizontaux:
-    #        m.initDomaine(self.dico)
-    #    for m in self.mots_verticaux:
-    #        m.initDomaine(self.dico)
 
+    # Initialisation des domaines des mots de la grille
     def initDomaine(self):
         for m in self.mots_horizontaux:
             m.initDomaine(self.dico.get_Domaine(m.taille, getValue=True))
         for m in self.mots_verticaux:
             m.initDomaine(self.dico.get_Domaine(m.taille, getValue=True))
 
+
+    # Récupère le résultat d'un algo sous forme de grille, et affecte les bonne valeur à chaque variable
     def setResultat(self, list):
         for m in list:
             m[0].lettres = m[1]
             if len(m) > 2:
                 m[0].value = m[2]
 
+
+    # Retourne le nombre de mots de la grille
     def motSize(self):
         return len(self.mots_horizontaux) + len(self.mots_verticaux)
 
 
-
+    # Sauvegarde une grille dans un fichier texte à partir d'un objet grille
     def sauvegarder_grille(self, filePath):
 
         fichier = open(filePath, "w")
-
         fichier.write(str(self.taille))
         fichier.write("\n")
-
         tab = numpy.ones((self.taille[0], self.taille[1]), str)
 
         for mot in self.mots_horizontaux:
@@ -209,7 +204,6 @@ class Grille:
             j = mot.yStart
             for k in range(j,j+mot.taille):
                 tab[i][k] = mot.lettres[k-j]
-
 
         for mot in self.mots_verticaux:
             i = mot.xStart
@@ -225,15 +219,3 @@ class Grille:
 
         fichier.close()
 
-
-
-
-
-
-# t = (20,20)
-# g = Grille(taille=t,alea=True)
-
-#
-# g = Grille(filePath="./grillesVides/sortie.mc")
-# print(g.taille)
-# print(type(g.taille[0]))

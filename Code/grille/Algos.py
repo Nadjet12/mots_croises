@@ -2,7 +2,7 @@
 """
 Created on Sat Mar 05 12:16:39 2016
 
-@author: Nadjet BOURDACHE
+@author: Renaud ADEQUIN & Nadjet BOURDACHE
 """
 import threading
 import time
@@ -16,7 +16,9 @@ class StoppableThread(object):
 
 
 class Algo(threading.Thread):
+
     def __init__(self, queue=None, grille=None, traceframe=None, algoName=None, heuristique=None):
+
         threading.Thread.__init__(self)
 
         # Variables de test
@@ -29,17 +31,21 @@ class Algo(threading.Thread):
         self.algoName = algoName
         self.res = None
 
+        # Si on ne définit pas d'heuristique, l'heuristique du domaine min est prise par défaut
         if heuristique:
             self.heur = heuristique
         else:
             self.heur = self.heuristique_dom_mim
 
-        # Variable de Thread
+        # Variables de Thread
         self.pause_cond = threading.Condition(threading.Lock())
         self.paused = False
         self._stop = threading.Event()
         self.hasRun = False
         self.fin = False
+
+
+    # Fonctions de gestion des algos
 
     def setQueue(self, queue):
         self.queue = queue
@@ -56,7 +62,6 @@ class Algo(threading.Thread):
                 self.traceframe.add_To_Trace(mess, mode)
             else:
                 pass
-                #print mess
         except TclError:
             print 'TclError'
 
@@ -78,6 +83,9 @@ class Algo(threading.Thread):
     def sendResult(self, resultat):
         if self.queue:
             self.queue.put(resultat)
+
+
+    # Lancement de l'algo
 
     def run(self):
         self.hasRun = True
@@ -103,7 +111,7 @@ class Algo(threading.Thread):
         elif self.algoName is "CBJ":
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
             self.ac3()
-            self.CBJ2(liste, [])
+            self.CBJ(liste, [])
 
             # Pas ou plus de resultats
             self.sendResult(None)
@@ -119,50 +127,58 @@ class Algo(threading.Thread):
         else:
             print "Error"
 
+
+    def waitContinue(self):
+        while self.wait:
+            pass
+
+
+    """********************************* Algorithmes de filtrages et de réolutions ****************************"""
+
+    # Filtrage AC3
+
     def ac3(self):
-        """
-        L ← {(xi, xj), i 6= j liées par une contrainte}
-        tant que L 6= ∅
-            choisir et supprimer dans L un couple (xi, xj)
-            si revise(xi, xj) alors
-                L ← L ∪ {(xk , xi) / ∃ contrainte liant xk et xi}
-            fsi
-        ftq
-        """
 
         nbMot = self.grille.get_Domaines_Sizes()
         start_time = time.time()
         self.send_to_Trace("Debut de l'AC3\n", 'in')
         contrainte_Liste = self.grille.getContraintes()
         file_L = contrainte_Liste[::]
+
+        # On parcours la totalité de la liste des contraintes de la grille
         while file_L:
             (x, y) = file_L.pop(0)
             if self.revise(x, y):
+                # Si le domaine de x a été modifié, on vérifie qu'il n'est pas vide
                 if len(x.getDomaine()) == 0:
                     return False
+                # Sinon, on ajoute à la liste de contraintes tous les mots directement liée à x par une contrainte
                 for (i, j) in contrainte_Liste:
                     if j == x or i == x:
                         file_L += [(i, j)]
 
+        # Affichage du temps d'exécution et du nombre de mots qui ont été supprimé des domaines
         elapsed_time = time.time() - start_time
         self.send_to_Trace("Fin de l'AC3 : " + str(nbMot-self.grille.get_Domaines_Sizes()) + " Mots ont été supprimés", "out")
         self.send_to_Trace(" Temps :" + str(elapsed_time) + "\n", "time")
 
-
         return True
 
-    def revise(self, x, y):
-        """
 
-        :param x:
-        :param y:
-        :return:
-        """
+    # Fonction "revise" utilisée dans l'AC3
+
+    def revise(self, x, y):
+
+        # S'il n y a pas de contraintes entre x et y pas de modification
         contraintsY = y.getContraintsX(x)
         if not contraintsY:
             return False
         modif = False
+
+        # S'il y en a, on parcours la liste des contraintes pour voir s'il y a des
+        # modifications à faire sur les domaines
         for indiceY in contraintsY:
+            # Si la contrainte est liée à la taille des mots (x et y ont la même taille)
             if indiceY == -1:
                 s = y.getDomaine()
                 if len(s) == 1:
@@ -172,9 +188,10 @@ class Algo(threading.Thread):
                         d.remove(s)
                         x.removeMotFromDomaine(s)
                         if len(x.getDomaine()) == 0:
-                            #si le domaine de x est 0 on arete et on dis que c'est modifié
+                            # Si la taille du domaine de x est nulle on arête et on dis que c'est modifié
                             return True
                 modif = False
+            # Si la contrainte est liée au fait que x et y se croisent
             else :
                 yLettre = y.getAllLettre(indiceY)
                 nb = len(x.getDomaine())
@@ -184,20 +201,28 @@ class Algo(threading.Thread):
                 modif =  bool
         return modif
 
+
+    # Vérification de la consistance de l'instanciation qui consiste à affecter mot à c et mot2 à y
+
     def consistance(self, (x, mot), (y, mot2)):
+
+        # Si les deux mots x et y ont la même valeur, l'instanciation n'est pas consistante
 
         if mot == mot2:
             return False
+
+        # On récupère la listes de toutes les positions auxquelles y croise x
+        # Cette valeur vaut -1 si x et y sont liée par une contrainte d'égalité des tailles de x et y
 
         crossPosX = [cont[1] for cont in x.contrainteListe if cont[0] is y]
 
         if (len(crossPosX) > 0):
             crossPosX = [item for item in crossPosX if item != -1]
+        # Une fois qu'on a supprimé les contraintes d'égalité, si la liste est vide => instanciation consistante
         if not crossPosX:
             return True
 
-        elif len(crossPosX) > 1:
-            return False
+        # On récupère la listes de toutes les positions auxquelles x croise y
 
         crossPosY = [cont[1] for cont in y.contrainteListe if cont[0] is x]
 
@@ -206,16 +231,18 @@ class Algo(threading.Thread):
         if not crossPosY:
             return True
 
-        if len(crossPosY) > 1:
-            return False
-
+        # On vérifie que la case qui se situe au croisement de x et y possède la même valeur pour les deux mots
         b = mot[crossPosX[0]] is mot2[crossPosY[0]]
+
+        # On renvoie le résultat
         return b
 
-    def check_forward2(self, xk, v, V):
+    # Filtrage par check forward
+    def check_forward(self, xk, v, V):
         for xj in V:
             contraintsY = xk.getContraintsX(xj)
             for indiceY in contraintsY:
+                # Contrainte d'égalité des taille de x et y
                 if indiceY == -1:
                     s = xj.getDomaine()
                     s = list(s)
@@ -224,33 +251,28 @@ class Algo(threading.Thread):
                         if len(s) == 0:
                             return False
                         xj.removeMotFromDomaine(v)
+                # Contrainte de croisement de x et y
                 else :
                     yLettre = v[indiceY]
                     xj.updateFromContraintes(xj.getContraintsXE(xk), yLettre)
+                    # Si après modification le domaine est vide, l'instanciation n'est pas bonne
                     if len(xj.getDomaine()) == 0:
                         return False
+            # Si après modification le domaine est vide, l'instanciation n'est pas bonne
             if len(xj.getDomaine()) == 0:
                 return False
         return True
 
+
+    # Résolution par FC
     def forward_checking(self, V, i):
-        """
-        si V = ∅ alors i est une solution
-        sinon
-            choisir xk ∈ V
-            faire pour tout v ∈ Dk
-                sauvegarde(V \ {xk })
-                si check-forward(xk , v, V) alors
-                    forward-checking(V \ {xk }, i ∪ {xk → v})
-                fsi
-                restauration V \ {xk }
-            fait
-        fsi
-        """
+
+        #Affichage d'un message au début de l'algo
         if self.timed == 0:
             self.send_to_Trace("Debut du Forward Checking :\n", "in")
             self.timed = time.time()
 
+        # Lorsqu'il n'y a plus de variables à instancier, l'algo se termine et on affiche le résultat et le temps de calcul
         if not V:
             self.timed = time.time() - self.timed
             self.send_to_Trace("Fin du Forward Checking ", "out")
@@ -276,7 +298,7 @@ class Algo(threading.Thread):
 
         for v in xk.getDomaine():
             I = i[:] + [(xk, v)]
-            if self.check_forward2(xk, v, V):
+            if self.check_forward(xk, v, V):
                 self.forward_checking(V[:], I)
                 if self.fin:
                     return
@@ -284,86 +306,26 @@ class Algo(threading.Thread):
                 mot.initDomaine(dom)
         return
 
+    # consistance_local vérifie si l'instanciation est consistante par rapport à y
     def consistance_locale(self, i, y):
         for x in i:
             if not self.consistance(x, y):
                 return False
         return True
 
+    # Résolution par CBJ
+
     def CBJ(self, V, i, it=1):
-        print 'itération =' + str(it)
-        if self.timed == 0:
-            self.send_to_Trace("Debut du Conflict Back Jumping :\n", "in")
-            self.timed = time.time()
-
-        if not V:
-            self.timed = time.time() - self.timed
-            self.send_to_Trace("Fin du Conflict Back Jumping ", "out")
-            self.send_to_Trace(" Temps :" + str(self.timed) + "\n", "time")
-            self.res = i
-            self.sendResult(self.res)
-            #self.fin = True
-            self.pause()
-            with self.pause_cond:
-                while self.paused:
-                    self.pause_cond.wait()
-                self.timed = time.time()
-            return []
-
-
-        xk = self.heuristique_instance_max(V, i)
-        conflit = []
-        nonBJ = True
-        V.remove(xk)
-        savedDom = []
-        #print 'xk choisi :' +str(xk) + " : " +str(len(xk.getDomaine()))
-        Dxk = xk.getDomaine()[:]
-        nbMotsTeste = 0
-        while Dxk and nonBJ:
-            self.nbMotsTeste +=1
-            nbMotsTeste +=1
-            #print nbMotsTeste
-            v = Dxk.pop()
-            I = i[:] + [(xk, v)]
-            conflit_local = self.consistante(i, (xk, v))
-            if not conflit_local:
-                #print 'Consistant ' + v
-                conflit_fils = self.CBJ(V[:], I, it=it+1)
-                #print "retour du cbj id :" + str(xk.id) + "  conflitfils" + str(conflit_fils)
-                if xk.id in conflit_fils: #and len(conflit_fils) > 1:
-                    #print 'xk in conflit fils > 1 ' +str(xk.id)
-                    conflit_fils.remove(xk.id)
-                    conflit += conflit_fils
-                    conflit = list(set(conflit))
-                    #nonBJ = False
-                else:
-                    conflit = conflit_fils
-                    nonBJ = False
-                    #print "xk not in conflit fils " + str(xk.id)
-                '''
-                elif xk.id in conflit_fils:
-                    print 'xk in conflit fils == 1 ' +str(xk.id)
-                    conflit_fils.remove(xk.id)
-                    conflit = conflit_fils
-                    conflit = list(set(conflit))
-                '''
-
-            else:
-                conflit += conflit_local
-                conflit = list(set(conflit))
-                #print 'conflit local :' + str(conflit) + "   mot :" + v
-        #if it == 1:
-        #    print 'fin Whhile it :' +str(it) + " mot testé "+ str(nbMotsTeste) + "  xk :" + str(xk)
-        return conflit
-
-    def CBJ2(self, V, i, it=1):
         prev = []
         if i:
             prev = [i[-1][0].id]
+
+        # Affichage au début de l'algo
         if self.timed == 0:
             self.send_to_Trace("Debut du Conflict Back Jumping :\n", "in")
             self.timed = time.time()
 
+        # Lorsqu'il n'y a plus de variables à instancier, l'algo se termine et on affiche le résultat et le temps de calcul
         if not V:
             self.timed = time.time() - self.timed
 
@@ -380,6 +342,8 @@ class Algo(threading.Thread):
                 self.timed = time.time()
             return []
 
+        # Résolution s'il reste des variables à instancier
+
         xk = self.heur(V, i)
         conflit = []
         nonBJ = True
@@ -391,10 +355,10 @@ class Algo(threading.Thread):
         while Dxk and nonBJ:
             v = Dxk.pop()
             I = i[:] + [(xk, v)]
-            if self.check_forward2(xk, v, V):
+            if self.check_forward(xk, v, V):
                 conflit_local = self.consistante(i, (xk, v))
                 if not conflit_local:
-                    conflit_fils = self.CBJ2(V[:], I, it=it+1)
+                    conflit_fils = self.CBJ(V[:], I, it=it+1)
                     if self.fin:
                         return
                     if xk.id in conflit_fils:
@@ -419,20 +383,22 @@ class Algo(threading.Thread):
         for mot in V:
             print mot
 
+    # Vérification de la consistance de l'instanciation courante et de l'affectation du mot v à la variable xk
     def consistante(self, inst, (xk, v)):
         conflit = set()
         for y in inst:
             if not self.consistance(y, (xk, v)):
-                #print 'non consistant --------'
-                #print str(y)
-                #print str((xk, v))
-                #print '-------------'
                 conflit.add(y[0].id)
         return list(conflit)
 
+
+    """************************** Heuristiques ***************************************"""
+
+    # Premier élément de la liste des variables à instancier
     def heuristique_triviale(self, V, i):
         return V[0]
 
+    # Variable ayant le domaine le plus petit dans l'instanciation courante
     def heuristique_dom_mim(self, V, i):
         elemMin = [(len(V[0].getDomaine()), 0)]
         for i in range(1, len(V)):
@@ -446,6 +412,8 @@ class Algo(threading.Thread):
         else:
             return V[(random.choice(elemMin))[1]]
 
+
+    # Variable ayant un nombre maximum de contraintes avec les autres variables
     def heuristique_contr_max(self, V, i):
         elemMax = [(len(V[0].contrainteListe), 0)]
         for i in range(1, len(V)):
@@ -459,6 +427,7 @@ class Algo(threading.Thread):
         else:
             return V[(random.choice(elemMax))[1]]
 
+    # Calcul du nombre de contraintes qu'a x avec les variables de l'instanciation courante
     def getcontraintesNB(self, x, i):
         c = x.contrainteListe
         nb = 0
@@ -471,12 +440,9 @@ class Algo(threading.Thread):
                 nb += 1
         return nb
 
+
     def heuristique_instance_max(self, V, inst):
-        """
-        variable qui a le plus de contrainte avec les variables déjà instanciées
-        :param V:
-        :return:
-        """
+
         elemMax = [(self.getcontraintesNB(V[0], inst), 0)]
         for i in range(1, len(V)):
             nb = self.getcontraintesNB(V[i], inst)
@@ -489,48 +455,46 @@ class Algo(threading.Thread):
         else:
            return V[(random.choice(elemMax))[1]]
 
-
-
-
         pass
 
 
 
-
-    def waitContinue(self):
-        while self.wait:
-            pass
+    """ ***************************** Algo de Branch & Bound pour CSPs valués *************************** """
 
     def branch_bound(self, V):
+
+        # Affichage au début de l'algo
         if self.timed == 0:
             self.send_to_Trace("Debut du Branch & Bound :\n", "in")
             self.timed = time.time()
 
+        # Initialisation de l'algo
         arbre = Arbre(V, self)
+
+        # Initialisation de la liste des feuilles
         sol = arbre.update()
-        #print sol
+        # Tant qu'on a pas de solution, on met à jour la liste des feuilles
         while not sol:
-            #print sol
             sol = arbre.update()
-            if sol == "pas de solution":
+            if sol == "Pas de solution":
                 print sol
                 return
-            #print sol
 
+        # Construction de la solution entière à partir de la feuille
         solution = []
         while not sol is None:
             solution += [(sol.motObj, sol.mot, sol.value)]
             sol = sol.pere
+
+        # Affichage de la solution et du temps de calcul
         self.timed = time.time() - self.timed
         self.send_to_Trace("Fin du Branch & Bound ", "out")
         self.send_to_Trace(" Temps :" + str(self.timed) + "\n", "time")
         self.res = solution
         self.sendResult(self.res)
-        #self.fin = True
+
         self.pause()
         with self.pause_cond:
             while self.paused:
                 self.pause_cond.wait()
             self.timed = time.time()
-
-

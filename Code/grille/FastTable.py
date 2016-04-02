@@ -1,7 +1,8 @@
 import collections
 import bisect
-import random
 
+""" Cette classe sert à effectuer des insertions dans une liste triée en respectant l'ordre décroisssant avec
+une complexité en O(log N)"""
 
 class FastTable:
 
@@ -25,60 +26,3 @@ class FastTable:
         self.__deque.rotate(-index)
         self.__deque.appendleft(obj)
         self.__deque.rotate(index)
-
-'''
-table = FastTable()
-
-# (valeur, Noeud)
-# 1er element du tuple la valeur et apres le Noeud
-for k in range(random.randint(5, 10)):
-    table.insert((random.random(), [random.randint(1, 10) for i in range(random.randint(1, 7))]))
-
-table.insert((1, [random.randint(1, 10) for i in range(random.randint(1, 7))]))
-table.insert((1, [random.randint(1, 10) for i in range(random.randint(1, 7))]))
-table.insert((1, [random.randint(1, 10) for i in range(random.randint(1, 7))]))
-table.insert((1, [random.randint(1, 10) for i in range(random.randint(1, 7))]))
-print 'taille de la liste :' + str(len(table))
-
-
-
-# liste de tout les max ==
-maxtuple = table.tail()
-maxval = maxtuple[0]
-tmp = table.tail()
-
-tableMax = [maxtuple]
-
-while tmp[0] == maxval:
-    tableMax += [tmp]
-    tmp = table.tail()
-
-
-print '\nelement non max a remettre dans la liste ' + str(tmp)
-table.insert(tmp)
-
-
-
-# la liste ne contient plus les max
-print '\nelement restant\n'
-while table:
-    print "element :" + str(table.tail())
-
-
-print "\nliste elements max :"
-
-for i in tableMax:
-    if i is tmp:
-        print str(i) + "l'element est remis dans la liste :-)"
-    else :
-        print i
-
-'''
-
-t = ('man', 1)
-t2 = ('man', 0.5514)
-
-s = set()
-s.add(t)
-s.add(t2)
-print s
