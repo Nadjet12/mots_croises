@@ -494,6 +494,9 @@ class Algo(threading.Thread):
 
         pass
 
+
+
+
     def waitContinue(self):
         while self.wait:
             pass
