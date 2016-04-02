@@ -12,6 +12,10 @@ from collections import deque
 import bisect
 
 
+
+NBMANMAX = 0
+
+
 class Noeud:
 
     def __init__(self, pere, motListe, motObj, couple, prof=1):
@@ -41,7 +45,7 @@ class Noeud:
             # si la liste est vide ce noeud est la meilleur solution            
             return self
 
-        xk = algo.heuristique_instance_max(self.listeMot, None)
+        xk = algo.heuristique_instance_max(self.listeMot, self.listeMotsAttribue)
         self.listeMot.remove(xk)
         for mot in xk.getValueDomaine():
             if len(algo.consistante(self.listeMotsAttribue, (xk, mot[0]))) == 0:
@@ -51,7 +55,6 @@ class Noeud:
         
 
 class Arbre:
-    NBUPDATE = 0
     def __init__(self, motListe, algo):
         self.listeNoeud = FastTable()
         self.solution = None
@@ -66,6 +69,7 @@ class Arbre:
 
 
     def get_Noeud_Max(self):
+        global NBMANMAX
         maxtuple = self.listeNoeud.tail()
         maxval = maxtuple[0]
         if len(self.listeNoeud) == 0:
@@ -86,15 +90,17 @@ class Arbre:
             self.listeNoeud.insert(el)
 
 
-        p =  elmax[1]
-        print '----------DEB------------'
-        print 'Noeud Max '+ str(p)
-        p = p.pere
-        while p:
-            print p
-            p = p.pere
-        print '-----------FIN-------------'
-
+        #p =  elmax[1]
+        #print '----------DEB------------'
+        #print 'Noeud Max '+ str(p)
+        #p = p.pere
+        #while p:
+        #    print p
+        #    p = p.pere
+        #print '-----------FIN-------------'
+        #print elmax[1].value
+        #print elmax[1].motObj.id
+        #print elmax[1].mot
         return elmax
 
     def getPosInsertion(self, list , val, deb, fin):
@@ -114,7 +120,6 @@ class Arbre:
 
 
     def update(self):
-        Arbre.NBUPDATE += 1
         #print 'appel a update = ' + str(Arbre.NBUPDATE)
 
         # prend le noeud max et developpe ses fils a la liste des Noeuds
