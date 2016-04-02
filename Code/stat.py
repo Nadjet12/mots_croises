@@ -18,8 +18,8 @@ if __name__ == "__main__":
     ]
 
     GRILLE = [
-        (GRILLEVIDE_PATH + 'A.mc', 'A'),
-        (GRILLEVIDE_PATH + 'B.mc', 'B'),
+        #(GRILLEVIDE_PATH + 'A.mc', 'A'),
+        #(GRILLEVIDE_PATH + 'B.mc', 'B'),
         (GRILLEVIDE_PATH + 'C.mc', 'C'),
         (GRILLEVIDE_PATH + '7.mc', '7')
     ]
@@ -33,30 +33,27 @@ if __name__ == "__main__":
 
 
 
-
-
-    for al in ALGO:
-        for dic in DICO:
-            times = []
-            print 'debut algo ' + str(al) + " " + str(dic[1])
-            for i in range(5):
-                dico = Dico(dic[0])
-                grille = Grille(GRILLE[1][0])
-                grille.updateDico(dico)
-                algo = Algo(grille=grille, algoName=al)
-                start = time.time()
-                algo.start()
-
-                algo.join()
-                elapse = time.time() - start
-                print 'fin ' + str(i+1) + ': ' + str(elapse)
-                times += [elapse]
-
-            fichier = open("./temps_"+al+"_"+GRILLE[1][1]+".stat", "a")
-            fichier.write(dic[1])
-            for  t in times:
-                fichier.write(" "+str(t))
-            fichier.write("\n")
-            fichier.close()
+    for gr in GRILLE:
+        for al in ALGO:
+            for dic in DICO:
+                times = []
+                print 'debut algo ' + str(al) + " " + str(dic[1])
+                for i in range(5):
+                    dico = Dico(dic[0])
+                    grille = Grille(gr[0])
+                    grille.updateDico(dico)
+                    algo = Algo(grille=grille, algoName=al)
+                    start = time.time()
+                    algo.start()
+                    algo.join()
+                    elapse = time.time() - start
+                    print 'fin ' + str(i+1) + ': ' + str(elapse)
+                    times += [elapse]
+                fichier = open("./temps_" + gr[1] + "_" + al + ".stat", "a")
+                fichier.write(dic[1])
+                for  t in times:
+                    fichier.write(" "+str(t))
+                fichier.write("\n")
+                fichier.close()
 
 
