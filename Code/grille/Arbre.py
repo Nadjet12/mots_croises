@@ -52,7 +52,7 @@ class Noeud:
                 n = Noeud(self, self.listeMot[:], xk, mot, self.prof+1)
                 t = (n.value, n)
                 liste.insert(t)
-        
+
 
 class Arbre:
     def __init__(self, motListe, algo):
