@@ -3,6 +3,7 @@
 import time
 from grille.Algos import Algo
 from grille.Grille import Grille
+from grille.Dictionnaire import initGrilleValue
 
 Grille_Var = 'C:\\Users\\Nadjet BOURDACHE\\Desktop\\Cours\\Master1\\RP\\mots_croises\\Data\\grillesVides\\A.mc'
 #Grille_Var = "./grillesVides/A.mc"
@@ -63,3 +64,8 @@ if __name__ == "__main__":
     print "heuristique :" + str(Heuristique.__name__)
     print "Dictionnaire :" + Dictionnaire_Var.split("/")[-1]
     print 'Grille :' + Grille_Var.split("/")[-1]
+
+
+
+
+initGrilleValue("C:/Users/Nadjet BOURDACHE/Desktop/Cours/Master1/RP/mots_croises/Data/texte.txt","C:/Users/Nadjet BOURDACHE/Desktop/Cours/Master1/RP/mots_croises/Data/mots/dicoValu.txt")

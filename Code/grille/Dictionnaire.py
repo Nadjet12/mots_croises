@@ -4,6 +4,8 @@ import time
 import re
 from codecs import *
 from copy import deepcopy
+import string
+import unicodedata
 
 
 class Noeud:
@@ -242,3 +244,42 @@ if __name__ == "__main__":
     #print("recherche mot \"" + pattern + "\" regex " + str(len(res)) + " : " + str(elapsed_time))
     #print(res)
 #pri    nt()
+
+
+def initGrilleValue(pathIn, pathOut):
+    fichierSource = open(pathIn, "r")
+    fichierDico = open(pathOut, "w")
+
+    dico = { lettre : {} for lettre in list(string.ascii_lowercase) }
+    nbMots = 0
+
+    ligne = fichierSource.readline()
+
+    while not ligne is None:
+        words = ligne.split()
+        for word in words:
+            word = word.lower()
+            word = unicode(word,'iso-8859-1')
+            word = unicodedata.normalize('NFD', word).encode('ascii', 'ignore')
+            word = word.replace('(','')
+            word = word.replace(')','')
+            word = word.replace("l'",'')
+            word = word.replace("d'",'')
+            word = word.replace("n'",'')
+            if len(word) > 2:
+                nbMots += 1
+                if dico[word[0]].__contains__(word):
+                    dico[word[0]][word] += 1
+                else:
+                    dico[word[0]].update({word : 1})
+            elif len(word) == 2:
+                dico[word[0]].update({word : 0})
+
+    for lettre in dico:
+        for mot in dico[lettre]:
+            dico[lettre][mot] /= nbMots
+            fichierDico.write(mot + " " + str(dico[lettre][mot]) + "\n")
+
+    fichierSource.close()
+    fichierDico.close()
+

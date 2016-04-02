@@ -7,6 +7,7 @@ Created on Mon Mar 21 12:22:49 2016
 
 import random
 import Algos
+from FastTable import FastTable
 from collections import deque
 import bisect
 
@@ -27,7 +28,7 @@ class Noeud:
 
     def __init__(self, pere, motListe, motObj, couple, prof=1):
         self.pere = pere
-        self.fils = []
+        self.fils = FastTable()
         self.listeMot = motListe[:]
         self.motObj = motObj
         self.mot = couple[0]
@@ -65,7 +66,9 @@ class Noeud:
         '''
         for mot in xk.getValueDomaine():
             if len(algo.consistante(self.listeMotsAttribue, (self.motObj, self.mot))) == 0:
-                self.fils += [Noeud(self, self.listeMot[:], xk, mot, self.prof+1)]
+                n = Noeud(self, self.listeMot[:], xk, mot, self.prof+1)
+                t = (n.value, n)
+                self.fils.insert(t)
 
         return self.fils
         
@@ -73,13 +76,17 @@ class Noeud:
 class Arbre:
     
     def __init__(self, motListe, algo):
-        self.listeNoeud = []
+        #self.listeNoeud = []
+        self.listeNoeud = FastTable()
         self.solution = None
         mot = motListe.pop(0)
         for el in mot.getValueDomaine():
-            self.listeNoeud += [Noeud(None, motListe, mot, el)]
-        self.listeNoeud = sorted(self.listeNoeud, key=lambda x: x.value, reverse=True)
+            t = (el[1], Noeud(None, motListe, mot, el))
+            self.listeNoeud.insert(t)
+        #self.listeNoeud = sorted(self.listeNoeud, key=lambda x: x.value, reverse=True)
         #self.listeNoeud = FunkyDeque(self.listeNoeud)
+
+
         self.algo = algo
         #sorted(self.listeNoeud, key=lambda value: (value[1]), reverse=True)
 
@@ -104,7 +111,25 @@ class Arbre:
         #elmax = max(liste,key=lambda x:x.prof)
         #self.listeNoeud.remove(elmax)
         #print "prof = " + str(elmax.prof)
-        return self.listeNoeud.pop(0)
+
+
+
+        maxtuple = self.listeNoeud.tail()
+        maxval = maxtuple[0]
+        tmp = self.listeNoeud.tail()
+
+        tableMax = [maxtuple]
+
+        while tmp[0] == maxval:
+            tableMax += [tmp]
+            tmp = self.listeNoeud.tail()
+
+        elmax = max(tableMax,key=lambda x:x[1].prof)
+        tableMax.remove(elmax)
+        for el in tableMax:
+            self.listeNoeud.insert(el)
+
+        return elmax
 
     def getPosInsertion(self, list , val, deb, fin):
         if deb < fin:
@@ -127,16 +152,19 @@ class Arbre:
 
         n = self.get_Noeud_Max()
 
-        l = n.create_Fils(self.algo)
-        if isinstance(l, Noeud):
+        l = n[1].create_Fils(self.algo)
+        #if isinstance(l, Noeud):
+        if l.__len__() == 1:
             # si l est un Noeud alors c'est la solution optimal
             self.solution = l
             return l
         else:
             # sinon c'est une liste de Noeud
-            for node in l:
-                pos = self.getPosInsertion(self.listeNoeud, node.value, 0, len(self.listeNoeud)-1)
-                self.listeNoeud.insert(pos, node)
-                #self.listeNoeud.insert(node)
+            #for node in l:
+                #pos = self.getPosInsertion(self.listeNoeud, node.value, 0, len(self.listeNoeud)-1)
+                #self.listeNoeud.insert(pos, node)
+            while l.__len__() != 0:
+                el = l.tail()
+                self.listeNoeud.insert(l)
             #print (len(self.listeNoeud))
 
