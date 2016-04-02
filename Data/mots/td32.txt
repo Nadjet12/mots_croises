@@ -3,19 +3,19 @@ aza 1
 ciern
 ili 1
 kolo
-lad
+lad 1
 lina 1
 man 1
-molo 1
-nida 1
-nil 1
+molo
+nida
+nil
 nisza 1
 obsada 1
 piza 1
-polo 1
-sroka 1
+polo
+sroka
 tantal 1
-tron 1
+tron
 tyczkaj
 zab
-zamach 1
+zamach

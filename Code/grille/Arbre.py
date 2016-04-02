@@ -11,24 +11,11 @@ from FastTable import FastTable
 from collections import deque
 import bisect
 
-class FunkyDeque(deque):
-    def _insert(self, index, value):
-        self.rotate(-index)
-        self.appendleft(value)
-        self.rotate(index)
-
-    def insert(self, value):
-        self._insert(bisect.bisect_left(self,value), value)
-
-    def __init__(self, iterable):
-        super(FunkyDeque, self).__init__(sorted(iterable, key=lambda x: x.prof, reverse=True))
-
 
 class Noeud:
 
     def __init__(self, pere, motListe, motObj, couple, prof=1):
         self.pere = pere
-        self.fils = FastTable()
         self.listeMot = motListe[:]
         self.motObj = motObj
         self.mot = couple[0]
@@ -40,6 +27,10 @@ class Noeud:
             self.listeMotsAttribue = [(self.motObj, self.mot)]
         self.prof = prof
 
+
+    def __repr__(self):
+        return "id:" +str(self.motObj.id) + " "+self.mot + " value:" +str(self.value) + ": prof " + str(self.prof)
+
     def getValue(self):
         return self.value
 
@@ -50,7 +41,7 @@ class Noeud:
             # si la liste est vide ce noeud est la meilleur solution            
             return self
 
-        xk = algo.heur(self.listeMot, None)
+        xk = algo.heuristique_instance_max(self.listeMot, None)
         self.listeMot.remove(xk)
         for mot in xk.getValueDomaine():
             if len(algo.consistante(self.listeMotsAttribue, (xk, mot[0]))) == 0:
@@ -67,7 +58,7 @@ class Arbre:
         mot = algo.heur(motListe, None)
         motListe.remove(mot)
         for el in mot.getValueDomaine():
-            t = (el[1], Noeud(None, motListe, mot, el))
+            t = (el[1], Noeud(None, motListe[:], mot, el))
             self.listeNoeud.insert(t)
 
 
@@ -88,11 +79,22 @@ class Arbre:
             tmp = self.listeNoeud.tail()
         self.listeNoeud.insert(tmp)
 
+
         elmax = max(tableMax,key=lambda x:x[1].prof)
         tableMax.remove(elmax)
         for el in tableMax:
             self.listeNoeud.insert(el)
-        print str(elmax[0]) + " " + str(elmax[1].mot) + "  " + str(elmax[1].prof) + "   "+ str(elmax[1].motObj)
+
+
+        p =  elmax[1]
+        print '----------DEB------------'
+        print 'Noeud Max '+ str(p)
+        p = p.pere
+        while p:
+            print p
+            p = p.pere
+        print '-----------FIN-------------'
+
         return elmax
 
     def getPosInsertion(self, list , val, deb, fin):
@@ -122,18 +124,6 @@ class Arbre:
         if isinstance(l, Noeud):
             # si l est un Noeud alors c'est la solution optimal
             self.solution = l
-            #print 'hello'
             return l
-        '''
-        else:
-            # sinon c'est une liste de Noeud
-            #for node in l:
-                #pos = self.getPosInsertion(self.listeNoeud, node.value, 0, len(self.listeNoeud)-1)
-                #self.listeNoeud.insert(pos, node)
-            while len(l) != 0:
-                el = l.tail()
-                self.listeNoeud.insert(el)
-            #print (len(self.listeNoeud))
-        '''
 
 

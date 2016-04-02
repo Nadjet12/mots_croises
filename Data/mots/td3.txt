@@ -5,7 +5,7 @@ ili 1
 kolo
 lad 1
 lina 1
-man 1
+man
 molo
 nida 1
 nil

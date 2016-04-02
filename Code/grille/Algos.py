@@ -111,6 +111,7 @@ class Algo(threading.Thread):
         elif self.algoName is "VAL":
             pass
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
+            self.ac3()
             self.branch_bound(liste)
 
             # Pas ou plus de resultats

@@ -74,3 +74,11 @@ for i in tableMax:
         print i
 
 '''
+
+t = ('man', 1)
+t2 = ('man', 0.5514)
+
+s = set()
+s.add(t)
+s.add(t2)
+print s

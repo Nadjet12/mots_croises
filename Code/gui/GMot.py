@@ -38,9 +38,11 @@ class GMot:
         self.value.insert('end', self.mot.value)
 
 
-    def showDomaine(self):
+    def showDomaine(self, Value=True):
         s = ""
-        for i in self.mot.getValueDomaine():
+        L = self.mot.getValueDomaine()
+        L = sorted(L, key=lambda x: x[1], reverse=True)
+        for i in L:
             if i[1]:
                 s += str(i[0])+"\t"+str(i[1])+ "\n"
             else:

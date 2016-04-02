@@ -25,6 +25,9 @@ class Mot:
         self.domaine2 = None
         self.contrainteListe = []
 
+    def str(self):
+        return ""
+
     def setDomaine(self, copie):
         self.domaine2 = copie.copyDico()
         self.domaineListe = list(self.domaine2.get_Domaine(self.taille))

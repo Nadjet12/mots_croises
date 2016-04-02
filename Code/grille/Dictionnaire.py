@@ -33,7 +33,7 @@ class Noeud:
 
     def setPeut_finir(self, peut_finir, value=0):
         self.peut_finir |= peut_finir
-        self.value = value
+        self.value = max(self.value, value)
 
     def get_list_Mots(self, pattern, mot, profondeur, getValue=False):
         liste = set()
