@@ -102,7 +102,8 @@ class Algo(threading.Thread):
 
         elif self.algoName is "FC_AC3":
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
-            self.ac3()
+            bool = self.ac3()
+            self.sendResult(('AC3', bool))
             self.forward_checking(liste, [])
 
             # Pas ou plus de resultats
@@ -110,7 +111,8 @@ class Algo(threading.Thread):
 
         elif self.algoName is "CBJ":
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
-            self.ac3()
+            bool = self.ac3()
+            self.sendResult(('AC3', bool))
             self.CBJ(liste, [])
 
             # Pas ou plus de resultats
@@ -119,7 +121,8 @@ class Algo(threading.Thread):
         elif self.algoName is "VAL":
             pass
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
-            self.ac3()
+            bool = self.ac3()
+            self.sendResult(('AC3', bool))
             self.branch_bound(liste)
 
             # Pas ou plus de resultats

@@ -9,17 +9,17 @@ FILE = [
 
 #    (BEGIN + 'A_CBJ' + END, 'A', 'Conflict BackJumping'),
 #    (BEGIN + 'B_CBJ' + END, 'B', 'Conflict BackJumping'),
-    (BEGIN + 'C_CBJ' + END, 'C', 'Conflict BackJumping'),
+#    (BEGIN + 'C_CBJ' + END, 'C', 'Conflict BackJumping'),
 #    (BEGIN + '7_CBJ' + END, '7', 'Conflict BackJumping'),
 
 #    (BEGIN + 'A_FC' + END, 'A', 'Forward Checking'),
 #    (BEGIN + 'B_FC' + END, 'B', 'Forward Checking'),
-    (BEGIN + 'C_FC' + END, 'C', 'Forward Checking'),
+#    (BEGIN + 'C_FC' + END, 'C', 'Forward Checking'),
 #    (BEGIN + '7_FC' + END, '7', 'Forward Checking'),
 
 #    (BEGIN + 'A_FC_AC3' + END, 'A', 'Forward Checking avec Arc-consistance'),
 #    (BEGIN + 'B_FC_AC3' + END, 'B', 'Forward Checking avec Arc-consistance'),
-    (BEGIN + 'C_FC_AC3' + END, 'C', 'Forward Checking avec Arc-consistance'),
+     (BEGIN + 'C_FC_AC3' + END, 'C', 'Forward Checking avec Arc-consistance'),
 #    (BEGIN + '7_FC_AC3' + END, '7', 'Forward Checking avec Arc-consistance'),
 ]
 

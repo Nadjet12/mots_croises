@@ -133,13 +133,16 @@ class ButtonFrame(Frame):
             mess = 'Non Arc-Consistant'
             if result:
                 mess = 'Arc-Consistant'
+                self.master.updateGrille()
             top = Toplevel()
             top.title("Resultat")
 
             msg = Message(top, text=mess)
             msg.pack()
             self.algo.stop()
-
+        elif isinstance(result, tuple):
+            if result[0] is 'AC3':
+                self.master.updateGrille()
         elif result:
             self.continueButton.configure(state="normal")
             self.algo.grille.setResultat(result)

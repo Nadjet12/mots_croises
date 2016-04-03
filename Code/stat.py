@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import time
 from grille.Grille import Grille
 
@@ -21,14 +22,14 @@ if __name__ == "__main__":
         #(GRILLEVIDE_PATH + 'A.mc', 'A'),
         #(GRILLEVIDE_PATH + 'B.mc', 'B'),
         (GRILLEVIDE_PATH + 'C.mc', 'C'),
-        (GRILLEVIDE_PATH + '7.mc', '7')
+        #(GRILLEVIDE_PATH + '7.mc', '7')
     ]
 
     ALGO = [
-        'AC3',
-        'FC',
+        #'AC3',
+        #'FC',
         'FC_AC3',
-        'CBJ'
+        #'CBJ'
     ]
 
 
