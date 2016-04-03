@@ -133,9 +133,9 @@ class Gui(Frame):
 
         algomenu.add_radiobutton(label="Conflict BackJumping avec AC3", variable=self.radio_algo, value=4,
                                  command=lambda arg0="CBJ_AC3": self.update_Algo(arg0))
-        algomenu.add_radiobutton(label="Conflict BackJumping", variable=self.radio_algo, value=4,
+        algomenu.add_radiobutton(label="Conflict BackJumping", variable=self.radio_algo, value=5,
                                  command=lambda arg0="CBJ": self.update_Algo(arg0))
-        algomenu.add_radiobutton(label="Branch & Bound Valué", variable=self.radio_algo, value=5,
+        algomenu.add_radiobutton(label="Branch & Bound Valué", variable=self.radio_algo, value=6,
                                  command=lambda arg0="VAL": self.update_Algo(arg0))
 
         self.radio_algo.set(1)
