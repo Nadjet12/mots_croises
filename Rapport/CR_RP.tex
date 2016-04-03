@@ -119,7 +119,14 @@ Pour le CBJ, l'heuristique la plus efficace est la même que pour le FC, à savo
 \end{enumerate}
 
 \section*{2. Expérimentations}
+
+
+Nous avons effectuer des expérimentations sur les algorithmes programmés, en les appliquant à différentes instances, pour chacune d'entre elles, nous avons calculé une moyennes du temps d'exécution.\\
+Pour chaque grille, nous réalisons une courbe qui montre l'évolution du temps de calcul en fonction de la taille des dictionnaires (une moyenne sur un ensemble d'exécution). Nous représentons également par des points les valeurs obtenues pour chaque exécution.
+
 \begin{enumerate}
+
+
 \item Pour le filtrage par AC3, les résultats obtenus pour les différentes grilles sont représentés sur les graphiques ci-dessous.
 
 On voit clairement que le temps du filtrage augmente exponentiellement avec la taille des dictionnaires utilisés. Ce qui se justifie par une plus grande taille du domaines des variables, et donc par plus de valeurs pour lesquels on vérifiera la consistance.
@@ -129,16 +136,13 @@ On remarque surtout, que plus la grille contient de mots, plus les temps croisse
 \begin{table*}[!h]
 \begin{center}
 \begin{tabular}{|c|}
-\hline
- {Filtrage par AC3} \\
-\hline
+
 \hline
   Grille A\\
 \hline   
    \\
 \includegraphics[width=10cm]{AC3_A.png}  \\
 \hline
-
 
 \end{tabular}
 \end{center}
@@ -153,6 +157,15 @@ Grille B \\
 \\
 \includegraphics[width=10cm]{AC3_B.png} \\
 \hline
+
+\end{tabular}
+\end{center}
+\end{table*}
+
+
+\begin{table*}[!h]
+\begin{center}
+\begin{tabular}{|c|}
 \hline
 Grille C\\
 \hline
@@ -165,8 +178,18 @@ Grille C\\
 \end{table*}
 
 \newpage
+~~\\
+~~\\
+~~\\
 \item Pour les algorithmes de résolution FC et CBJ, nous avons comparé les résultats des deux algorithmes avec et sans filtrage et avec différentes tailles de grilles et de dictionnaires.\\
-Les résultats obtenus sont représenté sur les graphiques suivants.
+Les résultats obtenus sont représenté sur les graphiques suivants.\\
+
+On remarque que le temps de calcul ne dépend pas forcément de la taille des dictionnaires. Pour une même grille, on peut obtenir des changement non monotone du temps de calcul lorsqu'on change la taille des dictionnaires.\\
+
+Plus particulièrement, pour la grille A, on remarque que le filtrage par AC3 préalable n'est bénéfique que pour les petits dictionnaires. Pour les plus grands dictionnaires, la résolution sans filtrage par AC3 demande un temps de calcul beaucoup plus court que lorsqu'on en effectue un. C'est du au grand nombre mots à tester dans les domaines des différentes variables.\\
+
+En ce qui concerne l'efficacité des deux algorithmes pour cette grille, aucun des deux n'est nettement meilleur que l'autre, le CBJ (avec ou sans AC3) est plus rapide que le FC (avec ou sans AC3) pour le dictionnaire de 58000 mots mais plus lent pour les dictionnaire de 22600 et 135000 mots. En revanche pour le dictionnaire de 850 mots, les deux algorithmes sont plus ou moins équivalents.
+
 
 \begin{table*}[!h]
 \begin{center}
@@ -184,7 +207,9 @@ Les résultats obtenus sont représenté sur les graphiques suivants.
 \end{center}
 \end{table*}
 
-Pour la grille A, on remarque que le filtrage par AC3 préalable n'est bénéfique que pour les petits dictionnaires. Pour les plus grands dictionnaires, la résolution sans filtrage par AC3 demande un temps de calcul beaucoup plus court que lorsqu'on en effectue un. C'est du au grand nombre mots à tester dans les domaines des différentes variables.\\
+De même pour la grille B, le filtrage n'accélère le temps de calcul que pour les dictionnaire de petite taille. même si la différences de temps avec et sans est moins importante que pour la grille A.\\
+
+Pour cette grille, les meilleurs temps ont été obtenus avec le FC.\\
 
 \begin{table*}[!h]
 \begin{center}
@@ -201,6 +226,7 @@ Grille B \\
 \end{tabular}
 \end{center}
 \end{table*}
+
 
 \begin{table*}[!h]
 \begin{center}
