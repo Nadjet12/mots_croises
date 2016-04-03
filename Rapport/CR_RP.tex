@@ -88,6 +88,7 @@ $$ \textit{AllDiff}\ (\textit{Mot}_1, \textit{Mot}_2, \cdots , \textit{Mot}_m)  
 \item D'un point de vue algorithmique, nous avons mis en œuvre une classe "Grille". Chaque objet de cette classe représente une instance de mots croisés, et contient une taille, un dictionnaire, une liste de tous les mots de la grille ayant une taille supérieure à 1 ainsi qu'une liste de cases noires.\\
 On pourra à partir d'un objet de cette classe, initialiser une grille à partir d'un fichier texte contenant une grille ou en générer une aléatoirement et la sauvegarder dans un fichier après résolution.\\
 
+<<<<<<< HEAD
 L'interface graphique proposée permet d'ouvrir une grille vide ou partielement rempli ou d'en générer une en indiquant la taille et le poucentage de cases noirs. Nous pouvons aussi à tout moment sauvegarder la grille non/partielement/completement résolu. \\
 
 \item Nous avons développé les algorithmes AC3 et Forward Checking tel qu'ils ont été définis en cours. \\
@@ -117,6 +118,12 @@ Pour le CBJ, l'heuristique la plus efficace est la même que pour le FC, à savo
 \item Afin d'améliorer les trois algorithmes, nous avons utilisé une structure d'arbre pour sauvegarder et manipuler les dictionnaires et les domaines des différentes variables.\\
  Cette structure permet un parcours rapide du dictionnaire pour l'initialisation des domaines, et surtout, elle permet accélérer les algorithmes de filtrage, puisqu'elle peut permettre d'éliminer plusieurs mots d'un domaine en supprimant des sous arbres de ce dernier, nous évitant ainsi de devoir parcourir et tester chaque mot du domaine.\\
 \end{enumerate}
+=======
+\item Les algorithmes AC3 et FC ont été développés tel qu'ils ont été définis en cours. 
+En revanche pour le Conflict BackJumping afin d’améliorer la résolution nous effectuons une une arc-consistance sur les mots de la grille pour réduire les domaines avant de lancer l'algorithme, nous avons aussi ajouter Check Forward avant l'appel récursif ce qui nous permet d'éviter des appel inutile et d'améliorer encore le temps de résolution des grille les plus grandes. Afin de les améliorer, nous avons utilisé une structure d'arbre pour sauvegarder et manipuler les dictionnaires et les domaines des différentes variables.\\
+ Cette structure permet un parcours rapide du dictionnaire pour l'initialisation des domaines, et surtout, elle permet d’accélérer les algorithmes de filtrage, puisqu’elle peut permettre d’éliminer plusieurs mots d’un
+domaine en supprimant des sous arbres de ce domaine et nous évite donc de devoir parcourir et tester chaque mot du domaine.\\
+>>>>>>> 2c2ae7f1f26d0acc8c3f01ac60095cb7d8503d45
 
 \section*{2. Expérimentations}
 \begin{enumerate}

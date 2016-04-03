@@ -13,7 +13,7 @@ class Mot:
 
     def __init__(self, lettres, coord, dir):
         self.id = Mot.ID
-        Mot.ID = Mot.ID + 1
+        Mot.ID += 1
         self.dir = dir
         self.value = 0
         self.lettres = lettres
@@ -51,9 +51,7 @@ class Mot:
         
     def __repr__(self):
         dom = self.getDomaine()
-        return self.dir + " id=" + str(self.id) + " Position=(" +str(self.xStart) + "," + \
-               str(self.yStart) + ") :" + self.lettres + ": \t\t\tTaille du mot " + \
-               str(self.taille) + " tailleDomaine:" + str(len(dom)) + " val:" + str(self.value)
+        return self.dir + " id:" + str(self.id) + " " + self.lettres + " val:" + str(self.value) + " tailleDomaine:" + str(len(dom))
 
     def get_Contrainte(self, mot):
         c1 = None
@@ -97,30 +95,29 @@ class Mot:
     def updateFromContraintes(self, contrainte, yLettre):
         bool = self.domaine2.updateFromContraintes(contrainte, yLettre)
         self.domaineListe = list(self.domaine2.get_Domaine(self.taille))
-        do= self.getDomaine()
+        self.domaineValueListe = list(self.domaine2.get_Domaine(self.taille, getValue=True))
+        do= self.getValueDomaine()
         if len(do) == 1:
             for d in do:
-                self.lettres = d
-        do = self.getValueDomaine()
-        self.value =  do[0][1]
+                self.lettres = d[0]
+                self.value =  d[1]
         return bool
 
     def removeMotFromDomaine(self, mot):
         self.domaine2.removeMot(mot)
         self.domaineListe = list(self.domaine2.get_Domaine(self.taille))
-        do= self.getDomaine()
+        self.domaineValueListe = list(self.domaine2.get_Domaine(self.taille, getValue=True))
+        do= self.getValueDomaine()
         if len(do) == 1:
             for d in do:
-                self.lettres = d
-        do = self.getValueDomaine()
-        self.value =  do[0][1]
+                self.lettres = d[0]
+                self.value =  d[1]
         return
 
 
     def updateResultat(self):
-        do= self.getDomaine()
+        do= self.getValueDomaine()
         if len(do) == 1:
             for d in do:
-                self.lettres = d
-        do = self.getValueDomaine()
-        self.value =  do[0][1]
+                self.lettres = d[0]
+                self.value =  d[1]

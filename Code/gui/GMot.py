@@ -19,7 +19,7 @@ class GMot:
         self.caseMotFrame = [Case(master2, validate="key", textvariable=None, state=NORMAL, bg='white',
                                   font=font, width=5, justify=CENTER, m=mot, ui=self, pos=i)
                              for i in range(mot.taille)]
-        self.button = Button(master2, text="Domaine", command=self.showDomaine)
+        self.button = Button(master2, text="Domaine :" + str(len(self.mot.getDomaine())), command=self.showDomaine)
         self.number = Entry(master2, validate="key", state=NORMAL, bg='grey',
                                      font=font, width=5, justify=CENTER)
         self.number.insert(0, self.mot.id)
@@ -37,6 +37,7 @@ class GMot:
                 self.caseMotFrame[i].setLettre(self.mot.lettres[i])
         self.value.delete(0, 'end')
         self.value.insert('end', self.mot.value)
+        self.button["text"] = "Domaine :" + str(len(self.mot.getDomaine()))
 
 
     def showDomaine(self, Value=True):
@@ -52,7 +53,7 @@ class GMot:
         win.title("Domaine de " + str(self.mot.id) + " taille " + str(len(L)))
         frame = Frame(win)
         scroll = Scrollbar(frame)
-        text = Text(frame, yscrollcommand=scroll.set, height=50, width=self.mot.taille+20)
+        text = Text(frame, yscrollcommand=scroll.set, height=30, width=self.mot.taille+20)
         text.insert(END, ''.join(s))
         scroll.config(command=text.yview)
         text.pack(side='left', fill='both', expand=1)
