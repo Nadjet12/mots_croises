@@ -13,7 +13,7 @@ class Mot:
 
     def __init__(self, lettres, coord, dir):
         self.id = Mot.ID
-        Mot.ID = Mot.ID + 1
+        Mot.ID += 1
         self.dir = dir
         self.value = 0
         self.lettres = lettres

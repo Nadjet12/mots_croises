@@ -124,16 +124,18 @@ class Gui(Frame):
         filemenu.add_command(label="Quitter", command=self.master.quit)
 
         self.radio_algo = StringVar()
-        algomenu.add_radiobutton(label="AC3", variable=self.radio_algo, value=1,
+        algomenu.add_radiobutton(label="Arc-Consistance 3", variable=self.radio_algo, value=1,
                                  command=lambda arg0="AC3": self.update_Algo(arg0))
         algomenu.add_radiobutton(label="Forward Checking", variable=self.radio_algo, value=2,
                                  command=lambda arg0="FC": self.update_Algo(arg0))
-        algomenu.add_radiobutton(label="FC/AC3", variable=self.radio_algo, value=3,
+        algomenu.add_radiobutton(label="Forward Checking avec AC3", variable=self.radio_algo, value=3,
                                  command=lambda arg0="FC_AC3": self.update_Algo(arg0))
 
-        algomenu.add_radiobutton(label="CBJ", variable=self.radio_algo, value=4,
+        algomenu.add_radiobutton(label="Conflict BackJumping avec AC3", variable=self.radio_algo, value=4,
+                                 command=lambda arg0="CBJ_AC3": self.update_Algo(arg0))
+        algomenu.add_radiobutton(label="Conflict BackJumping", variable=self.radio_algo, value=4,
                                  command=lambda arg0="CBJ": self.update_Algo(arg0))
-        algomenu.add_radiobutton(label="Valué", variable=self.radio_algo, value=5,
+        algomenu.add_radiobutton(label="Branch & Bound Valué", variable=self.radio_algo, value=5,
                                  command=lambda arg0="VAL": self.update_Algo(arg0))
 
         self.radio_algo.set(1)

@@ -172,10 +172,10 @@ class Grille:
 
     # Initialisation des domaines des mots de la grille
     def initDomaine(self):
-        for m in self.mots_horizontaux:
-            m.initDomaine(self.dico.get_Domaine(m.taille, getValue=True))
-        for m in self.mots_verticaux:
-            m.initDomaine(self.dico.get_Domaine(m.taille, getValue=True))
+        for m in self.mots_horizontaux + self.mots_verticaux:
+            h = m.lettres
+            h = h.replace(' ', '.')
+            m.initDomaine(self.dico.get_New_Domaine(h, getValue=True))
 
 
     # Récupère le résultat d'un algo sous forme de grille, et affecte les bonne valeur à chaque variable

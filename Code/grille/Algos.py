@@ -17,11 +17,12 @@ class StoppableThread(object):
 
 class Algo(threading.Thread):
 
-    def __init__(self, queue=None, grille=None, traceframe=None, algoName=None, heuristique=None):
+    def __init__(self, queue=None, grille=None, traceframe=None, algoName=None, heuristique=None, stat=False):
 
         threading.Thread.__init__(self)
 
         # Variables de test
+        self.stat = stat
         self.tempsOvertureGrille = 0
         self.timed = 0
         self.nbMotsTeste = 0
@@ -104,15 +105,23 @@ class Algo(threading.Thread):
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
             bool = self.ac3()
             self.sendResult(('AC3', bool))
-            self.forward_checking(liste, [])
+            if bool :
+                self.forward_checking(liste, [])
 
             # Pas ou plus de resultats
             self.sendResult(None)
 
-        elif self.algoName is "CBJ":
+        elif self.algoName is "CBJ_AC3":
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
             bool = self.ac3()
             self.sendResult(('AC3', bool))
+            if bool :
+                self.CBJ(liste, [])
+
+            # Pas ou plus de resultats
+            self.sendResult(None)
+        elif self.algoName is "CBJ":
+            liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
             self.CBJ(liste, [])
 
             # Pas ou plus de resultats
@@ -154,6 +163,9 @@ class Algo(threading.Thread):
             if self.revise(x, y):
                 # Si le domaine de x a été modifié, on vérifie qu'il n'est pas vide
                 if len(x.getDomaine()) == 0:
+                    elapsed_time = time.time() - start_time
+                    self.send_to_Trace("Fin de l'AC3 : Non Consistant", "out")
+                    self.send_to_Trace(" Temps :" + str(elapsed_time) + "\n", "time")
                     return False
                 # Sinon, on ajoute à la liste de contraintes tous les mots directement liée à x par une contrainte
                 for (i, j) in contrainte_Liste:
@@ -282,8 +294,9 @@ class Algo(threading.Thread):
             self.send_to_Trace(" Temps :" + str(self.timed) + "\n", "time")
             self.res = i
             self.sendResult(self.res)
-            self.fin = True
-            return
+            if self.stat:
+                self.fin = True
+                return
             self.pause()
             with self.pause_cond:
                 while self.paused:
@@ -303,8 +316,9 @@ class Algo(threading.Thread):
             I = i[:] + [(xk, v)]
             if self.check_forward(xk, v, V):
                 self.forward_checking(V[:], I)
-                if self.fin:
-                    return
+                if self.stat:
+                    if self.fin:
+                        return
             for mot, dom, taille in savedDom:
                 mot.initDomaine(dom)
         return
@@ -336,14 +350,19 @@ class Algo(threading.Thread):
             self.send_to_Trace(" Temps :" + str(self.timed) + "\n", "time")
             self.res = i
             self.sendResult(self.res)
-            self.fin = True
-            return
+            self.res = i
+            self.sendResult(self.res)
+            if self.stat:
+                self.fin = True
+                return
             self.pause()
             with self.pause_cond:
                 while self.paused:
                     self.pause_cond.wait()
                 self.timed = time.time()
-            return []
+
+
+            return prev
 
         # Résolution s'il reste des variables à instancier
 
@@ -362,8 +381,9 @@ class Algo(threading.Thread):
                 conflit_local = self.consistante(i, (xk, v))
                 if not conflit_local:
                     conflit_fils = self.CBJ(V[:], I, it=it+1)
-                    if self.fin:
-                        return
+                    if self.stat:
+                        if self.fin:
+                            return
                     if xk.id in conflit_fils:
                         conflit += conflit_fils
                         conflit = list(set(conflit))
@@ -382,9 +402,6 @@ class Algo(threading.Thread):
             conflit = list(set(conflit))
         return conflit
 
-    def printV(self, V):
-        for mot in V:
-            print mot
 
     # Vérification de la consistance de l'instanciation courante et de l'affectation du mot v à la variable xk
     def consistante(self, inst, (xk, v)):
@@ -402,7 +419,7 @@ class Algo(threading.Thread):
         return V[0]
 
     # Variable ayant le domaine le plus petit dans l'instanciation courante
-    def heuristique_dom_mim(self, V, i):
+    def heuristique_dom_mim(self, V, inst, rand=True):
         elemMin = [(len(V[0].getDomaine()), 0)]
         for i in range(1, len(V)):
             dom = len(V[i].getDomaine())
@@ -413,11 +430,14 @@ class Algo(threading.Thread):
         if len(elemMin) == 1:
             return V[elemMin[0][1]]
         else:
+            if not rand:
+                l = [V[k] for h,k in elemMin]
+                return self.heuristique_contr_max(l, inst, False)
             return V[(random.choice(elemMin))[1]]
 
 
     # Variable ayant un nombre maximum de contraintes avec les autres variables
-    def heuristique_contr_max(self, V, i):
+    def heuristique_contr_max(self, V, inst, rand=True):
         elemMax = [(len(V[0].contrainteListe), 0)]
         for i in range(1, len(V)):
             contr = len(V[i].contrainteListe)
@@ -428,6 +448,9 @@ class Algo(threading.Thread):
         if len(elemMax) == 1:
             return V[elemMax[0][1]]
         else:
+            if not rand:
+                l = [V[k] for h,k in elemMax]
+                return self.heuristique_instance_max(l, inst, False)
             return V[(random.choice(elemMax))[1]]
 
     # Calcul du nombre de contraintes qu'a x avec les variables de l'instanciation courante
@@ -444,7 +467,7 @@ class Algo(threading.Thread):
         return nb
 
 
-    def heuristique_instance_max(self, V, inst):
+    def heuristique_instance_max(self, V, inst, rand=False):
 
         elemMax = [(self.getcontraintesNB(V[0], inst), 0)]
         for i in range(1, len(V)):
