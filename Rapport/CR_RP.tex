@@ -97,17 +97,45 @@ On pourra à partir d'un objet de cette classe, initialiser une grille à partir
 \end{itemize}
 
 \item Afin d'améliorer les trois algorithmes, nous avons utilisé une structure d'arbre pour sauvegarder et manipuler les dictionnaires et les domaines des différentes variables.\\
- Cette structure permet un parcours rapide du dictionnaire pour l'initialisation des domaines, et surtout, elle permet d’accélérer les algorithmes de filtrage, puisqu’elle peut permettre d’éliminer plusieurs mots d’un domaine en supprimant des sous arbres de ce dernier, nous évitant ainsi de devoir parcourir et tester chaque mot du domaine.\\
+ Cette structure permet un parcours rapide du dictionnaire pour l'initialisation des domaines, et surtout, elle permet d’accélérer les algorithmes de filtrage, puisqu'elle peut permettre d'éliminer plusieurs mots d'un domaine en supprimant des sous arbres de ce dernier, nous évitant ainsi de devoir parcourir et tester chaque mot du domaine.\\
 \end{enumerate}
 
 \section*{2. Expérimentations}
 \begin{enumerate}
-\item
+\item Pour le filtrage par AC3, les résultats obtenus pour les différentes grilles sont représentés sur les graphiques ci-dessous.
+
+On voit clairement que le temps du filtrage augmente exponentiellement avec la taille des dictionnaires utilisés. Ce qui se justifie par une plus grande taille du domaines des variables, et donc par plus de valeurs pour lesquels on vérifiera la consistance.
+
+On remarque surtout, que plus la grille contient de mots, plus les temps croissent rapidement lorsqu'on augmente la taille des dictionnaires. Ceci est du au fait qu'il y ai plus de variables, et donc plus de contraintes à vérifier et plus de domaines qui croissent lorsque la taille augmente.
+\begin{table*}[!h]
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+ {Filtrage par AC3} \\
+\hline
+\hline
+  Grille A\\
+\hline   
+   \\
+\includegraphics[width=7.5cm]{AC3_A.png}  \\
+\hline
+Grille B \\
+\hline 
+\\
+\includegraphics[width=7.5cm]{AC3_B.png} \\
+\hline
+Grille C\\
+\hline
+  \\
+\includegraphics[width=7.5cm]{AC3_C.png} \\
+\hline
+
+\end{tabular}
+\end{center}
+\end{table*}
+
 \end{enumerate}
-\section*{3. Extension au cas pondéré}
-\begin{enumerate}
-\item
-\end{enumerate}
+
 
 
 \end{document}
