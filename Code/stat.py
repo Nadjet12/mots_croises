@@ -14,17 +14,17 @@ PATHSAVE = '../Stat/stat/'
 if __name__ == "__main__":
 
     DICO = [
-        (DICO_PATH + '850-mots-us.txt', '850-mots'),
-        (DICO_PATH + '22600-mots-fr.txt', '22600-mots'),
-        (DICO_PATH + '58000-mots-us.txt', '58000-mots'),
+        #(DICO_PATH + '850-mots-us.txt', '850-mots'),
+        #(DICO_PATH + '22600-mots-fr.txt', '22600-mots'),
+        #(DICO_PATH + '58000-mots-us.txt', '58000-mots'),
         (DICO_PATH + '133000-mots-us.txt', '133000-mots'),
         (DICO_PATH + '135000-mots-fr.txt', '135000-mots')
     ]
 
     GRILLE = [
 
-        #(GRILLEVIDE_PATH + '11.mc', '11'),
-        (GRILLEVIDE_PATH + '12.mc', '12'),
+        (GRILLEVIDE_PATH + '11.mc', '11'),
+        #(GRILLEVIDE_PATH + '12.mc', '12'),
         #(GRILLEVIDE_PATH + 'A.mc', 'A'),
         #(GRILLEVIDE_PATH + 'B.mc', 'B'),
         #(GRILLEVIDE_PATH + 'C.mc', 'C')
