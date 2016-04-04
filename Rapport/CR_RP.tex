@@ -230,7 +230,11 @@ Grille B \\
 \end{center}
 \end{table*}
 
+<<<<<<< HEAD
 En ce qui concerne l'apport du filtrage, on constate les mêmes résultats sur la grille C, le filtrage est plus ou moins bénéfique selon la taille des dictionnaires. \\
+=======
+En ce qui concerne l'apport du filtrage, on constate les mêmes résultats sur la grille C, le filtrage est plus ou moins bénéfique selon la taille des dictionnaires. \\
+>>>>>>> cb312243268ad52f080a576b2b7fd1ac6fd64695
 
 On peut remarquer qu'en moyenne, le CBJ (avec ou sans AC3 préalable) est plus rapide que le FC.\\
 
@@ -257,11 +261,19 @@ Grille C \\
 \begin{enumerate}
 
 \item Pour modéliser le problème de CSP valué, il suffit de reprendre la modélisation de la question 1.1 en ajoutant des valeurs aux mots du dictionnaire.\\
+<<<<<<< HEAD
 \ul{Structures de valuations:} Pour le Branch \& Bound, on peut proposer la structure de valuation suivante: la valeur d'un nœuds est le minimum entre sa propre valeur (dans le dictionnaire) et celle de son père. La valeur d'une solution est donc la valeur minimum de tous les mots de son instanciation.\\
 L'intérêt de cette valuation est qu'en développant, à chaque itération, le noeud de valeur maximum parmis toutes les feuilles de l'arbre, on peut garantir l'obtention de l'instanciation de valeur maximum sans avoir à parcourir la totalité de l'arbre de recherche.\\
 Cette valuation est monotone, car lorsqu'on ajoute un mots à l'instanciation courante, la valeur de la solution courante peut soit diminuer soit stagner, mais ne peut jamais augmenter.\\
 
 \item Nous avons choisi de modéliser le Branch \& Bound sous forme d'une liste de nœuds triés selon les valeurs croissantes des noeuds.\\
+=======
+\ul{Structures\ de\ valuations:} Pour le Branch & Bound, on peut proposer la structure de valuation suivante: la valeur d'un nœuds est le minimum entre sa propre valeur (dans le dictionnaire) et celle de son père. La valeur d'une solution est donc la valeur minimum de tous les mots de son instanciation.\\
+L'intérêt de cette valuation est qu'en développant, à chaque itération, le noeud de valeur maximum parmis toutes les feuilles de l'arbre, on peut garantir l'obtention de l'instanciation de valeur maximum sans avoir à parcourir la totalité de l'arbre de recherche.\\
+Cette valuation est monotone, car lorsqu'on ajoute un mots à l'instanciation courante, la valeur de la solution courante peut soit diminuer soit stagner, mais ne peut jamais augmenter.\\
+
+\item Nous avons choisi de modéliser le Branch & Bound sous forme d'une liste de nœuds triés selon les valeurs croissantes des noeuds.\\
+>>>>>>> cb312243268ad52f080a576b2b7fd1ac6fd64695
 A chaque étape, le noeud à développer sera le noeud de valeur maximum, à savoir, le noeud qui se trouve à la dernière position de la liste. En cas d'égalité de valeur, nous choisissons de prendre le noeud le plus profond dans l'arbre.\\
 Afin de grader notre liste triée avec une faible comlexité, nous effectuons des insertions triées en utilisant deux classes de python, à savoir collections.deque et bisect, qui nous permettent de faire des insertions trièes en O(log N).\\
 
