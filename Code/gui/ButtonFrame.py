@@ -72,7 +72,7 @@ class ButtonFrame(Frame):
         self.after(1000, self.process_queue)
         self.master.send_To_Trace("nombre de mot sur la grille :" + str(len(self.algo.grille.mots_horizontaux + self.algo.grille.mots_verticaux))+"\n", "curr")
         self.master.send_To_Trace("nombre de mot dans les Domaines :" + str(self.algo.grille.get_Domaines_Sizes())+"\n", "curr")
-        self.resetButton.configure(state="disabled")
+        #self.resetButton.configure(state="disabled")
 
     def raz(self):
         '''

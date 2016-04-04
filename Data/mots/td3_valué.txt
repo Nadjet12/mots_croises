@@ -1,17 +1,17 @@
 aida 1
-aza 1
+aza
 ciern
-ili 1
+ili
 kolo
-lad 1
-lina 1
-man 0.98028
+lad
+lina
+man
 molo
-nida 1
+nida
 nil
-nisza 1
-obsada 1
-piza 1
+nisza
+obsada
+piza
 polo
 sroka
 tantal 1

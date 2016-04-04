@@ -23,18 +23,19 @@ if __name__ == "__main__":
 
     GRILLE = [
 
-        (GRILLEVIDE_PATH + '11.mc', '11'),
+        #(GRILLEVIDE_PATH + '11.mc', '11'),
+        (GRILLEVIDE_PATH + '12.mc', '12'),
         #(GRILLEVIDE_PATH + 'A.mc', 'A'),
         #(GRILLEVIDE_PATH + 'B.mc', 'B'),
         #(GRILLEVIDE_PATH + 'C.mc', 'C')
     ]
 
     ALGO = [
-        'AC3',
-        'CBJ',
-        'FC',
+        #'AC3',
+        #'CBJ',
+        #'FC',
         'CBJ_AC3',
-        'FC_AC3',
+        #'FC_AC3',
 
     ]
 
