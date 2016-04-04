@@ -20,7 +20,7 @@ Dictionnaire_Var = "./mots/58000-mots-us.txt"
 #Algo_Var = "AC3"
 Algo_Var = "CBJ2"
 
-
+'''
 if __name__ == "__main__":
     start_time = time.time()
     grille = Grille(filePath=Grille_Var)
@@ -66,6 +66,6 @@ if __name__ == "__main__":
     print 'Grille :' + Grille_Var.split("/")[-1]
 
 
+'''
 
-
-initGrilleValue("C:/Users/Nadjet BOURDACHE/Desktop/Cours/Master1/RP/mots_croises/Data/texte.txt","C:/Users/Nadjet BOURDACHE/Desktop/Cours/Master1/RP/mots_croises/Data/mots/dicoValu.txt")
+initGrilleValue("../Data/texte.txt","../Data/mots/dicoValue.txt")

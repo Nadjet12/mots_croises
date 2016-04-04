@@ -169,7 +169,7 @@ class Algo(threading.Thread):
                     return False
                 # Sinon, on ajoute à la liste de contraintes tous les mots directement liée à x par une contrainte
                 for (i, j) in contrainte_Liste:
-                    if j == x or i == x:
+                    if j == x:
                         file_L += [(i, j)]
 
         # Affichage du temps d'exécution et du nombre de mots qui ont été supprimé des domaines
@@ -205,7 +205,7 @@ class Algo(threading.Thread):
                         if len(x.getDomaine()) == 0:
                             # Si la taille du domaine de x est nulle on arête et on dis que c'est modifié
                             return True
-                modif = False
+                modif |= False
             # Si la contrainte est liée au fait que x et y se croisent
             else :
                 yLettre = y.getAllLettre(indiceY)
@@ -213,7 +213,7 @@ class Algo(threading.Thread):
                 bool = x.updateFromContraintes(x.getContraintsXE(y), yLettre)
 
                 nb -= len(x.getDomaine())
-                modif =  bool
+                modif |=  bool
         return modif
 
 

@@ -88,7 +88,7 @@ $$ \textit{AllDiff}\ (\textit{Mot}_1, \textit{Mot}_2, \cdots , \textit{Mot}_m)  
 \item D'un point de vue algorithmique, nous avons mis en œuvre une classe "Grille". Chaque objet de cette classe représente une instance de mots croisés, et contient une taille, un dictionnaire, une liste de tous les mots de la grille ayant une taille supérieure à 1 ainsi qu'une liste de cases noires.\\
 On pourra à partir d'un objet de cette classe, initialiser une grille à partir d'un fichier texte contenant une grille ou en générer une aléatoirement et la sauvegarder dans un fichier après résolution.\\
 
-L'interface graphique proposée permet d'ouvrir une grille vide ou partielement rempli ou d'en générer une en indiquant la taille et le poucentage de cases noirs. Nous pouvons aussi à tout moment sauvegarder la grille non/partielement/completement résolu. \\
+Nous proposons une interface graphique qui permet d'ouvrir une grille vide ou partielement rempli ou d'en générer une en indiquant la taille et le poucentage de cases noirs. Nous pouvons aussi à tout moment sauvegarder la grille non/partielement/completement résolu. \\
 
 \item Nous avons développé les algorithmes AC3 et Forward Checking tel qu'ils ont été définis en cours. \\
 
@@ -122,7 +122,8 @@ Pour le CBJ, l'heuristique la plus efficace est la même que pour le FC, à savo
 
 
 Nous avons effectuer des expérimentations sur les algorithmes programmés, en les appliquant à différentes instances, pour chacune d'entre elles, nous avons calculé une moyennes du temps d'exécution.\\
-Pour chaque grille, nous réalisons une courbe qui montre l'évolution du temps de calcul en fonction de la taille des dictionnaires (une moyenne sur un ensemble d'exécution). Nous représentons également par des points les valeurs obtenues pour chaque exécution.
+Pour chaque grille, nous réalisons une courbe qui montre l'évolution du temps de calcul en fonction de la taille des dictionnaires (une moyenne sur un ensemble d'exécution). Nous représentons également par des points les valeurs obtenues pour chaque exécution.\\
+Pour chaque test, nous avons limité le temps de calcul à 5min.
 
 \begin{enumerate}
 
@@ -207,7 +208,9 @@ En ce qui concerne l'efficacité des deux algorithmes pour cette grille, aucun d
 \end{center}
 \end{table*}
 
-De même pour la grille B, le filtrage n'accélère le temps de calcul que pour les dictionnaire de petite taille. même si la différences de temps avec et sans est moins importante que pour la grille A.\\
+De même pour la grille B, le filtrage n'accélère le temps de calcul que pour les dictionnaire de petite taille. Même si la différences de temps avec et sans est moins importante que pour la grille A.\\
+
+Le
 
 Pour cette grille, les meilleurs temps ont été obtenus avec le FC.\\
 
@@ -227,6 +230,9 @@ Grille B \\
 \end{center}
 \end{table*}
 
+En ce qui concerne l'apport du filtrage, on constate les mêmes résultats sur la grille C, le filtrage est plus ou moins bénéfique selon la taille des dictionnaires. \\
+
+On peut remarquer qu'en moyenne, le CBJ (avec ou sans AC3 préalable) est plus rapide que le FC.\\
 
 \begin{table*}[!h]
 \begin{center}
@@ -246,6 +252,23 @@ Grille C \\
 
 \end{enumerate}
 
+\section*{3. Extension au cas valué}
 
+\begin{enumerate}
+
+\item Pour modéliser le problème de CSP valué, il suffit de reprendre la modélisation de la question 1.1 en ajoutant des valeurs aux mots du dictionnaire.\\
+\ul{Structures de valuations:} Pour le Branch \& Bound, on peut proposer la structure de valuation suivante: la valeur d'un nœuds est le minimum entre sa propre valeur (dans le dictionnaire) et celle de son père. La valeur d'une solution est donc la valeur minimum de tous les mots de son instanciation.\\
+L'intérêt de cette valuation est qu'en développant, à chaque itération, le noeud de valeur maximum parmis toutes les feuilles de l'arbre, on peut garantir l'obtention de l'instanciation de valeur maximum sans avoir à parcourir la totalité de l'arbre de recherche.\\
+Cette valuation est monotone, car lorsqu'on ajoute un mots à l'instanciation courante, la valeur de la solution courante peut soit diminuer soit stagner, mais ne peut jamais augmenter.\\
+
+\item Nous avons choisi de modéliser le Branch \& Bound sous forme d'une liste de nœuds triés selon les valeurs croissantes des noeuds.\\
+A chaque étape, le noeud à développer sera le noeud de valeur maximum, à savoir, le noeud qui se trouve à la dernière position de la liste. En cas d'égalité de valeur, nous choisissons de prendre le noeud le plus profond dans l'arbre.\\
+Afin de grader notre liste triée avec une faible comlexité, nous effectuons des insertions triées en utilisant deux classes de python, à savoir collections.deque et bisect, qui nous permettent de faire des insertions trièes en O(log N).\\
+
+\item Expérimentation \\
+
+\item \textit{Question bonus:} Pour cette question, nous avons mis au point un programme qui crée un dictionnaire contenant les mots du texte, et qui associe à chaque mot de taille supérieure à deux sa fréquence d'apparition dans le texte. Pour les mots de taille deux, on associe une valeur aléatoire comprise entre 0 et 1 exclu.\\
+
+\end{enumerate}
 
 \end{document}
