@@ -187,6 +187,8 @@ Les résultats obtenus sont représenté sur les graphiques suivants.\\
 
 On remarque que le temps de calcul ne dépend pas forcément de la taille des dictionnaires. Pour une même grille, on peut obtenir des changement non monotone du temps de calcul lorsqu'on change la taille des dictionnaires.\\
 
+On remarque aussi que lorsqu'il n'y a pas de solution, comme c'est le cas pour les trois grille avec le dictionnaire de 850 mots, le FC est en général plus rapide que le CBJ.\\
+
 - Plus particulièrement, pour la grille A, on remarque que le filtrage par AC3 préalable n'est bénéfique que pour les petits dictionnaires. Pour les plus grands dictionnaires, la résolution sans filtrage par AC3 demande un temps de calcul beaucoup plus court que lorsqu'on en effectue un. C'est du au grand nombre mots à tester dans les domaines des différentes variables, le temps passé sur le filtrage est donc long et n'est pas compensé par le temps gagné à la résolution.\\
 
 En ce qui concerne l'efficacité des deux algorithmes pour cette grille, aucun des deux n'est nettement meilleur que l'autre, le CBJ (avec ou sans AC3) est plus rapide que le FC (avec ou sans AC3) pour le dictionnaire de 58000 mots mais plus lent pour les dictionnaire de 22600 et 135000 mots. En revanche pour le dictionnaire de 850 mots, les deux algorithmes sont plus ou moins équivalents.
@@ -227,7 +229,7 @@ Grille B \\
 \end{tabular}
 \end{center}
 \end{table*}
-
+\newpage
 - En ce qui concerne l'apport du filtrage, on constate les mêmes résultats sur la grille C, le filtrage est plus ou moins bénéfique selon la taille des dictionnaires. \\
 
 On peut remarquer qu'en moyenne, le CBJ (avec ou sans AC3 préalable) est plus rapide que le FC.\\
@@ -248,6 +250,26 @@ Grille C \\
 \end{center}
 \end{table*}
 
+\item Pour prolonger les expérimentation, nous avons testé une grille aléatoire de taille 12x12. Nous avons choisi de lui appliquer le CBJ avec AC3 préalable car c'est l'algorithme qui a donné les temps de calcul les plus court pour les grandes tailles de grilles et de dictionnaires.\\
+
+Pour ces tests, nous obtenons des temps assez bons, mis à part pour le dictionnaire de taille 58000 ou on atteint notre "time out" de 5min.
+
+\begin{table*}[!h]
+\begin{center}
+\begin{tabular}{|c|}
+
+\hline
+Grille aléatoire de taille 12x12 \\
+\hline
+\\
+\includegraphics[width=10cm]{12.png}\\
+
+\hline
+
+\end{tabular}
+\end{center}
+\end{table*}
+
 \end{enumerate}
 
 \section*{3. Extension au cas valué}
@@ -255,7 +277,9 @@ Grille C \\
 \begin{enumerate}
 
 \item Pour modéliser le problème de CSP valué, il suffit de reprendre la modélisation de la question 1.1 en ajoutant des valeurs aux mots du dictionnaire.\\
-\ul{Structures de valuations}: \\
+
+\ul{Structures de valuations}: 
+
 Pour le Branch \& Bound, on peut proposer la structure de valuation suivante: la valeur d'un nœuds est le minimum entre sa propre valeur (dans le dictionnaire) et celle de son père. La valeur d'une solution est donc la valeur minimum de tous les mots de l'instanciation qui la constitue.\\
 L'intérêt de cette valuation est qu'en développant, à chaque itération, le nœud de valeur maximum parmi toutes les feuilles de l'arbre, on peut garantir l'obtention de l'instanciation de valeur maximum sans avoir à parcourir la totalité de l'arbre de recherche.\\
 Cette valuation est monotone, car lorsqu'on ajoute un mots à l'instanciation courante, la valeur de la solution courante peut soit diminuer soit stagner, mais ne peut jamais augmenter.\\
@@ -265,10 +289,33 @@ Cette valuation est monotone, car lorsqu'on ajoute un mots à l'instanciation co
 A chaque étape, le nœud à développer sera le nœud de valeur maximum, à savoir, le nœud qui se trouve à la dernière position de la liste. En cas d'égalité de valeur, nous choisissons de prendre le nœud le plus profond dans l'arbre.\\
 Afin de grader notre liste triée avec une faible complexité, nous effectuons des insertions triées en utilisant deux classes de python, à savoir collections.deque et bisect, qui nous permettent de faire des insertions triées en O(log N).\\
 
-\item Expérimentation \\
+\item Expérimentation: \\
+Pour tester l'efficacité de notre Branch \& Bound, nous l'avons appliqué à la grille du TD3, avec des dictionnaires de différentes taille allants de 200 à 700 mots, où les mots en rapport avec le master ANDROIDE ont une valeur de 1 et les autres mots ont une valeur aléatoire comprise entre 0 et 1 exclu.\\
+Nous avons obtenu des temps de calcul assez rapide, mais qui augmente exponentiellement à partir de 600 mots.\\
+Le graphique suivants montre les résultats obtenus:
+
+
+\begin{table*}[!h]
+\begin{center}
+\begin{tabular}{|c|}
+
+\hline
+Grille du TD3 \\
+\hline
+\\
+\includegraphics[width=10cm]{BB.png}\\
+
+\hline
+
+\end{tabular}
+\end{center}
+\end{table*}
 
 \item \textit{Question bonus:} Pour cette question, nous avons mis au point un programme qui crée un dictionnaire contenant les mots d'un texte, et qui associe à chaque mot de taille supérieure à deux sa fréquence d'apparition dans le texte. Pour les mots de taille deux, on associe une valeur aléatoire comprise entre 0 et 1 exclu.\\
 
 \end{enumerate}
+
+\section*{Conclusion}
+En conclusion, les algorithmes programmés sont relativement efficaces, mais d'une efficacité non constantes. Cela dépend certainement des heuristiques qui n'ont pas la même efficacité d'une instance à l'autre, de l'ordre dans lequel les mots sont pris dans les dictionnaires mais aussi de l'existence ou non de solutions pour l'instance étudiée.
 
 \end{document}
