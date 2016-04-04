@@ -132,7 +132,8 @@ class Algo(threading.Thread):
             liste =  self.grille.mots_horizontaux + self.grille.mots_verticaux
             bool = self.ac3()
             self.sendResult(('AC3', bool))
-            self.branch_bound(liste)
+            if bool :
+                self.branch_bound(liste)
 
             # Pas ou plus de resultats
             self.sendResult(None)
@@ -502,13 +503,13 @@ class Algo(threading.Thread):
         # Tant qu'on a pas de solution, on met à jour la liste des feuilles
         while not sol:
             sol = arbre.update()
-            if sol == "Pas de solution":
+            if isinstance(sol, str):
                 print sol
                 return
 
         # Construction de la solution entière à partir de la feuille
         solution = []
-        while not sol is None:
+        while sol:
             solution += [(sol.motObj, sol.mot, sol.value)]
             sol = sol.pere
 

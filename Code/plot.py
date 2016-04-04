@@ -14,7 +14,7 @@ FILE = [
 #    (BEGIN + 'C_CBJ' + END, 'C', 'CBJ'),
 #    (BEGIN + '7_CBJ' + END, '7', 'CBJ'),
 
-    (BEGIN + '12_CBJ_AC3' + END, '12', 'CBJ avec Arc-consistance'),
+    #(BEGIN + '12_CBJ_AC3' + END, '12', 'CBJ avec Arc-consistance'),
 #     (BEGIN + 'B_CBJ_AC3' + END, 'B', 'CBJ avec Arc-consistance'),
 #    (BEGIN + 'C_CBJ_AC3' + END, 'C', 'CBJ avec Arc-consistance'),
 #    (BEGIN + '7_CBJ_AC3' + END, '7', 'CBJ avec Arc-consistance'),
@@ -28,10 +28,11 @@ FILE = [
 #     (BEGIN + 'B_FC_AC3' + END, 'B', 'FC avec Arc-consistance'),
 #    (BEGIN + 'C_FC_AC3' + END, 'C', 'FC avec Arc-consistance'),
 #    (BEGIN + '7_FC_AC3' + END, '7', 'FC avec Arc-consistance'),
+    (BEGIN + 'td3_VAL' + END, 'VAL', 'Branch & Bound'),
 ]
 
 fig = plt.figure()
-plt.suptitle("Temps de resolution " + " sur la grille 12")
+plt.suptitle("Temps de resolution " + " sur la grille td3")
 ax = fig.add_subplot(111)
 mini = 0
 maxi = 0

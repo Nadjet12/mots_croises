@@ -80,7 +80,7 @@ class ButtonFrame(Frame):
         :return: None
         '''
         self.master.Ggrille(self.algo.grille.filePath)
-        self.resetButton.configure(state="disabled")
+        #self.resetButton.configure(state="disabled")
 
     def process_queue(self):
         '''
