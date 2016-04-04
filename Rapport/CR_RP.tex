@@ -88,7 +88,7 @@ $$ \textit{AllDiff}\ (\textit{Mot}_1, \textit{Mot}_2, \cdots , \textit{Mot}_m)  
 \item D'un point de vue algorithmique, nous avons mis en œuvre une classe "Grille". Chaque objet de cette classe représente une instance de mots croisés, et contient une taille, un dictionnaire, une liste de tous les mots de la grille ayant une taille supérieure à 1 ainsi qu'une liste de cases noires.\\
 On pourra à partir d'un objet de cette classe, initialiser une grille à partir d'un fichier texte contenant une grille ou en générer une aléatoirement et la sauvegarder dans un fichier après résolution.\\
 
-Nous proposons une interface graphique qui permet d'ouvrir une grille vide ou partielement rempli ou d'en générer une en indiquant la taille et le poucentage de cases noirs. Nous pouvons aussi à tout moment sauvegarder la grille non/partielement/completement résolu. \\
+Nous proposons une interface graphique qui permet d'ouvrir une grille vide ou partielement rempli ou d'en générer une en indiquant sa taille et le poucentage de cases noirs. Nous pouvons aussi à tout moment sauvegarder la grille non/partielement/completement résolue. \\
 
 \item Nous avons développé les algorithmes AC3 et Forward Checking tel qu'ils ont été définis en cours. \\
 
@@ -99,7 +99,7 @@ Nous avons développé plusieurs heuristiques:\\
  - Max contraintes instance : nous renvoi le mot avec le plus de contraintes avec les variables déjà instanciés.\\
  - Max contraintes : renvoi la viariable avec le plus de contraintes.\\
  
-Afin de déterminer l'heuristique la plus appropriée pour les différents algorithmes, nous avons compté le nombre de mots testés.
+Afin de déterminer l'heuristique la plus appropriée pour les différents algorithmes, nous avons compté le nombre de mots testés pour chaque heuristique.
 Après plusieurs tests, nous avons déterminé que la meilleure heuristique pour le Forward Checking était l'heuristique "domaine min". 
 
 Cependant il aurais été plus judicieux de combiner les heuristiques en cas d'égalité, mais le sujet nous indiquait de prendre un choix aléatoire pour plus de diversité.\\
@@ -114,7 +114,7 @@ Cependant il aurais été plus judicieux de combiner les heuristiques en cas d'�
 
 Pour le CBJ, l'heuristique la plus efficace est la même que pour le FC, à savoir "domaine min".\\
 
-\item Afin d'améliorer les trois algorithmes, nous avons utilisé une structure d'arbre pour sauvegarder et manipuler les dictionnaires et les domaines des différentes variables.\\
+\item \ul{Structure}:\\Afin d'améliorer les trois algorithmes, nous avons utilisé une structure d'arbre pour sauvegarder et manipuler les dictionnaires et les domaines des différentes variables.\\
  Cette structure permet un parcours rapide du dictionnaire pour l'initialisation des domaines, et surtout, elle permet accélérer les algorithmes de filtrage, puisqu'elle peut permettre d'éliminer plusieurs mots d'un domaine en supprimant des sous arbres de ce dernier, nous évitant ainsi de devoir parcourir et tester chaque mot du domaine.\\
 \end{enumerate}
 
@@ -187,7 +187,7 @@ Les résultats obtenus sont représenté sur les graphiques suivants.\\
 
 On remarque que le temps de calcul ne dépend pas forcément de la taille des dictionnaires. Pour une même grille, on peut obtenir des changement non monotone du temps de calcul lorsqu'on change la taille des dictionnaires.\\
 
-Plus particulièrement, pour la grille A, on remarque que le filtrage par AC3 préalable n'est bénéfique que pour les petits dictionnaires. Pour les plus grands dictionnaires, la résolution sans filtrage par AC3 demande un temps de calcul beaucoup plus court que lorsqu'on en effectue un. C'est du au grand nombre mots à tester dans les domaines des différentes variables.\\
+- Plus particulièrement, pour la grille A, on remarque que le filtrage par AC3 préalable n'est bénéfique que pour les petits dictionnaires. Pour les plus grands dictionnaires, la résolution sans filtrage par AC3 demande un temps de calcul beaucoup plus court que lorsqu'on en effectue un. C'est du au grand nombre mots à tester dans les domaines des différentes variables, le temps passé sur le filtrage est donc long et n'est pas compensé par le temps gagné à la résolution.\\
 
 En ce qui concerne l'efficacité des deux algorithmes pour cette grille, aucun des deux n'est nettement meilleur que l'autre, le CBJ (avec ou sans AC3) est plus rapide que le FC (avec ou sans AC3) pour le dictionnaire de 58000 mots mais plus lent pour les dictionnaire de 22600 et 135000 mots. En revanche pour le dictionnaire de 850 mots, les deux algorithmes sont plus ou moins équivalents.
 
@@ -200,7 +200,7 @@ En ce qui concerne l'efficacité des deux algorithmes pour cette grille, aucun d
   Grille A\\
 \hline   
    \\
-\includegraphics[width=10cm]{Grille_A.png}  \\
+\includegraphics[width=9cm]{Grille_A.png}  \\
 \hline
 
 
@@ -208,11 +208,9 @@ En ce qui concerne l'efficacité des deux algorithmes pour cette grille, aucun d
 \end{center}
 \end{table*}
 
-De même pour la grille B, le filtrage n'accélère le temps de calcul que pour les dictionnaire de petite taille. Même si la différences de temps avec et sans est moins importante que pour la grille A.\\
+- De même pour la grille B, le filtrage n'accélère le temps de calcul que pour les dictionnaire de petite taille. Même si la différences de temps avec et sans est moins importante que pour la grille A.\\
 
-Le
-
-Pour cette grille, les meilleurs temps ont été obtenus avec le FC.\\
+Pour cette grille, les meilleurs temps ont été obtenus avec le FC. D'ailleurs, sur cette grille, le temps de calcul du FC sur cette grille ne semble pas croitre exponentiellement avec la taille du dictionnaire.\\
 
 \begin{table*}[!h]
 \begin{center}
@@ -222,7 +220,7 @@ Pour cette grille, les meilleurs temps ont été obtenus avec le FC.\\
 Grille B \\
 \hline 
 \\
-\includegraphics[width=10cm]{Grille_B.png} \\
+\includegraphics[width=9cm]{Grille_B.png} \\
 \hline
 
 
@@ -230,11 +228,7 @@ Grille B \\
 \end{center}
 \end{table*}
 
-<<<<<<< HEAD
-En ce qui concerne l'apport du filtrage, on constate les mêmes résultats sur la grille C, le filtrage est plus ou moins bénéfique selon la taille des dictionnaires. \\
-=======
-En ce qui concerne l'apport du filtrage, on constate les mêmes résultats sur la grille C, le filtrage est plus ou moins bénéfique selon la taille des dictionnaires. \\
->>>>>>> cb312243268ad52f080a576b2b7fd1ac6fd64695
+- En ce qui concerne l'apport du filtrage, on constate les mêmes résultats sur la grille C, le filtrage est plus ou moins bénéfique selon la taille des dictionnaires. \\
 
 On peut remarquer qu'en moyenne, le CBJ (avec ou sans AC3 préalable) est plus rapide que le FC.\\
 
@@ -261,25 +255,19 @@ Grille C \\
 \begin{enumerate}
 
 \item Pour modéliser le problème de CSP valué, il suffit de reprendre la modélisation de la question 1.1 en ajoutant des valeurs aux mots du dictionnaire.\\
-<<<<<<< HEAD
-\ul{Structures de valuations:} Pour le Branch \& Bound, on peut proposer la structure de valuation suivante: la valeur d'un nœuds est le minimum entre sa propre valeur (dans le dictionnaire) et celle de son père. La valeur d'une solution est donc la valeur minimum de tous les mots de son instanciation.\\
-L'intérêt de cette valuation est qu'en développant, à chaque itération, le noeud de valeur maximum parmis toutes les feuilles de l'arbre, on peut garantir l'obtention de l'instanciation de valeur maximum sans avoir à parcourir la totalité de l'arbre de recherche.\\
+\ul{Structures de valuations}: \\
+Pour le Branch \& Bound, on peut proposer la structure de valuation suivante: la valeur d'un nœuds est le minimum entre sa propre valeur (dans le dictionnaire) et celle de son père. La valeur d'une solution est donc la valeur minimum de tous les mots de l'instanciation qui la constitue.\\
+L'intérêt de cette valuation est qu'en développant, à chaque itération, le nœud de valeur maximum parmi toutes les feuilles de l'arbre, on peut garantir l'obtention de l'instanciation de valeur maximum sans avoir à parcourir la totalité de l'arbre de recherche.\\
 Cette valuation est monotone, car lorsqu'on ajoute un mots à l'instanciation courante, la valeur de la solution courante peut soit diminuer soit stagner, mais ne peut jamais augmenter.\\
 
-\item Nous avons choisi de modéliser le Branch \& Bound sous forme d'une liste de nœuds triés selon les valeurs croissantes des noeuds.\\
-=======
-\ul{Structures\ de\ valuations:} Pour le Branch & Bound, on peut proposer la structure de valuation suivante: la valeur d'un nœuds est le minimum entre sa propre valeur (dans le dictionnaire) et celle de son père. La valeur d'une solution est donc la valeur minimum de tous les mots de son instanciation.\\
-L'intérêt de cette valuation est qu'en développant, à chaque itération, le noeud de valeur maximum parmis toutes les feuilles de l'arbre, on peut garantir l'obtention de l'instanciation de valeur maximum sans avoir à parcourir la totalité de l'arbre de recherche.\\
-Cette valuation est monotone, car lorsqu'on ajoute un mots à l'instanciation courante, la valeur de la solution courante peut soit diminuer soit stagner, mais ne peut jamais augmenter.\\
+\item Nous avons choisi de modéliser le Branch \& Bound sous forme d'une liste de nœuds triés selon leurs valeurs croissantes. Cette liste contiendra uniquement les nœuds susceptibles d'être développé, c'est à dire les feuilles de l'arbre.  \\
 
-\item Nous avons choisi de modéliser le Branch & Bound sous forme d'une liste de nœuds triés selon les valeurs croissantes des noeuds.\\
->>>>>>> cb312243268ad52f080a576b2b7fd1ac6fd64695
-A chaque étape, le noeud à développer sera le noeud de valeur maximum, à savoir, le noeud qui se trouve à la dernière position de la liste. En cas d'égalité de valeur, nous choisissons de prendre le noeud le plus profond dans l'arbre.\\
-Afin de grader notre liste triée avec une faible comlexité, nous effectuons des insertions triées en utilisant deux classes de python, à savoir collections.deque et bisect, qui nous permettent de faire des insertions trièes en O(log N).\\
+A chaque étape, le nœud à développer sera le nœud de valeur maximum, à savoir, le nœud qui se trouve à la dernière position de la liste. En cas d'égalité de valeur, nous choisissons de prendre le nœud le plus profond dans l'arbre.\\
+Afin de grader notre liste triée avec une faible complexité, nous effectuons des insertions triées en utilisant deux classes de python, à savoir collections.deque et bisect, qui nous permettent de faire des insertions triées en O(log N).\\
 
 \item Expérimentation \\
 
-\item \textit{Question bonus:} Pour cette question, nous avons mis au point un programme qui crée un dictionnaire contenant les mots du texte, et qui associe à chaque mot de taille supérieure à deux sa fréquence d'apparition dans le texte. Pour les mots de taille deux, on associe une valeur aléatoire comprise entre 0 et 1 exclu.\\
+\item \textit{Question bonus:} Pour cette question, nous avons mis au point un programme qui crée un dictionnaire contenant les mots d'un texte, et qui associe à chaque mot de taille supérieure à deux sa fréquence d'apparition dans le texte. Pour les mots de taille deux, on associe une valeur aléatoire comprise entre 0 et 1 exclu.\\
 
 \end{enumerate}
 
