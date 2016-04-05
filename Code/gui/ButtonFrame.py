@@ -67,6 +67,9 @@ class ButtonFrame(Frame):
             self.algo.stop()
             self.raz()
             self.algo = Algo(queue=self.queue, grille=self.algo.grille, traceframe=self.traceFrame, algoName=self.algo.algoName, heuristique=self.algo.heur)
+            self.master.master.algo = self.algo
+            self.master.algo = self.algo
+
 
         self.algo.start()
         self.after(1000, self.process_queue)
